@@ -1,0 +1,50 @@
+.starship {
+  width: 100%;
+  position: relative;
+  z-index: 4;
+  top: -16px;
+
+  filter: drop-shadow(4px 0px 22px rgba(0, 0, 0, 0.5));
+  animation: move-down 2s infinite alternate;
+}
+
+@keyframes move-down {
+  from {
+    top: -16px;
+  }
+  to {
+    top: 0;
+  }
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 80px;
+}
+
+.inner {
+  max-width: 800px;
+  padding: 0 40px;
+}
+
+.container {
+  display: grid;
+  place-items: center;
+  width: 100vw;
+  height: calc(100vh - 82px);
+}
+
+.actions {
+  display: flex;
+  flex-direction: row;
+  gap: 90px;
+  align-items: center;
+  justify-content: center;
+}
+
+.title {
+  color: #64ee64;
+  font-weight: 100 !important;
+  text-shadow: 0 0 22px #328f32;
+}
