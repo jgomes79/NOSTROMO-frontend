@@ -12,7 +12,7 @@ import styles from "./AppBar.module.scss";
 export const AppBar: React.FC = () => {
   return (
     <header className={styles.header}>
-      <Typography className={styles.logotype}>Nostromo</Typography>
+      <Typography className={styles.logotype}>nostromo</Typography>
       <nav className={styles.navigator}>
         <Link to={"/"}>IDO Launchpad</Link>
         <Link to={"/"}>Stake / Farm</Link>

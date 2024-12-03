@@ -24,6 +24,15 @@ export interface TypographyProps {
   readonly size?: "xlarge" | "large" | "medium" | "small" | "xsmall";
 
   /**
+   * Specifies the text transformation.
+   * - 'none': No transformation (default).
+   * - 'uppercase': Transform text to uppercase.
+   * - 'lowercase': Transform text to lowercase.
+   * - 'capitalize': Capitalize first letter of each word.
+   */
+  readonly textTransform?: CSSProperties["textTransform"];
+
+  /**
    * The content to be rendered inside the Typography component.
    */
   readonly children: React.ReactNode | string | number;
@@ -54,11 +63,12 @@ export const Typography: React.FC<Readonly<TypographyProps>> = ({
   variant = "body",
   size = "medium",
   textAlign = "left",
+  textTransform = "none",
   children,
   className,
   as: Component = "span",
 }: TypographyProps): React.ReactElement => (
-  <Component className={classNames(styles[variant], styles[size], className)} style={{ textAlign }}>
+  <Component className={classNames(styles[variant], styles[size], className)} style={{ textAlign, textTransform }}>
     {children}
   </Component>
 );

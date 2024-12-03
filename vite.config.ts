@@ -53,6 +53,10 @@ export default defineConfig(({ mode }) => {
       },
     },
 
+    server: {
+      port: 4200,
+    },
+
     test: {
       globals: true,
 
