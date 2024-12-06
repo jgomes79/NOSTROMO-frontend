@@ -1,6 +1,5 @@
-import { formatDistanceToNow } from "date-fns/formatDistanceToNow";
-
 import { formatPrice } from "@/lib/number";
+import { Countdown } from "@/shared/components/Countdown";
 import { Typography } from "@/shared/components/Typography";
 
 import styles from "./ProjectCard.module.scss";
@@ -11,7 +10,8 @@ interface ProjectCardProps {
   photoUrl: string;
   bannerUrl: string;
 
-  amount: number;
+  fundraisingGoal: number;
+  tokenPrice: number;
   currency: string;
   date: Date;
 }
@@ -21,43 +21,68 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
   description,
   photoUrl,
   bannerUrl,
-  amount,
+  fundraisingGoal,
+  tokenPrice,
   currency,
   date,
 }) => {
+  const renderField = (label: string, value: string) => (
+    <div className={styles.row}>
+      <Typography variant={"body"} size={"small"}>
+        {label}
+      </Typography>
+      <Typography className={styles.value} variant={"body"} size={"small"}>
+        {value}
+      </Typography>
+    </div>
+  );
   return (
     <div className={styles.layout}>
-      <div className={styles.container}>
-        <div className={styles.banner}>
-          <img src={bannerUrl} className={styles.bannerImg} width={"100%"} height={140} alt={"Project Banner"} />
+      <div className={styles.body}>
+        {/* Banner */}
+        <img src={bannerUrl} className={styles.banner} width={"100%"} height={140} alt={"Project Banner"} />
+
+        {/* Date */}
+        <div className={styles.date}>
+          <Typography variant={"body"} textTransform={"uppercase"} size={"xsmall"}>
+            Registration ends in
+          </Typography>
+          <Typography variant={"body"} size={"xsmall"}>
+            <Countdown date={date}>
+              {(timeLeft) => (
+                <>
+                  {timeLeft.days}D {timeLeft.hours}H {timeLeft.minutes}M {timeLeft.seconds}S
+                </>
+              )}
+            </Countdown>
+          </Typography>
+        </div>
+
+        <div className={styles.container}>
+          {/* Header */}
           <div className={styles.header}>
             <img src={photoUrl} className={styles.image} width={"100%"} height={94} alt={"Project Photo"} />
-            <Typography as={"h3"} variant="heading" size="medium">
+            <Typography as={"h3"} variant="heading" size="small">
               {title}
             </Typography>
           </div>
-        </div>
-      </div>
-      <div className={styles.container}>
-        <Typography variant={"body"} className={styles.description} size={"medium"} textAlign={"center"}>
-          {description}
-        </Typography>
-        <div className={styles.amount}>
-          <Typography variant={"body"} size={"small"}>
-            Targeted Raise
+
+          {/* Description */}
+          <Typography variant={"body"} className={styles.description} size={"medium"} textAlign={"center"}>
+            {description}
           </Typography>
-          <Typography variant={"body"} size={"medium"}>
-            {formatPrice(amount, currency)}
+
+          {/* Fields */}
+          <div className={styles.field}>
+            {renderField("Fundraising Goal", formatPrice(fundraisingGoal, currency))}
+            {renderField("Token Price", formatPrice(tokenPrice, currency))}
+          </div>
+        </div>
+        <div className={styles.footer}>
+          <Typography variant={"body"} size={"xsmall"} textTransform={"uppercase"}>
+            Review and Vote
           </Typography>
         </div>
-      </div>
-      <div className={styles.footer}>
-        <Typography variant={"body"} textTransform={"uppercase"} size={"xsmall"}>
-          Registration ends in
-        </Typography>
-        <Typography variant={"body"} size={"small"}>
-          {formatDistanceToNow(date, { addSuffix: false })}
-        </Typography>
       </div>
     </div>
   );

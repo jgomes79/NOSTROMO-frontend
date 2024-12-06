@@ -30,7 +30,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }: AppLayoutProps
   return (
     <div className={styles.container}>
       <AppBar />
-      <main className={styles.body}>
+      <main>
         <Outlet />
         {children}
       </main>

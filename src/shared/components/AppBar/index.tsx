@@ -3,16 +3,19 @@ import { Link } from "react-router-dom";
 
 import { RiDiscordFill, RiMediumFill, RiTelegramFill, RiTwitterXFill } from "react-icons/ri";
 
-import { Links } from "@/shared/components/Links";
-import { Typography } from "@/shared/components/Typography";
 import { WalletAccount } from "@/wallet/components/WalletAccount";
 
 import styles from "./AppBar.module.scss";
+import logo from "../../assets/images/logotype.png";
+import { Links } from "../../components/Links";
+import { Typography } from "../../components/Typography";
 
 export const AppBar: React.FC = () => {
   return (
     <header className={styles.header}>
-      <Typography className={styles.logotype}>nostromo</Typography>
+      <Typography className={styles.logotype}>
+        <img src={logo} alt="nostromo" width={180} />
+      </Typography>
       <nav className={styles.navigator}>
         <Link to={"/"}>IDO Launchpad</Link>
         <Link to={"/"}>Stake / Farm</Link>

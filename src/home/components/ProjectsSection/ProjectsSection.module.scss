@@ -1,23 +1,19 @@
 
 .layout {
-  background-color: rgb(7, 9, 7);
   height: 100%;
-  padding: 82px 32px;
+  padding: 0 32px;
 }
 
 .container {
   display: flex;
   flex-direction: column;
-  gap: 40px;
-
-
   max-width: 1200px;
   margin: 0 auto;
+  gap: 42px;
 }
 
 .cards {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  gap: 32px;
-
+  gap: 42px;
 }
