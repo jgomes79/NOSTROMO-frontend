@@ -1,0 +1,17 @@
+.layout {
+  display: flex;
+  gap: 16px;
+}
+
+.tab {
+  cursor: pointer;
+  background-color: transparent;
+  border: none;
+  color: #60675b;
+
+  &:hover {
+    color: #C7D2BE;
+  }
+
+  transition: color 120ms linear;
+}

@@ -1,5 +1,8 @@
+import { RiArrowDownFill } from "react-icons/ri";
+
 import { ProjectCard } from "@/project/components/ProjectCard";
-import { Typography } from "@/shared/components/Typography";
+import { Button } from "@/shared/components/Button";
+import { Tabs } from "@/shared/components/Tabs";
 
 import styles from "./ProjectsSection.module.scss";
 
@@ -110,9 +113,19 @@ export const ProjectsSection: React.FC = () => {
     <div className={styles.layout}>
       <div className={styles.container}>
         <div className={styles.header}>
-          <Typography variant={"heading"} size={"large"}>
-            Active Projects
-          </Typography>
+          <Tabs
+            tabs={[
+              {
+                label: "Upcoming",
+              },
+              {
+                label: "Active",
+              },
+              {
+                label: "Closed",
+              },
+            ]}
+          />
         </div>
         <div className={styles.cards}>
           {projects.map((project, index) => (
@@ -128,6 +141,9 @@ export const ProjectsSection: React.FC = () => {
               date={project.date}
             />
           ))}
+        </div>
+        <div className={styles.actions}>
+          <Button caption="Show more" iconRight={<RiArrowDownFill />} />
         </div>
       </div>
     </div>

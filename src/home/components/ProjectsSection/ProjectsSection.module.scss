@@ -1,6 +1,5 @@
 
 .layout {
-  height: 100%;
   padding: 0 32px;
 }
 
@@ -16,4 +15,23 @@
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   gap: 42px;
+
+  @include respond-to(mobile) {
+    grid-template-columns: 1fr;
+  }
+
+  @include respond-to(tablet) {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+}
+
+.header {
+  display: grid;
+
+  place-items: center;
 }
