@@ -17,3 +17,10 @@
     }
   }
 }
+
+.stepper {
+  position: fixed;
+  top: calc(100vh / 2);
+  right: 22px;
+  z-index: 4;
+}

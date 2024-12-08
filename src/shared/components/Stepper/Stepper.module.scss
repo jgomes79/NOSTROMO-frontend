@@ -1,0 +1,35 @@
+.layout {
+  display: flex;
+  gap: 8px;
+}
+
+.vertical {
+  flex-direction: column;
+}
+
+.horizontal {
+  flex-direction: row;
+}
+
+.step {
+  &.active {
+    .dot {
+      opacity: 1;
+    }
+  }
+
+  .dot {
+    background-color: $green-04;
+    opacity: 0.2;
+  }
+}
+
+.dot {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  @include crtAnimation();
+  transition: opacity 120ms linear;
+
+  cursor: pointer;
+}
