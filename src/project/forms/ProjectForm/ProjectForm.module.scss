@@ -13,13 +13,13 @@
   display: flex;
   flex-direction: column;
   gap: 18px;
-  color: #fff;
-  border-color: #111;
+  color: $white;
+  border-color: $black;
   border-style: solid;
   cursor: default;
 
   legend {
-    color: greenyellow;
+    color: $green-03;
     margin-left: 22px;
   }
 

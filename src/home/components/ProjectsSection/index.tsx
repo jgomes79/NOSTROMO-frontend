@@ -1,6 +1,9 @@
-import { RiArrowDownFill } from "react-icons/ri";
+import { useMemo } from "react";
+
+import { RiArrowDownLine } from "react-icons/ri";
 
 import { ProjectCard } from "@/project/components/ProjectCard";
+import { ProjectStates } from "@/project/project.types";
 import { Button } from "@/shared/components/Button";
 import { Tabs } from "@/shared/components/Tabs";
 
@@ -109,41 +112,45 @@ export const ProjectsSection: React.FC = () => {
     },
   ];
 
+  /**
+   * Memoized function to render the tab container with project cards.
+   *
+   * @returns {JSX.Element} A div containing a list of ProjectCard components.
+   */
+  const renderTabContainer = useMemo(
+    () => () => (
+      <div className={styles.cards}>
+        {projects.map((project, index) => (
+          <ProjectCard key={index} {...project} />
+        ))}
+      </div>
+    ),
+    [projects],
+  );
+
   return (
     <div className={styles.layout}>
       <div className={styles.container}>
-        <div className={styles.header}>
-          <Tabs
-            tabs={[
-              {
-                label: "Upcoming",
-              },
-              {
-                label: "Active",
-              },
-              {
-                label: "Closed",
-              },
-            ]}
-          />
-        </div>
-        <div className={styles.cards}>
-          {projects.map((project, index) => (
-            <ProjectCard
-              key={index}
-              title={project.title}
-              description={project.description}
-              photoUrl={project.photoUrl}
-              bannerUrl={project.bannerUrl}
-              fundraisingGoal={project.fundraisingGoal}
-              tokenPrice={project.tokenPrice}
-              currency={project.currency}
-              date={project.date}
-            />
-          ))}
-        </div>
+        <Tabs<ProjectStates>
+          tabs={[
+            {
+              id: ProjectStates.UPCOMING,
+              label: "Upcoming",
+            },
+            {
+              id: ProjectStates.ACTIVE,
+              label: "Active",
+            },
+            {
+              id: ProjectStates.FUNDED,
+              label: "Closed",
+            },
+          ]}
+          onRender={renderTabContainer}
+        />
+
         <div className={styles.actions}>
-          <Button caption="Show more" iconRight={<RiArrowDownFill />} />
+          <Button caption="Show more" iconRight={<RiArrowDownLine />} />
         </div>
       </div>
     </div>

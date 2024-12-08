@@ -1,17 +1,40 @@
 .layout {
   display: flex;
   gap: 16px;
+  flex-direction: column;
+  gap: 52px;
+}
+
+.tabs {
+  display: flex;
+  gap: 22px;
 }
 
 .tab {
   cursor: pointer;
   background-color: transparent;
   border: none;
-  color: #60675b;
+  color: $green-01;
 
   &:hover {
-    color: #C7D2BE;
+    color: $green-02;
   }
 
+  &.active {
+    color: $green-03;
+  }
+  
   transition: color 120ms linear;
 }
+
+
+.container {
+  display: flex;
+  flex-direction: column;
+}
+
+
+.text {
+  @include crtAnimation();
+}
+

@@ -42,10 +42,12 @@
   gap: 40px;
 
   a {
-    color: #C7D2BE;
+    @include crtAnimation();
+    
+    color: $green-04;
 
     &:hover {
-      color: #fff;
+      color: $white;
     }
 
     transition: color 120ms linear;

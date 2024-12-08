@@ -48,20 +48,20 @@
 
 .solid {
   &.primary {
-    background: #c7d2be;
-    color: #535050;
+    background: $green-03;
+    color: $black;
 
     .loader {
-      stroke: #535050;
+      stroke: $black;
     }
 
     &:not([disabled]):hover {
-      background: #9ba594;
+      background: $green-05;
     }
 
     &:focus {
       outline-style: solid;
-      outline-color: red;
+      outline-color: $green-03;
     }
   }
 
@@ -88,7 +88,7 @@
   background: transparent;
 
   &.primary {
-    color: #c7d2be;
+    color: $green-04;
 
     .loader {
       stroke: #fff;

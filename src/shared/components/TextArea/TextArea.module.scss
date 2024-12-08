@@ -6,15 +6,15 @@
 
 .input {
   padding: 18px;
-  background: #222;
+  background: $black;
   border: none;
   border-radius: 8px;
-  outline: 1px solid #333;
-  color: #fff;
+  outline: 1px solid $black;
+  color: $white;
   font-size: 14px;
 
   &:focus {
-    outline: 1px solid yellowgreen;
+    outline: 1px solid $green-03;
   }
 
   transition: 120ms linear;

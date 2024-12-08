@@ -1,6 +1,12 @@
 $black: #000;
 $white: #fff;
 
+$green-01: #3d4c30;
+$green-02: #66933e;
+$green-03: #8af827;
+$green-04: #C7D2BE;
+$green-05: #6cc31f;
+
 $breakpoints: (
   mobile: (
     max: 767px,
@@ -76,4 +82,10 @@ $breakpoints: (
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+}
+
+
+@mixin crtAnimation() {
+  mask-image: linear-gradient(to bottom, #0005 50%, #000 50%);
+  mask-size: 100% 2px;
 }
