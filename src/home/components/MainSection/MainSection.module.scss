@@ -179,6 +179,8 @@ $stars-speed: 4000s;
     animation: blink 1s step-end infinite;
     font-family: "Aldrich", sans-serif !important;
   }
+
+  @include crtAnimation();
 }
 
 @keyframes blink {
@@ -190,14 +192,42 @@ $stars-speed: 4000s;
   }
 }
 
+.starshipContainer {
+  position: relative;
+  animation: float 5s ease-in-out infinite;
+
+  &:before, &:after {
+    content: "";
+    position: absolute;
+    background: #eb1616;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    filter: blur(100px);
+    z-index: 2;
+  }
+
+  &:before {
+    right: 40%;
+    top: 24%;
+    
+  }
+
+  &:after {
+    right: 0;
+    top: 27%;
+    
+  }
+}
+
 .starship {
   padding-top: 42px;
   max-width: 800px;
   width: 100%;
-  animation: float 5s ease-in-out infinite;
   margin-left: auto;
 
   position: relative;
+  z-index: 3;
 }
 
 @keyframes float {

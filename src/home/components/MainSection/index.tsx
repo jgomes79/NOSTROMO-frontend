@@ -21,7 +21,9 @@ export const MainSection: React.FC<MainSectionProps> = ({ onClickShowProjects })
         </Typography>
       </div>
 
-      <img alt={"starship"} src={NostromoImage} className={styles.starship} width={"100%"} />
+      <div className={styles.starshipContainer}>
+        <img alt={"starship"} src={NostromoImage} className={styles.starship} width={"100%"} />
+      </div>
     </div>
     <button className={styles.icon} onClick={onClickShowProjects}>
       <Typography variant={"heading"} size={"small"} textAlign={"center"}>

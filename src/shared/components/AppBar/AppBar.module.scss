@@ -42,8 +42,6 @@
   gap: 40px;
 
   a {
-    @include crtAnimation();
-    
     color: $green-04;
 
     &:hover {
