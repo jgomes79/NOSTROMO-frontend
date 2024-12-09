@@ -7,7 +7,6 @@ import { Stepper } from "@/shared/components/Stepper";
 import styles from "./HomePage.module.scss";
 
 export const HomePage: React.FC = () => {
-  const projectsRef = useRef<HTMLElement>(null);
   const sectionRefs = useRef<(HTMLElement | null)[]>([]);
   const [currentSection, setCurrentSection] = useState(0);
 
@@ -63,7 +62,7 @@ export const HomePage: React.FC = () => {
     <div className={styles.layout}>
       {/* Starship Section */}
       <section ref={(el) => (sectionRefs.current[0] = el)} className={styles.section}>
-        <MainSection onClickShowProjects={() => scrollToSection(projectsRef)} />
+        <MainSection onClickShowProjects={() => handleClickStep(1)} />
       </section>
 
       {/* Projects Section */}

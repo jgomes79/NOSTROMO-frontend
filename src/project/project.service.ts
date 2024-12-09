@@ -1,5 +1,5 @@
 import { getEndpoint, request, requestWithFile } from "@/core/api/api.helpers";
-import { Project } from "@/project/project.types";
+import { Project, ProjectStates } from "@/project/project.types";
 
 /**
  * Fetches a project by its slug.
@@ -10,6 +10,32 @@ import { Project } from "@/project/project.types";
 export const getProjectById = (slug: Project["slug"]): Promise<Project> =>
   request<Project>(getEndpoint("projects-service", `/project/${slug}`), {
     method: "GET",
+  });
+
+/**
+ * Type representing the response from the getProjects API.
+ *
+ * @property {Project[]} rows - An array of projects.
+ * @property {number} count - The total number of projects.
+ */
+export type GetProjectsResponse = {
+  rows: Project[];
+  count: number;
+};
+
+/**
+ * Fetches a list of projects by their state and page number.
+ *
+ * @param {number} page - The page number to fetch.
+ * @param {ProjectStates} state - The state of the projects to fetch.
+ * @returns {Promise<Project[]>} - A promise that resolves to an array of project data.
+ */
+export const getProjects = (page: number, state: ProjectStates) =>
+  request<GetProjectsResponse>(getEndpoint("projects-service", `/projects/${state}`), {
+    method: "GET",
+    params: {
+      page,
+    },
   });
 
 /**

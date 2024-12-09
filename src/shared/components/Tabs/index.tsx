@@ -31,12 +31,11 @@ interface TabsProps<T> {
   readonly onChange?: (tabId: T) => void;
 
   /**
-   * Function to render the content of the active tab.
+   * The content to render for the active tab.
    *
-   * @param {T} tabId - The ID of the active tab.
-   * @returns {React.ReactNode} The content to render for the active tab.
+   * @type {React.ReactNode}
    */
-  readonly onRender: (tabId: T) => React.ReactNode;
+  readonly onRender: React.ReactNode;
 }
 
 export const Tabs = <T,>({ tabs, onChange, onRender }: TabsProps<T>) => {
@@ -73,7 +72,7 @@ export const Tabs = <T,>({ tabs, onChange, onRender }: TabsProps<T>) => {
           </button>
         ))}
       </div>
-      {onRender(activeTab)}
+      {onRender}
     </div>
   );
 };

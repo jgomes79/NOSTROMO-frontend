@@ -30,3 +30,16 @@
   justify-content: center;
 }
 
+.centered {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  padding: 82px 12px;
+}
+
+.loader {
+  color: $green-03;
+
+  @include crtAnimation();
+}

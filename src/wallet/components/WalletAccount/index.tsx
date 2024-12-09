@@ -1,4 +1,5 @@
 import { WalletButton } from "@rainbow-me/rainbowkit";
+import { RiWallet2Line } from "react-icons/ri";
 import { useWalletClient } from "wagmi";
 
 import { Button } from "@/shared/components/Button";
@@ -17,7 +18,14 @@ export const WalletAccount: React.FC = () => {
             {connected && data ? (
               <Typography>{shortHex(data.account.address, 5)}</Typography>
             ) : (
-              <Button variant={"solid"} color={"primary"} size={"small"} caption={"Connect Wallet"} onClick={connect} />
+              <Button
+                variant={"solid"}
+                color={"primary"}
+                size={"small"}
+                caption={"Connect Wallet"}
+                onClick={connect}
+                iconLeft={<RiWallet2Line />}
+              />
             )}
           </>
         )}

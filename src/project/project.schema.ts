@@ -19,8 +19,9 @@ export const ProjectSchema = z.object({
   litepaperUrl: z.string().url({ message: "Invalid URL format" }),
   tokenomicsUrl: z.string().url({ message: "Invalid URL format" }),
   tokensCreated: z.string(),
-  tokenPrice: z.string(),
-  amountToRaise: z.string(),
+  tokenPrice: z.number(),
+  amountToRaise: z.number(),
+  startDate: z.date(),
 
   currency: CurrencySchema,
 

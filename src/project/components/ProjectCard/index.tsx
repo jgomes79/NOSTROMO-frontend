@@ -1,15 +1,18 @@
+import { Link } from "react-router-dom";
+
 import { formatPrice } from "@/lib/number";
+import { trimString } from "@/lib/string";
 import { Countdown } from "@/shared/components/Countdown";
 import { Typography } from "@/shared/components/Typography";
 
 import styles from "./ProjectCard.module.scss";
 
 interface ProjectCardProps {
+  slug: string;
   title: string;
   description: string;
   photoUrl: string;
   bannerUrl: string;
-
   fundraisingGoal: number;
   tokenPrice: number;
   currency: string;
@@ -17,6 +20,7 @@ interface ProjectCardProps {
 }
 
 export const ProjectCard: React.FC<ProjectCardProps> = ({
+  slug,
   title,
   description,
   photoUrl,
@@ -37,7 +41,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
     </div>
   );
   return (
-    <div className={styles.layout}>
+    <Link className={styles.layout} to={`/projects/${slug}`}>
       <div className={styles.body}>
         {/* Banner */}
         <img src={bannerUrl} className={styles.banner} width={"100%"} height={140} alt={"Project Banner"} />
@@ -69,7 +73,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
 
           {/* Description */}
           <Typography variant={"body"} className={styles.description} size={"medium"} textAlign={"center"}>
-            {description}
+            {trimString(description, 90)}
           </Typography>
 
           {/* Fields */}
@@ -84,6 +88,6 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
           </Typography>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };

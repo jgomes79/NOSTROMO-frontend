@@ -7,7 +7,8 @@ $transition-hover: all 120ms linear;
   border-radius: 8px;
   position: relative;
 
-
+  color: $white;
+  
   user-select: none;
   cursor: pointer; 
   overflow: hidden;
