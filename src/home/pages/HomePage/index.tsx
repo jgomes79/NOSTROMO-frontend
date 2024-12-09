@@ -70,21 +70,11 @@ export const HomePage: React.FC = () => {
         <ProjectsSection />
       </section>
 
-      {/* Section 3 */}
-      <section ref={(el) => (sectionRefs.current[2] = el)} className={styles.section}>
-        Section 3
-      </section>
-
-      {/* Section 4 */}
-      <section ref={(el) => (sectionRefs.current[3] = el)} className={styles.section}>
-        Section 4
-      </section>
-
       {/* Stepper */}
       <div className={styles.stepper}>
         <Stepper
           step={currentSection}
-          steps={["Step 1", "Step 2", "Step 3", "Step 4"]}
+          steps={Array.from({ length: sectionRefs.current.length })}
           onClick={handleClickStep}
           orientation="vertical"
         />

@@ -15,6 +15,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   gap: 42px;
+  padding: 22px 0;
 
   @include respond-to(mobile) {
     grid-template-columns: 1fr;
