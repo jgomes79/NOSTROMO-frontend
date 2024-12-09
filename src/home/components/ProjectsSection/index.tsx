@@ -9,6 +9,7 @@ import { Button } from "@/shared/components/Button";
 import { EmptyState } from "@/shared/components/EmptyState";
 import { Loader } from "@/shared/components/Loader";
 import { Tabs } from "@/shared/components/Tabs";
+import { Typography } from "@/shared/components/Typography";
 
 import styles from "./ProjectsSection.module.scss";
 
@@ -34,10 +35,12 @@ export const ProjectsSection: React.FC = () => {
 
     if (!isLoading && projects.length === 0) {
       return (
-        <EmptyState
-          title="No projects found"
-          description="Be the first to start a new project and make a difference!"
-        />
+        <div className={styles.centered}>
+          <EmptyState
+            title="No projects found"
+            description="Be the first to start a new project and make a difference!"
+          />
+        </div>
       );
     }
 
@@ -66,34 +69,50 @@ export const ProjectsSection: React.FC = () => {
   return (
     <div className={styles.layout}>
       <div className={styles.container}>
-        <Tabs<ProjectStates>
-          tabs={[
-            {
-              id: ProjectStates.UPCOMING,
-              label: "Upcoming",
-            },
-            {
-              id: ProjectStates.FUNDING_PHASE_1,
-              label: "Active",
-            },
-            {
-              id: ProjectStates.CLOSED,
-              label: "Closed",
-            },
-          ]}
-          onRender={renderProjects}
-          onChange={(state) => fetchProjects(1, state)}
-        />
+        <div className={styles.tabs}>
+          <Tabs<ProjectStates>
+            tabs={[
+              {
+                id: ProjectStates.UPCOMING,
+                label: "Upcoming",
+              },
+              {
+                id: ProjectStates.FUNDING_PHASE_1,
+                label: "Active",
+              },
+              {
+                id: ProjectStates.CLOSED,
+                label: "Closed",
+              },
+            ]}
+            onRender={renderProjects}
+            onChange={(state) => fetchProjects(1, state)}
+          />
 
-        {total > 4 && (
-          <div className={styles.actions}>
-            <Button
-              caption="Show more"
-              iconRight={<RiArrowDownLine />}
-              onClick={() => fetchProjects(page + 1, state)}
-            />
+          {total > 4 && (
+            <div className={styles.actions}>
+              <Button
+                caption="Show more"
+                iconRight={<RiArrowDownLine />}
+                onClick={() => fetchProjects(page + 1, state)}
+              />
+            </div>
+          )}
+        </div>
+
+        <div className={styles.application}>
+          <div className={styles.inner}>
+            <div className={styles.column}>
+              <Typography variant={"heading"} size={"large"} as={"h2"}>
+                Ready to launch your project on Qubic?
+              </Typography>
+              <Typography variant={"heading"} size={"medium"}>
+                Apply today and make it happen!
+              </Typography>
+            </div>
+            <Button caption={"Apply Now!"} size={"large"} />
           </div>
-        )}
+        </div>
       </div>
     </div>
   );
