@@ -145,9 +145,8 @@ $stars-speed: 4000s;
 .container {
   position: relative;
   z-index: 5;
-  margin: 0 auto;
-  max-width: 1100px;
   flex: 1;
+  @include containerMargin();
 }
 
 

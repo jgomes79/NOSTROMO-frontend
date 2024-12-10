@@ -91,16 +91,17 @@
     color: $green-04;
 
     .loader {
-      stroke: #fff;
+      stroke: $white;
     }
 
     &:not([disabled]):hover {
-      background: #50564b;
+      background: $green-06;
+      color: $green-03;
     }
 
     &:focus {
       outline-style: solid;
-      outline-color: red;
+      outline-color: $green-03;
     }
   }
 

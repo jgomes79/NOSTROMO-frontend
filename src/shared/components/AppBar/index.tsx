@@ -1,11 +1,12 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { useWindowScroll } from "react-use";
 
 import classNames from "clsx";
 import { motion } from "framer-motion";
 import { RiDiscordFill, RiMediumFill, RiTelegramFill, RiTwitterXFill } from "react-icons/ri";
 
+import { LAUNCHPAD_ROUTES } from "@/launchpad/launchpad.constants";
 import useResponsive from "@/shared/hooks/useResponsive";
 import { WalletAccount } from "@/wallet/components/WalletAccount";
 
@@ -16,7 +17,7 @@ import { Links } from "../../components/Links";
 export const AppBar: React.FC = () => {
   const { isMobile } = useResponsive();
   const { y: scrollY } = useWindowScroll();
-  const headerHeight = scrollY > 20 ? "70px" : "90px";
+  const headerHeight = scrollY > 5 ? "70px" : "90px";
 
   return (
     <motion.header
@@ -27,12 +28,21 @@ export const AppBar: React.FC = () => {
       }}
     >
       <div className={styles.container}>
-        <img src={logo} alt="nostromo" width={140} />
+        <Link to={"/"}>
+          <img src={logo} alt="nostromo" width={140} />
+        </Link>
         {!isMobile && (
           <>
             <nav className={styles.navigator}>
-              <Link to={"/"}>IDO Launchpad</Link>
-              <Link to={"/"}>Stake / Farm</Link>
+              <NavLink
+                to={LAUNCHPAD_ROUTES.MAIN}
+                className={({ isActive }) => (isActive ? styles.isActive : undefined)}
+              >
+                IDO Launchpad
+              </NavLink>
+              <NavLink to={"/"} className={({ isActive }) => (isActive ? styles.isActive : undefined)}>
+                Stake / Farm
+              </NavLink>
             </nav>
             <div className={styles.row}>
               <Links

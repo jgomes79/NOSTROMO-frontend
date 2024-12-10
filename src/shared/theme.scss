@@ -8,6 +8,7 @@ $green-04: #C7D2BE;
 $green-05: #6cc31f;
 $green-06: rgb(42 53 30 / 80%);
 $green-07: #649c30;
+$green-08: #111b08;
 
 $breakpoints: (
   mobile: (
@@ -90,4 +91,11 @@ $breakpoints: (
 @mixin crtAnimation() {
   mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 1) 50%);
   mask-size: 100% 2px;
+}
+
+@mixin containerMargin() {
+  margin: 0 auto;
+  max-width: 1200px;
+  padding: 0 22px;
+  width: 100%;
 }

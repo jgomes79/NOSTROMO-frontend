@@ -30,7 +30,14 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
   currency,
   date,
 }) => {
-  const renderField = (label: string, value: string) => (
+  /**
+   * Renders a field with a label and value.
+   *
+   * @param {string} label - The label of the field.
+   * @param {string} value - The value of the field.
+   * @returns {JSX.Element} The rendered field component.
+   */
+  const renderField = (label: string, value: string): JSX.Element => (
     <div className={styles.row}>
       <Typography variant={"body"} size={"small"}>
         {label}
@@ -40,6 +47,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
       </Typography>
     </div>
   );
+
   return (
     <Link className={styles.layout} to={`/projects/${slug}`}>
       <div className={styles.body}>

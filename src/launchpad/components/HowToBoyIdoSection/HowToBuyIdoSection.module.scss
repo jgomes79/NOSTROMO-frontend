@@ -1,0 +1,29 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;;
+  padding: 82px 0;
+  gap: 42px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.title {
+  color: $green-07;
+}
+
+.stepper {
+  border-radius: 12px;
+  padding: 32px 12px;
+  background: linear-gradient(-120deg, #202b14 0%, rgb(8 12 5) 100%);
+  border: 1px solid $green-06;
+}
+
+.stepNumber {
+  position: relative;
+  top: 2px;
+}

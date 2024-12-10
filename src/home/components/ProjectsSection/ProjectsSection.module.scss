@@ -6,9 +6,9 @@
 .container {
   display: flex;
   flex-direction: column;
-  max-width: 1200px;
-  margin: 0 auto;
   gap: 42px;
+  @include containerMargin();
+
 }
 
 .tabs {
