@@ -1,7 +1,9 @@
 import { Link } from "react-router-dom";
 
 import { formatPrice } from "@/lib/number";
+import { getRoute } from "@/lib/router";
 import { trimString } from "@/lib/string";
+import { PROJECT_ROUTES } from "@/project/project.constants";
 import { Countdown } from "@/shared/components/Countdown";
 import { Typography } from "@/shared/components/Typography";
 
@@ -49,7 +51,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
   );
 
   return (
-    <Link className={styles.layout} to={`/projects/${slug}`}>
+    <Link className={styles.layout} to={getRoute(PROJECT_ROUTES.DETAILS, { slug })}>
       <div className={styles.body}>
         {/* Banner */}
         <img src={bannerUrl} className={styles.banner} width={"100%"} height={160} alt={"Project Banner"} />
