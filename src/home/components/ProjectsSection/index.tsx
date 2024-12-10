@@ -1,6 +1,6 @@
 import { useEffect, useMemo } from "react";
 
-import { RiArrowDownLine } from "react-icons/ri";
+import { RiArrowDownLine, RiSendPlaneLine } from "react-icons/ri";
 
 import { ProjectCard } from "@/project/components/ProjectCard";
 import { useProjectsController } from "@/project/hooks/useProjectsController";
@@ -110,7 +110,7 @@ export const ProjectsSection: React.FC = () => {
                 Apply today and make it happen!
               </Typography>
             </div>
-            <Button caption={"Apply Now!"} size={"large"} />
+            <Button caption={"Apply Now!"} iconRight={<RiSendPlaneLine />} size={"large"} />
           </div>
         </div>
       </div>

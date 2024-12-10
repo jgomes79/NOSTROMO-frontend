@@ -3,6 +3,7 @@ import { Outlet } from "react-router-dom";
 
 import { useErrorInterceptor } from "@/core/errors/hooks/useErrorInterceptor";
 import { AppBar } from "@/shared/components/AppBar";
+import { Footer } from "@/shared/components/Footer";
 
 import styles from "./AppLayout.module.scss";
 
@@ -34,6 +35,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }: AppLayoutProps
         <Outlet />
         {children}
       </main>
+      <Footer />
     </div>
   );
 };

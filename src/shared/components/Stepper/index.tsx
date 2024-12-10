@@ -1,43 +1,55 @@
 import React from "react";
 
-import classNames from "clsx";
-
 import styles from "./Stepper.module.scss";
+import CircleStepVector from "../../assets/vectors/circle-step-vector.svg";
+import { Typography } from "../Typography";
+
+/**
+ * Represents a step in the stepper component.
+ */
+type Step = {
+  /**
+   * The icon to be displayed for the step.
+   */
+  readonly icon: React.ReactNode;
+
+  /**
+   * The title of the step.
+   */
+  readonly title: string;
+
+  /**
+   * The description of the step.
+   */
+  readonly description: string;
+};
 
 interface StepperProps {
   /**
-   * The orientation of the stepper.
-   * It can be either "vertical" or "horizontal".
-   */
-  readonly orientation?: "vertical" | "horizontal";
-
-  /**
-   * The current step number.
-   */
-  readonly step: number;
-
-  /**
    * The list of steps.
    */
-  readonly steps: string[];
-
-  /**
-   * The callback function that is called when a step is clicked.
-   */
-  readonly onClick?: (index: number) => void;
+  readonly steps: Step[];
 }
 
-export const Stepper: React.FC<StepperProps> = ({
-  step,
-  steps = [],
-  onClick = () => {},
-  orientation = "horizontal",
-}) => {
+export const Stepper: React.FC<StepperProps> = ({ steps = [] }) => {
   return (
-    <div className={classNames([styles.layout, styles[orientation]])}>
-      {steps.map((_, index) => (
-        <div key={index} className={classNames([styles.step, { [styles.active]: step === index }])}>
-          <div className={styles.dot} onClick={() => onClick?.(index)} />
+    <div className={styles.layout}>
+      {steps.map((step, index) => (
+        <div key={`--step-${index}`} className={styles.step}>
+          <div className={styles.icon}>
+            <div className={styles.iconBackground}>
+              <CircleStepVector />
+            </div>
+            <div className={styles.svg}>{step.icon}</div>
+          </div>
+          <div className={styles.content}>
+            <Typography variant={"heading"} size={"small"} as={"h3"} textAlign={"center"}>
+              {step.title}
+            </Typography>
+            <Typography variant={"body"} size={"small"} as={"p"} textAlign={"center"}>
+              {step.description}
+            </Typography>
+          </div>
         </div>
       ))}
     </div>

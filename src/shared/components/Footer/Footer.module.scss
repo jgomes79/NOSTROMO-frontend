@@ -1,0 +1,58 @@
+.footer {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  padding: 30px;
+  background: linear-gradient(0deg, #0d1803 0%, rgba(0, 0, 0, 0.7) 100%);
+  gap: 12px;
+  position: relative;
+
+  &:before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, $green-06 50%, rgba(0, 0, 0, 0) 100%);
+  }
+}
+
+.footer > :nth-child(3) {
+  place-self: center end;
+}
+
+.footer > :nth-child(2) {
+  place-self: center;
+}
+
+.footer > :nth-child(1) {
+  place-self: center start;
+}
+
+.brand {
+  gap: 8px;
+  display: flex;
+  flex-direction: column;
+}
+
+.logotype {
+  filter: grayscale(100%);
+  opacity: 1;
+
+  @include crtAnimation()
+}
+
+.links {
+  display: flex;
+  flex-direction: column;
+
+  a {
+    color: $green-02;
+
+    transition: color 0.3s linear;
+
+    &:hover {
+      color: $green-03;
+    }
+  }
+}

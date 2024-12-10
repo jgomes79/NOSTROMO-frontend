@@ -1,8 +1,9 @@
 import React, { useEffect, useState, useRef } from "react";
 
+import { HowToJoinSection } from "@/home/components/HowToJoinSection";
 import { MainSection } from "@/home/components/MainSection";
 import { ProjectsSection } from "@/home/components/ProjectsSection";
-import { Stepper } from "@/shared/components/Stepper";
+import { SectionIndicator } from "@/shared/components/SectionIndicator";
 
 import styles from "./HomePage.module.scss";
 
@@ -65,14 +66,19 @@ export const HomePage: React.FC = () => {
         <MainSection onClickShowProjects={() => handleClickStep(1)} />
       </section>
 
-      {/* Projects Section */}
+      {/* How to Join Section */}
       <section ref={(el) => (sectionRefs.current[1] = el)} className={styles.section}>
+        <HowToJoinSection />
+      </section>
+
+      {/* Projects Section */}
+      <section ref={(el) => (sectionRefs.current[2] = el)} className={styles.section}>
         <ProjectsSection />
       </section>
 
       {/* Stepper */}
       <div className={styles.stepper}>
-        <Stepper
+        <SectionIndicator
           step={currentSection}
           steps={Array.from({ length: sectionRefs.current.length })}
           onClick={handleClickStep}
