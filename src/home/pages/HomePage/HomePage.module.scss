@@ -5,9 +5,14 @@
 .section {
   padding-top: 120px;
 
+  @include respond-to(mobile) {
+    padding-top: 42px;
+  }
+
   &:nth-child(1) {
     position: relative;
     height: 100vh;
+    padding-bottom: 36px;
 
     &:after {
       content: "";

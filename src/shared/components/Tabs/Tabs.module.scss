@@ -3,6 +3,11 @@
   gap: 16px;
   flex-direction: column;
   gap: 52px;
+
+  @include respond-to(mobile) {
+    gap: 12px;
+    align-items: center;
+  }
 }
 
 .tabs {

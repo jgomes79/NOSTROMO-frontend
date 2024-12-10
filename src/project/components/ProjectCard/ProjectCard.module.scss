@@ -57,7 +57,7 @@ $transition-hover: all 120ms linear;
 
 .banner {
   width: 100%;
-  height: 110px;
+
   object-fit: cover;
   opacity: 0.5;
   transition: $transition-hover;
@@ -70,10 +70,6 @@ $transition-hover: all 120ms linear;
   gap: 14px;
   position: relative;
   z-index: 4;
-
-  h3 {
-    padding-bottom: 4px;
-  }
 }
 
 .image {

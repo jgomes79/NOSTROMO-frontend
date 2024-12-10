@@ -6,6 +6,12 @@
   gap: 12px;
   position: relative;
 
+  @include respond-to(mobile) {
+    padding: 30px 12px;
+    gap: 42px;
+    grid-template-columns: 1fr;
+  }
+
   &:before {
     content: "";
     position: absolute;
@@ -19,6 +25,11 @@
 
 .footer > :nth-child(3) {
   place-self: center end;
+  
+  @include respond-to(mobile) {
+    place-self: center;
+    display: none;
+  } 
 }
 
 .footer > :nth-child(2) {
@@ -27,6 +38,12 @@
 
 .footer > :nth-child(1) {
   place-self: center start;
+
+  @include respond-to(mobile) {
+    place-self: center;
+    display: none;
+  } 
+
 }
 
 .brand {

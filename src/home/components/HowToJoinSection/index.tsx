@@ -6,6 +6,7 @@ import VerifyIcon from "@/shared/assets/icons/verify-icon.svg";
 import { Globe } from "@/shared/components/Globe";
 import { Stepper } from "@/shared/components/Stepper";
 import { Typography } from "@/shared/components/Typography";
+import useResponsive from "@/shared/hooks/useResponsive";
 
 import styles from "./HowToJoinSection.module.scss";
 
@@ -13,6 +14,7 @@ export const HowToJoinSection: React.FC = () => {
   // CRT effect setup
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const layoutRef = useRef<HTMLDivElement | null>(null);
+  const { isMobile } = useResponsive();
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -66,7 +68,7 @@ export const HowToJoinSection: React.FC = () => {
       <div className={styles.field}>
         <Typography
           variant={"heading"}
-          size={"large"}
+          size={isMobile ? "small" : "large"}
           textAlign={"center"}
           textTransform={"uppercase"}
           as={"h1"}
@@ -74,7 +76,12 @@ export const HowToJoinSection: React.FC = () => {
         >
           How to Join top trier web
         </Typography>
-        <Typography variant={"body"} size={"large"} textAlign={"center"} className={styles.description}>
+        <Typography
+          variant={"body"}
+          size={isMobile ? "small" : "large"}
+          textAlign={"center"}
+          className={styles.description}
+        >
           Only three steps are needed for you to start enjoying all the advantages of NOSTROMO
         </Typography>
       </div>

@@ -44,7 +44,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
     <Link className={styles.layout} to={`/projects/${slug}`}>
       <div className={styles.body}>
         {/* Banner */}
-        <img src={bannerUrl} className={styles.banner} width={"100%"} height={140} alt={"Project Banner"} />
+        <img src={bannerUrl} className={styles.banner} width={"100%"} height={160} alt={"Project Banner"} />
 
         {/* Date */}
         <div className={styles.date}>

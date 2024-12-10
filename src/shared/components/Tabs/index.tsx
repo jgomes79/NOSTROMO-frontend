@@ -2,8 +2,6 @@ import { useState } from "react";
 
 import classNames from "clsx";
 
-import useResponsive from "@/shared/hooks/useResponsive";
-
 import styles from "./Tabs.module.scss";
 import { Typography } from "../Typography";
 
@@ -39,7 +37,6 @@ interface TabsProps<T> {
 }
 
 export const Tabs = <T,>({ tabs, onChange, onRender }: TabsProps<T>) => {
-  const { isMobile } = useResponsive();
   const [activeTab, setActiveTab] = useState(tabs[0].id);
 
   /**
@@ -61,12 +58,7 @@ export const Tabs = <T,>({ tabs, onChange, onRender }: TabsProps<T>) => {
             className={classNames(styles.tab, { [styles.active]: activeTab === tab.id })}
             onClick={() => handleClickTab(tab.id)}
           >
-            <Typography
-              variant={"heading"}
-              className={styles.text}
-              aria-label={"crt"}
-              size={isMobile ? "medium" : "large"}
-            >
+            <Typography variant={"heading"} className={styles.text} aria-label={"crt"} size={"large"}>
               {tab.label}
             </Typography>
           </button>

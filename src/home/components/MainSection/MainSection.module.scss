@@ -70,6 +70,10 @@ $stars-speed: 4000s;
     box-shadow: 0 -390px 150px black inset, 0 0px 130px 40px #c43c1b inset, 0 0px 23px 4px #ff9696 inset, 0 -10px 130px #9d331c;
     filter: blur(2px);
 
+    @include respond-to(mobile) {
+      box-shadow: 0 -190px 150px black inset, 0 0px 130px 40px #c43c1b inset, 0 0px 23px 4px #ff9696 inset, 0 -10px 130px #9d331c;
+    }
+
     transform: translateZ(0px) translateY(0) rotatex(4deg) scaleX(0.89);
     -webkit-animation: planet 120s 3.9s infinite linear;
     animation: planet 120s 3.9s infinite linear;
@@ -173,7 +177,7 @@ $stars-speed: 4000s;
     content: "\00a0";
     margin-left: 12px;
     width: 8px;
-    background-color: #b3c9a1;
+    background-color: $green-04;
     animation: blink 1s step-end infinite;
     font-family: "Aldrich", sans-serif !important;
   }
@@ -238,7 +242,7 @@ $stars-speed: 4000s;
 }
 
 .icon {
-  color: #fff;
+  color: $white;
   position: relative;
   z-index: 4;
   display: flex;

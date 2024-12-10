@@ -55,6 +55,8 @@ export const HomePage: React.FC = () => {
       setCurrentSection(index);
     };
 
+    handleScroll();
+
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);

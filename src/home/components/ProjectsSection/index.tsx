@@ -10,11 +10,13 @@ import { EmptyState } from "@/shared/components/EmptyState";
 import { Loader } from "@/shared/components/Loader";
 import { Tabs } from "@/shared/components/Tabs";
 import { Typography } from "@/shared/components/Typography";
+import useResponsive from "@/shared/hooks/useResponsive";
 
 import styles from "./ProjectsSection.module.scss";
 
 export const ProjectsSection: React.FC = () => {
   const { page, isLoading, projects, total, state, fetchProjects } = useProjectsController();
+  const { isMobile } = useResponsive();
 
   useEffect(() => {
     fetchProjects(1, state);
@@ -103,14 +105,23 @@ export const ProjectsSection: React.FC = () => {
         <div className={styles.application}>
           <div className={styles.inner}>
             <div className={styles.column}>
-              <Typography variant={"heading"} size={"large"} as={"h2"}>
+              <Typography
+                variant={"heading"}
+                size={isMobile ? "medium" : "large"}
+                as={"h2"}
+                textAlign={isMobile ? "center" : "left"}
+              >
                 Ready to launch your project on Qubic?
               </Typography>
-              <Typography variant={"heading"} size={"medium"}>
+              <Typography
+                variant={"heading"}
+                size={isMobile ? "small" : "large"}
+                textAlign={isMobile ? "center" : "left"}
+              >
                 Apply today and make it happen!
               </Typography>
             </div>
-            <Button caption={"Apply Now!"} iconRight={<RiSendPlaneLine />} size={"large"} />
+            <Button caption={"Apply Now!"} iconRight={<RiSendPlaneLine />} size={isMobile ? "small" : "large"} />
           </div>
         </div>
       </div>
