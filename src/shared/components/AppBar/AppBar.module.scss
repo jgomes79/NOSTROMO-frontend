@@ -47,6 +47,11 @@
   justify-content: center;
   place-items: center;
   height: 100%;
+
+  @include respond-to(mobile) {
+    grid-template-columns: 1fr auto;
+    place-items: center left;
+  }
 }
 
 .navigator {

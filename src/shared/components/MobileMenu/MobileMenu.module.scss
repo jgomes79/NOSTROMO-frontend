@@ -1,0 +1,48 @@
+.layout {
+  display: flex;
+  flex-direction: column;
+
+  gap: 22px;
+  flex: 1;
+
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  background: $black;
+
+  padding: 24px 32px;
+}
+
+.header {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  place-items: center left;
+  flex: 0;
+}
+
+.container {
+  flex: 1;
+  overflow: auto;
+  padding: 48px 0;
+}
+
+.navigator {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+
+  a {
+    color: $green-04;
+
+    &:hover {
+      color: $white;
+    }
+
+    transition: color 120ms linear;
+  }
+}
+
+
+.isActive {
+  color: $green-03 !important;
+}

@@ -1,23 +1,28 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
-import { useWindowScroll } from "react-use";
+import { useLockBodyScroll, useWindowScroll } from "react-use";
 
 import classNames from "clsx";
 import { motion } from "framer-motion";
-import { RiDiscordFill, RiMediumFill, RiTelegramFill, RiTwitterXFill } from "react-icons/ri";
+import { RiDiscordFill, RiMediumFill, RiMenuFill, RiTelegramFill, RiTwitterXFill } from "react-icons/ri";
 
-import { LAUNCHPAD_ROUTES } from "@/launchpad/launchpad.constants";
 import useResponsive from "@/shared/hooks/useResponsive";
+import { navigationMenu } from "@/shared/shared.constants";
 import { WalletAccount } from "@/wallet/components/WalletAccount";
 
 import styles from "./AppBar.module.scss";
 import logo from "../../assets/images/logotype.png";
 import { Links } from "../../components/Links";
+import { IconButton } from "../IconButton";
+import { MobileMenu } from "../MobileMenu";
 
 export const AppBar: React.FC = () => {
   const { isMobile } = useResponsive();
   const { y: scrollY } = useWindowScroll();
+  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const headerHeight = scrollY > 5 ? "70px" : "90px";
+
+  useLockBodyScroll(isMenuOpen);
 
   return (
     <motion.header
@@ -31,18 +36,26 @@ export const AppBar: React.FC = () => {
         <Link to={"/"}>
           <img src={logo} alt="nostromo" width={140} />
         </Link>
+
+        {isMenuOpen && isMobile && <MobileMenu onClose={() => setIsMenuOpen(false)} />}
+
+        {isMobile && (
+          <IconButton
+            size={"small"}
+            variant={"ghost"}
+            icon={<RiMenuFill />}
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+          />
+        )}
+
         {!isMobile && (
           <>
             <nav className={styles.navigator}>
-              <NavLink
-                to={LAUNCHPAD_ROUTES.MAIN}
-                className={({ isActive }) => (isActive ? styles.isActive : undefined)}
-              >
-                IDO Launchpad
-              </NavLink>
-              <NavLink to={"/"} className={({ isActive }) => (isActive ? styles.isActive : undefined)}>
-                Stake / Farm
-              </NavLink>
+              {navigationMenu.map(({ title, path }) => (
+                <NavLink key={path} to={path} className={({ isActive }) => (isActive ? styles.isActive : undefined)}>
+                  {title}
+                </NavLink>
+              ))}
             </nav>
             <div className={styles.row}>
               <Links

@@ -59,7 +59,7 @@ $stars-speed: 4000s;
     content: "";
     width: 100%;
     height: 100%;
-    border-radius: 50%;
+    border-radius: 800px;
     position: absolute;
     left: -36%;
     top: -18%;
@@ -68,19 +68,21 @@ $stars-speed: 4000s;
 
     background: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/217233/mars_texture.jpg);
     box-shadow: 0 -390px 150px black inset, 0 0px 130px 40px #c43c1b inset, 0 0px 23px 4px #ff9696 inset, 0 -10px 130px #9d331c;
-    filter: blur(2px);
 
     @include respond-to(mobile) {
       box-shadow: 0 -190px 150px black inset, 0 0px 130px 40px #c43c1b inset, 0 0px 23px 4px #ff9696 inset, 0 -10px 130px #9d331c;
     }
 
-    transform: translateZ(0px) translateY(0) rotatex(4deg) scaleX(0.89);
-    -webkit-animation: planet 120s 3.9s infinite linear;
-    animation: planet 120s 3.9s infinite linear;
-
-    transition: transform 2.8s 0.23s cubic-bezier(0.33, 0, 0, 1), opacity 2s 0.8s, box-shadow 0s 0s;
-    background-size: 1140px 910px !important;
     transform: rotate(120deg);
+    
+    @include respond-to(desktop) {
+      -webkit-animation: planet 120s 3.9s infinite linear;
+      animation: planet 120s 3.9s infinite linear;
+  
+      transition: transform 2.8s 0.23s cubic-bezier(0.33, 0, 0, 1), opacity 2s 0.8s, box-shadow 0s 0s;
+      background-size: 1140px 910px !important;
+    }
+
   }
 }
 
