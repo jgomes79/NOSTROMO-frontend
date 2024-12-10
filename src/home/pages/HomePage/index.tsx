@@ -1,5 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 
+import classNames from "clsx";
+
 import { HowToJoinSection } from "@/home/components/HowToJoinSection";
 import { MainSection } from "@/home/components/MainSection";
 import { ProjectsSection } from "@/home/components/ProjectsSection";
@@ -63,11 +65,11 @@ export const HomePage: React.FC = () => {
     <div className={styles.layout}>
       {/* Starship Section */}
       <section ref={(el) => (sectionRefs.current[0] = el)} className={styles.section}>
-        <MainSection onClickShowProjects={() => handleClickStep(1)} />
+        <MainSection onClickShowProjects={() => handleClickStep(2)} />
       </section>
 
       {/* How to Join Section */}
-      <section ref={(el) => (sectionRefs.current[1] = el)} className={styles.section}>
+      <section ref={(el) => (sectionRefs.current[1] = el)} className={classNames(styles.section, styles.green)}>
         <HowToJoinSection />
       </section>
 

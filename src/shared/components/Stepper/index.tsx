@@ -43,10 +43,17 @@ export const Stepper: React.FC<StepperProps> = ({ steps = [] }) => {
             <div className={styles.svg}>{step.icon}</div>
           </div>
           <div className={styles.content}>
-            <Typography variant={"heading"} size={"small"} as={"h3"} textAlign={"center"}>
+            <Typography
+              className={styles.title}
+              variant={"heading"}
+              size={"small"}
+              as={"h3"}
+              textAlign={"center"}
+              textTransform={"uppercase"}
+            >
               {step.title}
             </Typography>
-            <Typography variant={"body"} size={"small"} as={"p"} textAlign={"center"}>
+            <Typography className={styles.description} variant={"body"} size={"small"} as={"p"} textAlign={"center"}>
               {step.description}
             </Typography>
           </div>

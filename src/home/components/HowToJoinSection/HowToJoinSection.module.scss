@@ -2,11 +2,21 @@
 .layout {
   display: flex;
   flex-direction: column;
-  padding: 42px 32px;
+  padding:200px 32px;
+  gap: 100px;
+
+  position: relative;
+  width: 100%;
+}
+
+.monitor {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
 }
 
 .title {
-  color: $green-04;
+  color: $green-03;
   position: relative;
   user-select: none;
 
@@ -34,6 +44,11 @@
 }
 
 .description {
-  color: $green-05;
+  color: $green-04;
   @include crtAnimation();
+}
+
+.steps {
+  max-width: 1400px;
+  margin: 0 auto;
 }
