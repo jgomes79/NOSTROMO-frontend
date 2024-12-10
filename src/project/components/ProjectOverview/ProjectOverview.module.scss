@@ -1,6 +1,14 @@
 .layout {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  
+  @include respond-to(mobile) {
+    grid-template-columns: 1fr;
+  }
+
+  @include respond-to(tablet-vertical) {
+    grid-template-columns: 1fr;
+  }
 
   border: 4px dashed $green-02;
   border-radius: 12px;

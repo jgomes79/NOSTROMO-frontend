@@ -3,8 +3,8 @@
 }
 
 .section {
-  padding-top: 120px;
-
+  padding: 60px 0;
+  
   @include respond-to(mobile) {
     padding-top: 42px;
   }
@@ -38,4 +38,9 @@
   top: calc(100vh / 2);
   right: 22px;
   z-index: 4;
+}
+
+.container {
+  @include containerMargin();
+  gap: 42px;
 }

@@ -1,0 +1,50 @@
+.layout {
+  width: 100%;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 42px;
+}
+
+.tabs {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 42px;
+  padding: 22px 0;
+
+  @include respond-to(mobile) {
+    grid-template-columns: 1fr;
+  }
+
+  @include respond-to(tablet) {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+}
+
+.centered {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  padding: 82px 12px;
+}
+
+.loader {
+  color: $green-03;
+
+  @include crtAnimation();
+}
+

@@ -1,13 +1,15 @@
 import React, { useEffect, useState, useRef } from "react";
 
 import classNames from "clsx";
+import { RiSendPlaneLine } from "react-icons/ri";
 
-import { HowToJoinSection } from "@/home/components/HowToJoinSection";
-import { MainSection } from "@/home/components/MainSection";
-import { ProjectsSection } from "@/home/components/ProjectsSection";
+import { ProjectList } from "@/project/components/ProjectList";
+import { Banner } from "@/shared/components/Banner";
 import { SectionIndicator } from "@/shared/components/SectionIndicator";
 
 import styles from "./HomePage.module.scss";
+import { HowToJoinSection } from "../../components/HowToJoinSection";
+import { MainSection } from "../../components/MainSection";
 
 export const HomePage: React.FC = () => {
   const sectionRefs = useRef<(HTMLElement | null)[]>([]);
@@ -77,7 +79,16 @@ export const HomePage: React.FC = () => {
 
       {/* Projects Section */}
       <section ref={(el) => (sectionRefs.current[2] = el)} className={styles.section}>
-        <ProjectsSection />
+        <div className={styles.container}>
+          <ProjectList />
+
+          <Banner
+            title="Ready to launch your project on Qubic?"
+            description="Apply today and make it happen!"
+            button={{ caption: "Apply Now!", icon: <RiSendPlaneLine /> }}
+            imageUrl="https://img-new.cgtrader.com/items/3680126/efe442e104/large/sci-fi-material-unreal-engine-4-3d-model-low-poly-uasset-spp-sbs-tbscene.jpg"
+          />
+        </div>
       </section>
 
       {/* Stepper */}

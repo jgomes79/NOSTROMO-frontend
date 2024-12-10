@@ -2,7 +2,6 @@
   display: flex;
   flex-direction: column;
   align-items: center;;
-  padding: 82px 0;
   gap: 42px;
 }
 
@@ -10,10 +9,11 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
+  color: $green-04;
 }
 
 .title {
-  color: $green-07;
+  color: $green-03;
 }
 
 .stepper {

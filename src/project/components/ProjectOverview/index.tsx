@@ -3,6 +3,7 @@ import React from "react";
 import { RiDiscordFill, RiMediumFill, RiTelegramFill, RiTwitterXFill, RiWallet2Line } from "react-icons/ri";
 
 import { formatPrice } from "@/lib/number";
+import { trimString } from "@/lib/string";
 import { Button } from "@/shared/components/Button";
 import { Countdown } from "@/shared/components/Countdown";
 import { Links } from "@/shared/components/Links";
@@ -63,7 +64,7 @@ export const ProjectOverview: React.FC<ProjectOverviewProps> = ({
           </Typography>
         </div>
         <Typography variant={"body"} size={"medium"} className={styles.description}>
-          {description}
+          {trimString(description, 256)}
         </Typography>
         <div className={styles.date}>
           <Typography variant={"heading"} size={"small"}>

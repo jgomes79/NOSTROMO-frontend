@@ -1,22 +1,19 @@
 import { useEffect, useMemo } from "react";
 
-import { RiArrowDownLine, RiSendPlaneLine } from "react-icons/ri";
+import { RiArrowDownLine } from "react-icons/ri";
 
-import { ProjectCard } from "@/project/components/ProjectCard";
-import { useProjectsController } from "@/project/hooks/useProjectsController";
-import { ProjectStates } from "@/project/project.types";
 import { Button } from "@/shared/components/Button";
 import { EmptyState } from "@/shared/components/EmptyState";
 import { Loader } from "@/shared/components/Loader";
 import { Tabs } from "@/shared/components/Tabs";
-import { Typography } from "@/shared/components/Typography";
-import useResponsive from "@/shared/hooks/useResponsive";
 
-import styles from "./ProjectsSection.module.scss";
+import styles from "./ProjectList.module.scss";
+import { useProjectsController } from "../../hooks/useProjectsController";
+import { ProjectStates } from "../../project.types";
+import { ProjectCard } from "../ProjectCard";
 
-export const ProjectsSection: React.FC = () => {
+export const ProjectList: React.FC = () => {
   const { page, isLoading, projects, total, state, fetchProjects } = useProjectsController();
-  const { isMobile } = useResponsive();
 
   useEffect(() => {
     fetchProjects(1, state);
@@ -100,29 +97,6 @@ export const ProjectsSection: React.FC = () => {
               />
             </div>
           )}
-        </div>
-
-        <div className={styles.application}>
-          <div className={styles.inner}>
-            <div className={styles.column}>
-              <Typography
-                variant={"heading"}
-                size={isMobile ? "medium" : "large"}
-                as={"h2"}
-                textAlign={isMobile ? "center" : "left"}
-              >
-                Ready to launch your project on Qubic?
-              </Typography>
-              <Typography
-                variant={"heading"}
-                size={isMobile ? "small" : "large"}
-                textAlign={isMobile ? "center" : "left"}
-              >
-                Apply today and make it happen!
-              </Typography>
-            </div>
-            <Button caption={"Apply Now!"} iconRight={<RiSendPlaneLine />} size={isMobile ? "small" : "large"} />
-          </div>
         </div>
       </div>
     </div>

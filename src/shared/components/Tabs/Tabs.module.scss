@@ -2,7 +2,8 @@
   display: flex;
   gap: 16px;
   flex-direction: column;
-  gap: 52px;
+  gap: 22px;
+  width: 100%;
 
   @include respond-to(mobile) {
     gap: 12px;

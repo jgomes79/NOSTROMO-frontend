@@ -49,22 +49,23 @@
   }
 }
 
+
 .solid {
   &.primary {
-    background: $green-04;
-    color: #535050;
+    background: $green-03;
+    color: $black;
 
     .loader {
-      stroke: #535050;
+      stroke: $black;
     }
 
     &:not([disabled]):hover {
-      background: #9ba594;
+      background: $green-05;
     }
 
     &:focus {
       outline-style: solid;
-      outline-color: red;
+      outline-color: $green-03;
     }
   }
 
@@ -91,19 +92,20 @@
   background: transparent;
 
   &.primary {
-    color: #ffffff;
+    color: $green-04;
 
     .loader {
-      stroke: #fff;
+      stroke: $white;
     }
 
     &:not([disabled]):hover {
-      background: #ffffff19;
+      background: $green-06;
+      color: $green-03;
     }
 
     &:focus {
       outline-style: solid;
-      outline-color: red;
+      outline-color: $green-03;
     }
   }
 
@@ -146,6 +148,7 @@
   }
 }
 
+
 .icon,
 .caption,
 .selector {
@@ -154,9 +157,10 @@
 }
 
 .caption {
-  font-weight: 700;
-  font-size: 14px;
-  white-space: nowrap;
+  svg {
+    width: 22px;
+    height: 22px;
+  }
 }
 
 .icon {
@@ -166,20 +170,6 @@
   svg {
     width: 22px;
     height: 22px;
-  }
-}
-
-.selector {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  height: 100%;
-  justify-content: center;
-
-  svg {
-    width: 12px;
-    height: 12px;
-    vertical-align: top;
   }
 }
 

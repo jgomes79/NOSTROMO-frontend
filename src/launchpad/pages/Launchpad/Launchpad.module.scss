@@ -1,6 +1,7 @@
 .layout {
   display: flex;
   flex-direction: column;
+  padding-bottom: 82px;
 }
 
 .section {
@@ -9,7 +10,8 @@
   flex-direction: column;
   
   &.green {
-    padding: 82px 32px;
+    padding: 82px 0;
+    padding-top: 180px;
     background: linear-gradient(-180deg, #19240e 0%, #000000 50%, rgb(0 0 0) 100%);
   }
 }
@@ -20,6 +22,19 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 82px 22px;
-  gap: 42px;
+  gap: 62px
+}
+
+.slider {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 16px;
+}
+
+.stepper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 22px;
 }
