@@ -16,14 +16,10 @@ export const MainSection: React.FC<MainSectionProps> = ({ onClickShowProjects })
     <div className={styles.planet} />
     <div className={styles.container}>
       <div className={styles.field}>
-        <Typography variant={"heading"} className={styles.title} size={"xlarge"} textAlign={"center"}>
-          Enter the Gateway of Blockchain Innovation
-        </Typography>
+        <h1 className={styles.title}>Enter the Gateway of Blockchain Innovation</h1>
       </div>
 
-      <div className={styles.starshipContainer}>
-        <img alt={"starship"} src={NostromoImage} className={styles.starship} width={"100%"} />
-      </div>
+      <img alt={"starship"} src={NostromoImage} className={styles.starship} width={"100%"} />
     </div>
     <button className={styles.icon} onClick={onClickShowProjects}>
       <Typography variant={"heading"} size={"small"} textAlign={"center"}>
