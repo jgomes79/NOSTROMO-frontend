@@ -51,6 +51,11 @@
   display: flex;
   align-items: center;
   gap: 18px;
+
+  @include respond-to(mobile) {
+    flex-direction: column;
+    gap: 22px;
+  }
 }
 
 .date {
@@ -63,13 +68,20 @@
   border: 1px solid $green-06;
   border-radius: 12px;
 
+  @include respond-to(mobile) {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
   span {
     color: $green-03;
   }
 }
 
 .field {
-  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .inline {
@@ -77,17 +89,30 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
+
+  @include respond-to(mobile) {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 22px;
+  }
 }
 
 .row {
   display: flex;
   justify-content: space-between;
   width: 100%;
-  margin-bottom: 10px;
+
+  color: $green-04;
+
+  @include respond-to(mobile) {
+    flex-direction: column;
+    gap: 4px;
+  }
 }
 
 .value {
   font-weight: bold;
+  color: $white;
 }
 
 .description {

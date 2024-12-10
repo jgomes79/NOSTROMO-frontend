@@ -8,20 +8,62 @@ import { Button } from "@/shared/components/Button";
 import { Countdown } from "@/shared/components/Countdown";
 import { Links } from "@/shared/components/Links";
 import { Typography } from "@/shared/components/Typography";
+import useResponsive from "@/shared/hooks/useResponsive";
 
 import styles from "./ProjectOverview.module.scss";
 
+/**
+ * Props for the ProjectOverview component.
+ */
 interface ProjectOverviewProps {
+  /**
+   * The name of the project.
+   */
   readonly name: string;
+
+  /**
+   * The description of the project.
+   */
   readonly description: string;
+
+  /**
+   * The URL of the project's photo.
+   */
   readonly photoUrl: string;
+
+  /**
+   * The URL of the project's banner.
+   */
   readonly bannerUrl: string;
+
+  /**
+   * The fundraising goal of the project.
+   */
   readonly fundraisingGoal: number;
+
+  /**
+   * The price of the project's token.
+   */
   readonly tokenPrice: number;
+
+  /**
+   * The currency of the project's token price.
+   */
   readonly currency: string;
+
+  /**
+   * The start date of the project.
+   */
   readonly date: Date;
 }
 
+/**
+ * ProjectOverview component displays an overview of a project including its
+ * name, description, fundraising goal, token price, and start date.
+ *
+ * @param {ProjectOverviewProps} props - The props for the component.
+ * @returns {JSX.Element} The rendered ProjectOverview component.
+ */
 export const ProjectOverview: React.FC<ProjectOverviewProps> = ({
   name,
   description,
@@ -32,6 +74,7 @@ export const ProjectOverview: React.FC<ProjectOverviewProps> = ({
   currency,
   date,
 }) => {
+  const { isMobile } = useResponsive();
   /**
    * Renders a field with a label and value.
    *
@@ -44,7 +87,7 @@ export const ProjectOverview: React.FC<ProjectOverviewProps> = ({
       <Typography variant={"body"} size={"small"}>
         {label}
       </Typography>
-      <Typography className={styles.value} variant={"body"} size={"small"}>
+      <Typography className={styles.value} variant={"body"} size={isMobile ? "medium" : "small"}>
         {value}
       </Typography>
     </div>
