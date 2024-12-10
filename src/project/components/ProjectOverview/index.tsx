@@ -93,19 +93,27 @@ export const ProjectOverview: React.FC<ProjectOverviewProps> = ({
     </div>
   );
 
+  const renderHeader = () => (
+    <div className={styles.header}>
+      <div className={styles.project}>
+        <img src={photoUrl} alt={name} className={styles.image} />
+        <Typography variant={"heading"} size={"large"}>
+          {name}
+        </Typography>
+      </div>
+    </div>
+  );
+
   return (
     <div className={styles.layout}>
       <div className={styles.banner}>
         <img src={bannerUrl} alt={name} />
+
+        {isMobile && renderHeader()}
       </div>
 
       <div className={styles.content}>
-        <div className={styles.header}>
-          <img src={photoUrl} alt={name} className={styles.image} />
-          <Typography variant={"heading"} size={"large"}>
-            {name}
-          </Typography>
-        </div>
+        {!isMobile && renderHeader()}
         <Typography variant={"body"} size={"medium"} className={styles.description}>
           {trimString(description, 256)}
         </Typography>

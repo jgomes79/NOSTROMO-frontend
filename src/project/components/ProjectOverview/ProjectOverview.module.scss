@@ -21,11 +21,16 @@
   width: 100%;
   height: 100%;
   flex: 1;
+  position: relative;
 
   img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+  }
+
+  @include respond-to(mobile) {
+    min-height: 300px;
   }
 }
 
@@ -33,6 +38,7 @@
   display: flex;
   flex: 1;
   flex-direction: column;
+  position: relative;
 
   padding: 32px;
   width: 100%;
@@ -50,11 +56,26 @@
 .header {
   display: flex;
   align-items: center;
-  gap: 18px;
 
   @include respond-to(mobile) {
     flex-direction: column;
+    justify-content: center;
     gap: 22px;
+    position: absolute;
+    z-index: 4;
+    inset: 0;
+    background: linear-gradient(0deg, #0d1208 0%, rgb(40 46 34 / 30%) 100%);
+  }
+}
+
+.project {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  
+  @include respond-to(mobile) {
+    max-width: 20%;
+    flex-direction: column;
   }
 }
 
