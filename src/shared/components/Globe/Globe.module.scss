@@ -1,0 +1,40 @@
+
+.main {
+	display: flex;
+	Justify-content: center;
+	align-items: center;
+	position: relative;
+	height: 63px;
+	width: 66px;
+}
+
+.container {
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	position: absolute;
+	height: 96%;
+	width: 96%;
+	border-radius: 100px;
+	overflow: hidden;
+	z-index: 2;
+}
+
+.countries {
+	position: absolute;
+	animation: axis-spin 5s steps(24) infinite;
+}
+
+@keyframes axis-spin {
+  from {
+    transform: translatex(0px);
+  }
+  to {
+    transform: translatex(-123px);
+  }
+}
+
+.globe {
+	position: absolute;
+	filter: drop-shadow(-2px -2px 8px $green-03) drop-shadow(2px 2px 3px $green-05);
+}

@@ -3,6 +3,7 @@ import { useEffect, useRef } from "react";
 import CardIcon from "@/shared/assets/icons/card-icon.svg";
 import CoinsIcon from "@/shared/assets/icons/coins-icon.svg";
 import VerifyIcon from "@/shared/assets/icons/verify-icon.svg";
+import { Globe } from "@/shared/components/Globe";
 import { Stepper } from "@/shared/components/Stepper";
 import { Typography } from "@/shared/components/Typography";
 
@@ -61,6 +62,7 @@ export const HowToJoinSection: React.FC = () => {
   return (
     <div className={styles.layout} ref={layoutRef}>
       <canvas ref={canvasRef} className={styles.monitor} />
+      <Globe />
       <div className={styles.field}>
         <Typography
           variant={"heading"}

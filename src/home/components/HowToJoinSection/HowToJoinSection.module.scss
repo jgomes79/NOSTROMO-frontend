@@ -1,12 +1,15 @@
 
 .layout {
-  display: flex;
-  flex-direction: column;
-  padding:200px 32px;
-  gap: 100px;
+  display: grid;
+  place-items: center;
+
+  padding: 140px 32px;
+  gap: 62px;
 
   position: relative;
   width: 100%;
+
+  color: $green-04;
 }
 
 .monitor {
