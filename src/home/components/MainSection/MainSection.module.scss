@@ -57,9 +57,9 @@ $planet-box-shadow: (
     color3: #37281f,
   ),
   wednesday: (
-    color1: rgba(234, 205, 199, 0.6),
-    color2: rgba(234, 205, 199, 0.6),
-    color3: #2d4153,
+    color1: #d68e38,
+    color2: #ff9503,
+    color3: #897668,
   ),
   thursday: (
     color1: rgba(234, 205, 199, 0.6),
@@ -117,7 +117,7 @@ $planet-box-shadow: (
   }
 
   &.wednesday:after {
-    background: url(../../assets/images/neptune.png);
+    background: url(../../assets/images/venus.png);
     @include planet-box-shadow(wednesday);
   }
 
