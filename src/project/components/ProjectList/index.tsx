@@ -12,6 +12,11 @@ import { useProjectsController } from "../../hooks/useProjectsController";
 import { ProjectStates } from "../../project.types";
 import { ProjectCard } from "../ProjectCard";
 
+/**
+ * A component that renders a list of projects with tabs for different project states.
+ *
+ * @returns {JSX.Element} The rendered ProjectList component.
+ */
 export const ProjectList: React.FC = () => {
   const { page, isLoading, projects, total, state, fetchProjects } = useProjectsController();
 

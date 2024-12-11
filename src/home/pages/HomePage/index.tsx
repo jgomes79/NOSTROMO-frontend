@@ -12,6 +12,12 @@ import styles from "./HomePage.module.scss";
 import { HowToJoinSection } from "../../components/HowToJoinSection";
 import { MainSection } from "../../components/MainSection";
 
+/**
+ * HomePage component renders the main homepage layout.
+ * It includes sections for the main introduction, how to join, projects, and a banner.
+ *
+ * @returns {JSX.Element} The rendered HomePage component.
+ */
 export const HomePage: React.FC = () => {
   const sectionRefs = useRef<(HTMLElement | null)[]>([]);
   const [currentSection, setCurrentSection] = useState(0);
@@ -87,7 +93,7 @@ export const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* How to Join Section */}
+      {/* Banner Section */}
       <section ref={(el) => (sectionRefs.current[3] = el)} className={styles.section}>
         <div className={styles.container}>
           <Banner

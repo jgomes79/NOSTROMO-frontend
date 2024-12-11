@@ -9,6 +9,12 @@ import useResponsive from "@/shared/hooks/useResponsive";
 
 import styles from "./HowToJoinSection.module.scss";
 
+/**
+ * HowToJoinSection component renders a section that guides users on how to join the platform.
+ * It includes a title, description, and a stepper with three steps.
+ *
+ * @returns {JSX.Element} The rendered HowToJoinSection component.
+ */
 export const HowToJoinSection: React.FC = () => {
   const { isMobile } = useResponsive();
 
