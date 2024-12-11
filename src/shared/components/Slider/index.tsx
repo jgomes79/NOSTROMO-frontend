@@ -1,15 +1,28 @@
-import React, { useImperativeHandle, forwardRef, useState } from "react";
+import React, { useImperativeHandle, forwardRef, useState, useEffect, useRef } from "react";
 
 import { AnimatePresence, motion } from "framer-motion";
 
 import styles from "./Slider.module.scss";
-
 /**
  * Props for the Slider component.
  */
 interface SliderProps {
+  /**
+   * An array of React nodes to be displayed in the slider.
+   */
   readonly components: React.ReactNode[];
+
+  /**
+   * A callback function to be called with the current index whenever the slider moves.
+   *
+   * @param index - The current index of the slider.
+   */
   readonly onMove: (index: number) => void;
+
+  /**
+   * The delay in milliseconds between each auto-advance.
+   */
+  readonly delay?: number;
 }
 
 /**
@@ -30,8 +43,25 @@ export type SliderElement = {
  * @param ref - A ref to expose the `next`, `previous`, `getCurrentIndex`, and `moveTo` methods.
  * @returns A JSX element representing the slider.
  */
-export const Slider = forwardRef(({ components, onMove }: SliderProps, ref) => {
+export const Slider = forwardRef(({ components, onMove, delay = 0 }: SliderProps, ref) => {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
+  const autoAdvanceTimeout = useRef<NodeJS.Timeout | null>(null);
+
+  /**
+   * Sets up an effect to auto-advance the slider after a specified delay.
+   * The effect is cleaned up when the component is unmounted or when the delay or currentIndex changes.
+   */
+  useEffect(() => {
+    if (delay > 0) {
+      autoAdvanceTimeout.current = setTimeout(next, delay);
+    }
+
+    return () => {
+      if (autoAdvanceTimeout.current) {
+        clearTimeout(autoAdvanceTimeout.current);
+      }
+    };
+  }, [currentIndex, delay]);
 
   /**
    * Advances to the next component in the slider.
