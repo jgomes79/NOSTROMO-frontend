@@ -11,12 +11,8 @@
   
   &.green {
     padding: 82px 0;
-    padding-top: 180px;
+    padding-top: 120px;
     background: linear-gradient(-180deg, #19240e 0%, #000000 50%, rgb(0 0 0) 100%);
-
-    @include respond-to(mobile) {
-      padding-top: 120px;
-    }
   }
 }
 

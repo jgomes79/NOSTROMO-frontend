@@ -1,7 +1,9 @@
 .layout {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  
+  grid-template-columns: 50% 50%;
+  align-items: stretch;
+  height: 100%;
+
   @include respond-to(mobile) {
     grid-template-columns: 1fr;
   }
@@ -14,6 +16,7 @@
   border-radius: 12px;
   width: 100%;
   overflow: hidden;
+
 }
 
 .banner {
@@ -38,7 +41,7 @@
   display: flex;
   flex: 1;
   flex-direction: column;
-  position: relative;
+  justify-content: space-evenly;
 
   padding: 32px;
   width: 100%;

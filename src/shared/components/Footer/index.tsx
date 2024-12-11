@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-import { RiDiscordFill, RiMediumFill, RiTelegramFill, RiTwitterXFill } from "react-icons/ri";
+import { socialNetworks } from "@/shared/shared.constants";
 
 import styles from "./Footer.module.scss";
 import logo from "../../assets/images/isotype.png";
@@ -38,26 +38,7 @@ export const Footer: React.FC = () => {
       </div>
       <div className={styles.brand}>
         <Typography>Follow us on</Typography>
-        <Links
-          data={[
-            {
-              path: "https://discord.com",
-              icon: <RiDiscordFill />,
-            },
-            {
-              path: "https://telegram.com",
-              icon: <RiTelegramFill />,
-            },
-            {
-              path: "https://medium.com",
-              icon: <RiMediumFill />,
-            },
-            {
-              path: "https://x.com",
-              icon: <RiTwitterXFill />,
-            },
-          ]}
-        />
+        <Links data={socialNetworks} />
       </div>
     </footer>
   );

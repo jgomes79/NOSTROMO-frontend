@@ -4,10 +4,10 @@ import { useLockBodyScroll, useWindowScroll } from "react-use";
 
 import classNames from "clsx";
 import { motion } from "framer-motion";
-import { RiDiscordFill, RiMediumFill, RiMenuFill, RiTelegramFill, RiTwitterXFill } from "react-icons/ri";
+import { RiMenuFill } from "react-icons/ri";
 
 import useResponsive from "@/shared/hooks/useResponsive";
-import { navigationMenu } from "@/shared/shared.constants";
+import { navigationMenu, socialNetworks } from "@/shared/shared.constants";
 import { WalletAccount } from "@/wallet/components/WalletAccount";
 
 import styles from "./AppBar.module.scss";
@@ -58,26 +58,7 @@ export const AppBar: React.FC = () => {
               ))}
             </nav>
             <div className={styles.row}>
-              <Links
-                data={[
-                  {
-                    path: "https://discord.com",
-                    icon: <RiDiscordFill />,
-                  },
-                  {
-                    path: "https://telegram.com",
-                    icon: <RiTelegramFill />,
-                  },
-                  {
-                    path: "https://medium.com",
-                    icon: <RiMediumFill />,
-                  },
-                  {
-                    path: "https://x.com",
-                    icon: <RiTwitterXFill />,
-                  },
-                ]}
-              />
+              <Links data={socialNetworks} />
               <WalletAccount />
             </div>
           </>
