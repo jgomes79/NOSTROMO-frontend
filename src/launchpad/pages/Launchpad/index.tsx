@@ -25,8 +25,6 @@ export const Launchpad: React.FC = () => {
    * @returns A JSX element containing the slider controls or null if the slider is not initialized.
    */
   const renderSliderControls = useMemo(() => {
-    if (!slider.current) return null;
-
     return (
       <div className={styles.stepper}>
         <IconButton
@@ -51,7 +49,7 @@ export const Launchpad: React.FC = () => {
         />
       </div>
     );
-  }, [currentIndex, projects.length]);
+  }, [currentIndex, slider.current, projects.length]);
 
   return (
     <div className={styles.layout}>
