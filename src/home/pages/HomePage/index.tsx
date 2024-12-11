@@ -81,7 +81,12 @@ export const HomePage: React.FC = () => {
       <section ref={(el) => (sectionRefs.current[2] = el)} className={styles.section}>
         <div className={styles.container}>
           <ProjectList />
+        </div>
+      </section>
 
+      {/* How to Join Section */}
+      <section ref={(el) => (sectionRefs.current[3] = el)} className={styles.section}>
+        <div className={styles.container}>
           <Banner
             title="Ready to launch your project on Qubic?"
             description="Apply today and make it happen!"

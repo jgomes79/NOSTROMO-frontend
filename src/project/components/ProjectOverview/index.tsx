@@ -93,7 +93,12 @@ export const ProjectOverview: React.FC<ProjectOverviewProps> = ({
     </div>
   );
 
-  const renderHeader = () => (
+  /**
+   * Renders the header section of the project overview.
+   *
+   * @returns {JSX.Element} The rendered header component.
+   */
+  const renderHeader = (): JSX.Element => (
     <div className={styles.header}>
       <div className={styles.project}>
         <img src={photoUrl} alt={name} className={styles.image} />

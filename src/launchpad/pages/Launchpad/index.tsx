@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 
 import classNames from "clsx";
 import { RiArrowLeftFill, RiArrowRightFill } from "react-icons/ri";
@@ -18,14 +18,52 @@ export const Launchpad: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const { projects } = useProjectsController();
 
+  /**
+   * Renders the slider controls for navigating through projects.
+   *
+   * @returns A JSX element containing the slider controls or null if the slider is not initialized.
+   */
+  const renderSliderControls = useMemo(() => {
+    if (!slider.current) return null;
+
+    return (
+      <div className={styles.stepper}>
+        <IconButton
+          icon={<RiArrowLeftFill />}
+          size={"small"}
+          variant={"ghost"}
+          onClick={() => slider.current?.previous()}
+          disabled={currentIndex === 0}
+        />
+        <SectionIndicator
+          step={currentIndex}
+          steps={Array.from({ length: projects.length })}
+          onClick={(index) => slider.current?.moveTo(index)}
+          orientation="horizontal"
+        />
+        <IconButton
+          icon={<RiArrowRightFill />}
+          size={"small"}
+          variant={"ghost"}
+          onClick={() => slider.current?.next()}
+          disabled={currentIndex === projects.length - 1}
+        />
+      </div>
+    );
+  }, [currentIndex, projects.length]);
+
   return (
     <div className={styles.layout}>
-      <section className={classNames(styles.section, styles.green)}>
-        <div className={styles.container}>
-          {/* How to buy IDO */}
-          <HowToBoyIdoSection />
+      <section className={classNames(styles.section, styles.top)}>
+        {/* How to buy IDO */}
+        <div className={classNames(styles.container, styles.large, styles.bottomLighting)}>
+          <div className={styles.zIndexSuperior}>
+            <HowToBoyIdoSection />
+          </div>
+        </div>
 
-          {/* Project Overview */}
+        {/* Project Overview */}
+        <div className={classNames(styles.container, styles.large)}>
           <div className={styles.slider}>
             <Slider
               ref={slider}
@@ -44,33 +82,11 @@ export const Launchpad: React.FC = () => {
                 />
               ))}
             />
-            {slider.current && (
-              <div className={styles.stepper}>
-                <IconButton
-                  icon={<RiArrowLeftFill />}
-                  size={"small"}
-                  variant={"ghost"}
-                  onClick={() => slider.current?.previous()}
-                  disabled={currentIndex === 0}
-                />
-                <SectionIndicator
-                  step={currentIndex}
-                  steps={Array.from({ length: projects.length })}
-                  onClick={(index) => slider.current?.moveTo(index)}
-                  orientation="horizontal"
-                />
-                <IconButton
-                  icon={<RiArrowRightFill />}
-                  size={"small"}
-                  variant={"ghost"}
-                  onClick={() => slider.current?.next()}
-                  disabled={currentIndex === projects.length - 1}
-                />
-              </div>
-            )}
+            {renderSliderControls}
           </div>
         </div>
       </section>
+
       <section className={styles.section}>
         <div className={styles.container}>
           <ProjectList />

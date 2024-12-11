@@ -2,6 +2,7 @@
   display: flex;
   flex-direction: column;
   padding-bottom: 82px;
+  min-height: calc(100vh - 120px);
 }
 
 .section {
@@ -9,10 +10,10 @@
   display: flex;
   flex-direction: column;
   
-  &.green {
-    padding: 82px 0;
-    padding-top: 120px;
-    background: linear-gradient(-180deg, #19240e 0%, #000000 50%, rgb(0 0 0) 100%);
+  &.top {
+    gap: 42px;
+    padding-bottom: 62px;
+    background: linear-gradient(-180deg, #161c10 0%, #000000 50%, rgb(0, 0, 0) 100%);
   }
 }
 
@@ -22,7 +23,40 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 62px
+  gap: 62px;
+
+  &.large {
+    max-width: 1400px !important;
+  }
+
+  &.bottomLighting {
+    position: relative;
+    padding-top: 128px;
+    padding-bottom: 42px;
+
+    &:after, &:before {
+      content: "";
+      position: absolute;
+    }
+
+    &:after {
+      inset: 0;
+      background: radial-gradient(circle at bottom, rgb(37 63 13) -12%, rgba(0, 0, 0, 0) 55%, rgba(0, 0, 0, 0) 100%);
+    }
+
+    &:before {
+      height: 1px;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgb(92 133 48 / 80%) 50%, rgba(0, 0, 0, 0) 100%);
+    }
+  }
+}
+
+.zIndexSuperior {
+  z-index: 4;
+  position: relative;
 }
 
 .slider {
