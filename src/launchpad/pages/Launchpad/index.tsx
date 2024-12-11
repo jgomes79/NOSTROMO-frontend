@@ -10,6 +10,7 @@ import { IconButton } from "@/shared/components/IconButton";
 import { Loader } from "@/shared/components/Loader";
 import { SectionIndicator } from "@/shared/components/SectionIndicator";
 import { Slider, SliderElement } from "@/shared/components/Slider";
+import { useAppTitle } from "@/shared/hooks/useAppTitle";
 
 import styles from "./Launchpad.module.scss";
 import { HowToBoyIdoSection } from "../../components/HowToBoyIdoSection";
@@ -18,6 +19,8 @@ export const Launchpad: React.FC = () => {
   const slider = useRef<SliderElement>();
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const { projects, isLoading } = useProjectsController();
+
+  useAppTitle("Launchpad");
 
   /**
    * Renders the slider controls for navigating through projects.

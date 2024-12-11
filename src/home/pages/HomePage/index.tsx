@@ -6,6 +6,7 @@ import { RiSendPlaneLine } from "react-icons/ri";
 import { ProjectList } from "@/project/components/ProjectList";
 import { Banner } from "@/shared/components/Banner";
 import { SectionIndicator } from "@/shared/components/SectionIndicator";
+import { useAppTitle } from "@/shared/hooks/useAppTitle";
 
 import styles from "./HomePage.module.scss";
 import { HowToJoinSection } from "../../components/HowToJoinSection";
@@ -14,6 +15,8 @@ import { MainSection } from "../../components/MainSection";
 export const HomePage: React.FC = () => {
   const sectionRefs = useRef<(HTMLElement | null)[]>([]);
   const [currentSection, setCurrentSection] = useState(0);
+
+  useAppTitle("Enter the Gateway of Blockchain Innovation");
 
   /**
    * Scrolls smoothly to the section referenced by the given ref.

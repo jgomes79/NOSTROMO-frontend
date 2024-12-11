@@ -1,0 +1,35 @@
+{
+  "name": "NOSTROMO",
+  "short_name": "NOSTROMO",
+  "theme_color": "#8af827",
+  "background_color": "#000000",
+  "display": "standalone",
+  "orientation": "any",
+  "scope": "/",
+  "start_url": "/",
+  "display_override": ["window-controls-overlay"],
+
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/icons/icon-256.png",
+      "type": "image/png",
+      "sizes": "256x256"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "protocol_handlers": [
+    {
+      "protocol": "web+nostromo",
+      "url": "/?url=%s"
+    }
+  ]
+}

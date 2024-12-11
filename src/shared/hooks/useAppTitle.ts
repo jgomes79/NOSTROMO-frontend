@@ -13,7 +13,7 @@ export const useAppTitle = (title?: string) => {
    * @param text - The text to set as the app title.
    */
   const set = (text: string) => {
-    document.title = `Mindney - ${text}`;
+    document.title = `NOSTROMO - ${text}`;
   };
 
   useEffect(() => {
