@@ -16,7 +16,7 @@ interface LoaderProps {
   /**
    * The color of the loader, either "orange" or "gray".
    */
-  readonly color?: "orange" | "gray";
+  readonly color?: "green" | "gray";
 
   /**
    * The size of the loader in pixels.
@@ -35,7 +35,7 @@ interface LoaderProps {
  * @param props - The properties passed to the Loader component.
  * @returns The Loader component with specified variant and size.
  */
-export const Loader: React.FC<LoaderProps> = ({ color = "orange", variant = "default", size = 42, className }) => (
+export const Loader: React.FC<LoaderProps> = ({ color = "green", variant = "default", size = 42, className }) => (
   <div className={classNames(styles[variant], styles[color], className)}>
     <div
       className={styles.loader}

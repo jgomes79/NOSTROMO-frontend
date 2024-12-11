@@ -3,15 +3,19 @@
   flex-direction: column;
   gap: 8px;
   flex: 1;
+
+  &.horizontal {
+    flex-direction: row;
+  }
 }
 
 .row {
   display: flex;
   height: 18px;
 
-  $skeletonTrail: rgba(255, 255, 255, 0.03);
+  $skeletonTrail: rgba(22, 40, 19, 0.253);
 
-  background: linear-gradient(to right, $skeletonTrail 0%, rgba(255, 255, 255, 0) 50%, $skeletonTrail 100%);
+  background: linear-gradient(to right, $skeletonTrail 0%, rgba(35, 65, 29, 0.253) 50%, $skeletonTrail 100%);
   background-size: 300% 100%; 
   border-radius: 18px;
   animation: trailEffect 4s infinite linear;

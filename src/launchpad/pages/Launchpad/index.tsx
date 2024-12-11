@@ -7,6 +7,7 @@ import { ProjectList } from "@/project/components/ProjectList";
 import { ProjectOverview } from "@/project/components/ProjectOverview";
 import { useProjectsController } from "@/project/hooks/useProjectsController";
 import { IconButton } from "@/shared/components/IconButton";
+import { Loader } from "@/shared/components/Loader";
 import { SectionIndicator } from "@/shared/components/SectionIndicator";
 import { Slider, SliderElement } from "@/shared/components/Slider";
 
@@ -16,7 +17,7 @@ import { HowToBoyIdoSection } from "../../components/HowToBoyIdoSection";
 export const Launchpad: React.FC = () => {
   const slider = useRef<SliderElement>();
   const [currentIndex, setCurrentIndex] = useState<number>(0);
-  const { projects } = useProjectsController();
+  const { projects, isLoading } = useProjectsController();
 
   /**
    * Renders the slider controls for navigating through projects.
@@ -65,24 +66,32 @@ export const Launchpad: React.FC = () => {
         {/* Project Overview */}
         <div className={classNames(styles.container, styles.large)}>
           <div className={styles.slider}>
-            <Slider
-              ref={slider}
-              onMove={setCurrentIndex}
-              components={projects.map((project, index) => (
-                <ProjectOverview
-                  key={index}
-                  name={project.name}
-                  description={project.description}
-                  photoUrl={project.photoUrl}
-                  bannerUrl={project.bannerUrl}
-                  fundraisingGoal={project.amountToRaise}
-                  tokenPrice={project.tokenPrice}
-                  currency={project.currency.name}
-                  date={project.startDate}
+            {isLoading ? (
+              <div className={styles.loader}>
+                <Loader size={52} />
+              </div>
+            ) : (
+              <>
+                <Slider
+                  ref={slider}
+                  onMove={setCurrentIndex}
+                  components={projects.map((project, index) => (
+                    <ProjectOverview
+                      key={index}
+                      name={project.name}
+                      description={project.description}
+                      photoUrl={project.photoUrl}
+                      bannerUrl={project.bannerUrl}
+                      fundraisingGoal={project.amountToRaise}
+                      tokenPrice={project.tokenPrice}
+                      currency={project.currency.name}
+                      date={project.startDate}
+                    />
+                  ))}
                 />
-              ))}
-            />
-            {renderSliderControls}
+                {renderSliderControls}
+              </>
+            )}
           </div>
         </div>
       </section>

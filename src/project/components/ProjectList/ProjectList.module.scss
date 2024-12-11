@@ -14,6 +14,10 @@
   gap: 32px;
 }
 
+.inner {
+  padding: 22px 0;
+}
+
 .cards {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -40,11 +44,5 @@
   align-items: center;
   height: 100%;
   padding: 82px 12px;
-}
-
-.loader {
-  color: $green-03;
-
-  @include crtAnimation();
 }
 

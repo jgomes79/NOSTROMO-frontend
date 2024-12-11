@@ -2,10 +2,12 @@
   display: flex;
   justify-content: center;
   align-items: center;
+
+  @include crtAnimation();
 }
 
-.orange {
-  color: green;
+.green {
+  color: $green-03;
 }
 
 .gray {

@@ -4,7 +4,7 @@ import { RiArrowDownLine } from "react-icons/ri";
 
 import { Button } from "@/shared/components/Button";
 import { EmptyState } from "@/shared/components/EmptyState";
-import { Loader } from "@/shared/components/Loader";
+import { Skeleton } from "@/shared/components/Skeleton";
 import { Tabs } from "@/shared/components/Tabs";
 
 import styles from "./ProjectList.module.scss";
@@ -25,13 +25,6 @@ export const ProjectList: React.FC = () => {
    * @returns {JSX.Element | undefined} - A JSX element containing the list of projects or a loading indicator.
    */
   const renderProjects = useMemo(() => {
-    if (isLoading && page === 1)
-      return (
-        <div className={styles.centered}>
-          <Loader size={52} className={styles.loader} />
-        </div>
-      );
-
     if (!isLoading && projects.length === 0) {
       return (
         <div className={styles.centered}>
@@ -43,8 +36,16 @@ export const ProjectList: React.FC = () => {
       );
     }
 
-    if (!isLoading && projects.length > 0) {
-      return (
+    return (
+      <Skeleton
+        count={3}
+        orientation="horizontal"
+        height={480}
+        gap={42}
+        width={"full"}
+        isLoading={isLoading && page === 1}
+        className={styles.inner}
+      >
         <div className={styles.cards}>
           {projects.map((project, index) => (
             <ProjectCard
@@ -61,8 +62,8 @@ export const ProjectList: React.FC = () => {
             />
           ))}
         </div>
-      );
-    }
+      </Skeleton>
+    );
   }, [isLoading, page, projects]);
 
   return (
