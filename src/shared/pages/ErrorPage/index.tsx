@@ -4,13 +4,34 @@ import { Typography } from "@/shared/components/Typography";
 
 import styles from "./ErrorPage.module.scss";
 
+/**
+ * Props for the ErrorPage component.
+ */
 interface ErrorPageProps {
+  /**
+   * Optional error code to display.
+   */
   readonly code?: string | React.ReactNode;
+  /**
+   * Title of the error page.
+   */
   readonly title: string;
+  /**
+   * Description of the error.
+   */
   readonly description: string;
+  /**
+   * Optional actions to be displayed on the error page.
+   */
   readonly actions?: React.ReactNode[];
 }
 
+/**
+ * ErrorPage component - Renders a page to display error information.
+ *
+ * @param {ErrorPageProps} props - The properties for the ErrorPage component.
+ * @returns {React.ReactElement} The rendered ErrorPage component.
+ */
 export const ErrorPage: React.FC<ErrorPageProps> = ({ code, title, description, actions = [] }) => {
   return (
     <div className={styles.layout}>

@@ -75,8 +75,8 @@ export const Launchpad: React.FC = () => {
               <>
                 <Slider
                   ref={slider}
+                  delay={8000}
                   onMove={setCurrentIndex}
-                  delay={5000}
                   components={projects.map((project, index) => (
                     <ProjectOverview
                       key={index}

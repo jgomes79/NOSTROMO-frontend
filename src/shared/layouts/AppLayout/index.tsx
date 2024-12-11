@@ -1,5 +1,5 @@
 import React, { ReactNode, useEffect } from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 
 import { useErrorInterceptor } from "@/core/errors/hooks/useErrorInterceptor";
 import { AppBar } from "@/shared/components/AppBar";
@@ -7,7 +7,13 @@ import { Footer } from "@/shared/components/Footer";
 
 import styles from "./AppLayout.module.scss";
 
+/**
+ * Props for the AppLayout component.
+ */
 export interface AppLayoutProps {
+  /**
+   * Optional children elements to be rendered within the layout.
+   */
   readonly children?: ReactNode;
 }
 
@@ -20,6 +26,7 @@ export interface AppLayoutProps {
  */
 export const AppLayout: React.FC<AppLayoutProps> = ({ children }: AppLayoutProps): React.ReactElement => {
   const { configureErrorInterceptors } = useErrorInterceptor();
+  const location = useLocation();
 
   /**
    * Effect to configure error interceptors on component mount.
@@ -27,6 +34,13 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }: AppLayoutProps
   useEffect(() => {
     configureErrorInterceptors();
   }, []);
+
+  /**
+   * Effect to scroll to top when route changes
+   */
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
 
   return (
     <div className={styles.container}>
