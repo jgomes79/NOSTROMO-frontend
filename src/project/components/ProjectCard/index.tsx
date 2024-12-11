@@ -9,18 +9,62 @@ import { Typography } from "@/shared/components/Typography";
 
 import styles from "./ProjectCard.module.scss";
 
+/**
+ * Props for the ProjectCard component.
+ */
 interface ProjectCardProps {
+  /**
+   * The unique identifier for the project.
+   */
   slug: string;
+
+  /**
+   * The title of the project.
+   */
   title: string;
+
+  /**
+   * A brief description of the project.
+   */
   description: string;
+
+  /**
+   * The URL of the project's photo.
+   */
   photoUrl: string;
+
+  /**
+   * The URL of the project's banner image.
+   */
   bannerUrl: string;
+
+  /**
+   * The fundraising goal amount for the project.
+   */
   fundraisingGoal: number;
+
+  /**
+   * The price of the project's token.
+   */
   tokenPrice: number;
+
+  /**
+   * The currency in which the fundraising goal and token price are denominated.
+   */
   currency: string;
+
+  /**
+   * The date when the project registration ends.
+   */
   date: Date;
 }
 
+/**
+ * A card component that displays information about a project.
+ *
+ * @param {ProjectCardProps} props - The props for the component.
+ * @returns {JSX.Element} The rendered ProjectCard component.
+ */
 export const ProjectCard: React.FC<ProjectCardProps> = ({
   slug,
   title,
