@@ -32,9 +32,9 @@ $planet-box-shadow: (
     color3: #897668,
   ),
   thursday: (
-    color1: rgba(234, 205, 199, 0.6),
-    color2: rgba(234, 205, 199, 0.6),
-    color3: rgba(127, 188, 171, 0.6),
+    color1: rgb(255 255 255 / 60%),
+    color2: rgb(255 255 255 / 60%),
+    color3: rgb(227 227 227 / 60%),
   ),
   friday: (
     color1: rgba(234, 205, 199, 0.6),
@@ -92,7 +92,7 @@ $planet-box-shadow: (
   }
 
   &.thursday:after {
-    background: url(../../assets/images/uranus.png);
+    background: url(../../assets/images/mercury.jpg);
     @include planet-box-shadow(thursday);
   }
 
@@ -121,7 +121,7 @@ $planet-box-shadow: (
     top: -18%;
 
     z-index: 1;
-
+    filter: blur(2px);
     transform: rotate(120deg);
     
     @include respond-to(desktop) {
