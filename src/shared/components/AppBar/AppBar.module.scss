@@ -60,10 +60,10 @@
   gap: 40px;
 
   a {
-    color: $green-04;
+    color: #C7D2BE;
 
     &:hover {
-      color: $white;
+      color: #fff;
     }
 
     transition: color 120ms linear;
@@ -78,5 +78,5 @@
 }
 
 .isActive {
-  color: $green-03 !important;
+  color: #8af827 !important;
 }

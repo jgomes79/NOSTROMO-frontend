@@ -40,6 +40,10 @@ $transition-hover: all 120ms linear;
       opacity: 1;
     }
 
+    .description {
+      color: #C7D2BE;
+    }
+
     .date {
       background-color: #8AF827;
       color: $black;
@@ -47,7 +51,7 @@ $transition-hover: all 120ms linear;
 
     .footer {
       background-color: #649C30;
-      color: $black;
+      color: #000;
     }
   }
 }
@@ -97,7 +101,7 @@ $transition-hover: all 120ms linear;
   display: flex;
   flex-direction: column;
   flex: 1;
-  color: $green-04;
+  color: #d5d5d5;
   align-items: center;
   justify-content: center;
 }
@@ -129,7 +133,7 @@ $transition-hover: all 120ms linear;
   align-items: center;
   justify-content: space-between;
 
-  color: $green-04;
+  color: #C7D2BE;
 }
 
 

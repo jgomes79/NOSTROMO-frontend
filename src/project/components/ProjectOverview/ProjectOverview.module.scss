@@ -41,7 +41,7 @@
   width: 100%;
   gap: 18px;
   background: linear-gradient(-120deg, #060903 0%, rgb(21 39 4) 100%);
-  border: 4px dashed $green-02;
+  border: 4px dashed #66933e;
   border-radius: 12px;
   overflow: hidden;
 }
@@ -86,7 +86,7 @@
   padding: 14px 18px;
   background: linear-gradient(-120deg, #0c1108 0%, rgb(4, 5, 3) 100%);
   place-items: center left;
-  border: 1px solid $green-06;
+  border: 1px solid #66933e;
   border-radius: 12px;
 
   @include respond-to(mobile) {
@@ -95,7 +95,7 @@
   }
 
   span {
-    color: $green-03;
+    color: #8af827;
   }
 }
 
@@ -123,7 +123,7 @@
   justify-content: space-between;
   width: 100%;
 
-  color: $green-04;
+  color: #C7D2BE;
 
   @include respond-to(mobile) {
     flex-direction: column;
@@ -137,5 +137,5 @@
 }
 
 .description {
-  color: $green-04;
+  color: #C7D2BE;
 }
