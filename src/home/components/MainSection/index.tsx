@@ -50,14 +50,22 @@ export const MainSection: React.FC<MainSectionProps> = ({ onClickShowProjects })
       <div className={classNames(styles.planet, styles[dayClass])} />
       <div className={styles.container}>
         <div className={styles.field}>
-          <h1 className={styles.title}>Enter the Gateway of Blockchain Innovation</h1>
+          <Typography
+            variant={"heading"}
+            size={"large"}
+            textTransform={"uppercase"}
+            textAlign={"center"}
+            className={styles.title}
+          >
+            Enter the Gateway of Blockchain Innovation
+          </Typography>
         </div>
 
         <img alt={"starship"} src={NostromoImage} className={styles.starship} width={"100%"} />
       </div>
       <button className={styles.icon} onClick={onClickShowProjects}>
         <Typography variant={"heading"} size={"small"} textAlign={"center"}>
-          Show Projects
+          Show projects
         </Typography>
         <FaArrowDown />
       </button>

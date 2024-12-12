@@ -57,6 +57,8 @@ export const Launchpad: React.FC = () => {
   return (
     <div className={styles.layout}>
       <section className={classNames(styles.section, styles.top)}>
+        <div className={styles.diffuse} />
+
         {/* How to buy IDO */}
         <div className={classNames(styles.container, styles.large, styles.bottomLighting)}>
           <div className={styles.zIndexSuperior}>
@@ -73,24 +75,26 @@ export const Launchpad: React.FC = () => {
               </div>
             ) : (
               <>
-                <Slider
-                  ref={slider}
-                  delay={8000}
-                  onMove={setCurrentIndex}
-                  components={projects.map((project, index) => (
-                    <ProjectOverview
-                      key={index}
-                      name={project.name}
-                      description={project.description}
-                      photoUrl={project.photoUrl}
-                      bannerUrl={project.bannerUrl}
-                      fundraisingGoal={project.amountToRaise}
-                      tokenPrice={project.tokenPrice}
-                      currency={project.currency.name}
-                      date={project.startDate}
-                    />
-                  ))}
-                />
+                <div className={styles.sliderFrame}>
+                  <Slider
+                    ref={slider}
+                    delay={8000}
+                    onMove={setCurrentIndex}
+                    components={projects.map((project, index) => (
+                      <ProjectOverview
+                        key={index}
+                        name={project.name}
+                        description={project.description}
+                        photoUrl={project.photoUrl}
+                        bannerUrl={project.bannerUrl}
+                        fundraisingGoal={project.amountToRaise}
+                        tokenPrice={project.tokenPrice}
+                        currency={project.currency.name}
+                        date={project.startDate}
+                      />
+                    ))}
+                  />
+                </div>
                 {renderSliderControls}
               </>
             )}

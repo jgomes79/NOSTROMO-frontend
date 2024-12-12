@@ -3,18 +3,32 @@
   flex-direction: column;
   padding-bottom: 82px;
   min-height: calc(100vh - 120px);
+  position: relative;
 }
 
 .section {
   width: 100%;
   display: flex;
   flex-direction: column;
-  
+
+  position: relative;
+  z-index: 4;
+
   &.top {
     gap: 42px;
     padding-bottom: 62px;
-    background: linear-gradient(-180deg, #161c10 0%, #000000 50%, rgb(0, 0, 0) 100%);
+    background: linear-gradient(180deg, #161c10 0%, #000000 50%, rgb(0, 0, 0) 100%);
+
+    @include space();
   }
+}
+
+.diffuse {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+
+  background: linear-gradient(180deg, #00000000 0%, #000000 50%, #000000 100%);
 }
 
 .container {
@@ -24,6 +38,9 @@
   flex-direction: column;
   align-items: center;
   gap: 62px;
+
+  position: relative;
+  z-index: 4;
 
   &.large {
     max-width: 1400px !important;
@@ -41,7 +58,7 @@
 
     &:after {
       inset: 0;
-      background: radial-gradient(circle at bottom, rgb(37 63 13) -12%, rgba(0, 0, 0, 0) 55%, rgba(0, 0, 0, 0) 100%);
+      background: radial-gradient(circle at bottom, rgb(23, 40, 8) -12%, rgba(0, 0, 0, 0) 55%, rgba(0, 0, 0, 0) 100%);
     }
 
     &:before {
@@ -64,6 +81,15 @@
   flex-direction: column;
   align-items: flex-end;
   gap: 16px;
+}
+
+.sliderFrame {
+  border: 4px solid $green-02;
+  border-radius: 12px;
+  width: 100%;
+  overflow: hidden;
+  padding: 12px;
+  box-shadow: 0 0 44px 0 rgb(43 73 17);
 }
 
 .stepper {

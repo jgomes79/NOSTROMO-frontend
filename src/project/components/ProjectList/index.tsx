@@ -78,12 +78,12 @@ export const ProjectList: React.FC = () => {
           <Tabs<ProjectStates>
             tabs={[
               {
-                id: ProjectStates.UPCOMING,
-                label: "Upcoming",
-              },
-              {
                 id: ProjectStates.FUNDING_PHASE_1,
                 label: "Active",
+              },
+              {
+                id: ProjectStates.UPCOMING,
+                label: "Upcoming",
               },
               {
                 id: ProjectStates.CLOSED,

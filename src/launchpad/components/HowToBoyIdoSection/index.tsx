@@ -3,6 +3,9 @@ import React from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { RiArrowUpSFill, RiArrowDownSFill } from "react-icons/ri";
 
+import CardIcon from "@/shared/assets/icons/card-icon.svg";
+import CoinsIcon from "@/shared/assets/icons/coins-icon.svg";
+import VerifyIcon from "@/shared/assets/icons/verify-icon.svg";
 import { Animatable } from "@/shared/components/Animatable";
 import { Button } from "@/shared/components/Button";
 import { Stepper } from "@/shared/components/Stepper";
@@ -13,21 +16,6 @@ import { useLaunchpadController } from "../../hooks/useLaunchpadController";
 
 export const HowToBoyIdoSection: React.FC = () => {
   const { isHowToBuyIdoOpen, toggleHowToBuyIdo } = useLaunchpadController();
-
-  /**
-   * Renders the step number using the Typography component.
-   *
-   * @param number - The step number to render.
-   * @returns A Typography component displaying the step number.
-   */
-  const renderStepNumber = React.useCallback(
-    (number: number) => (
-      <Typography variant={"heading"} size={"medium"} className={styles.stepNumber}>
-        {number}
-      </Typography>
-    ),
-    [],
-  );
 
   return (
     <Animatable>
@@ -65,24 +53,20 @@ export const HowToBoyIdoSection: React.FC = () => {
                 <Stepper
                   steps={[
                     {
-                      icon: renderStepNumber(1),
-                      title: "Connect EVM wallet",
-                      description: "Seamlessly link your EVM wallet to access the launchpad.",
+                      icon: <CardIcon />,
+                      title: "Purchase $QUBIC",
+                      description:
+                        "$QUBIC is the native token that enables users to participate in IDOs by staking mechanisms. Buy here.",
                     },
                     {
-                      icon: renderStepNumber(2),
-                      title: "Go to profile",
-                      description: "Navigate to your profile to manage your account and settings.",
+                      icon: <CoinsIcon />,
+                      title: "Stake your $QUBIC",
+                      description: "Ass your $QUBIC to Nostromos’ staking pool in order to acquire a tier",
                     },
                     {
-                      icon: renderStepNumber(3),
-                      title: "Go to stake system",
-                      description: "Explore the staking system to maximize your rewards.",
-                    },
-                    {
-                      icon: renderStepNumber(4),
-                      title: "Register and buy IDO",
-                      description: "Sign up to participate in projects and purchase IDOs.",
+                      icon: <VerifyIcon />,
+                      title: "Time to participate!",
+                      description: "Choose your desired project and be ready for the launch! ",
                     },
                   ]}
                 />

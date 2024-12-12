@@ -1,43 +1,50 @@
-$black: #000;
-$white: #fff;
+// Speed of the stars animation in seconds
+$stars-speed: 4000s;
 
-$green-01: #3d4c30;
-$green-02: #66933e;
-$green-03: #8af827;
-$green-04: #C7D2BE;
-$green-05: #6cc31f;
-$green-06: rgb(42 53 30 / 80%);
-$green-07: #649c30;
-$green-08: #111b08;
+// Color variables
+$black: #000; // Black color
+$white: #fff; // White color
 
+// Green color palette
+$green-01: #3d4c30; // Dark green
+$green-02: #66933e; // Medium green
+$green-03: #8af827; // Bright green
+$green-04: #C7D2BE; // Light green
+$green-05: #6cc31f; // Vivid green
+$green-06: rgb(42 53 30 / 80%); // Transparent dark green
+$green-07: #649c30; // Olive green
+$green-08: #111b08; // Very dark green
+
+// Breakpoints for responsive design
 $breakpoints: (
   mobile: (
-    max: 767px,
+    max: 767px, // Maximum width for mobile devices
   ),
   mobile-vertical: (
-    max: 599px,
+    max: 599px, // Maximum width for vertical mobile devices
   ),
   mobile-horizontal: (
-    min: 600px,
-    max: 767px,
+    min: 600px, // Minimum width for horizontal mobile devices
+    max: 767px, // Maximum width for horizontal mobile devices
   ),
   tablet: (
-    min: 768px,
-    max: 1439px,
+    min: 768px, // Minimum width for tablets
+    max: 1439px, // Maximum width for tablets
   ),
   tablet-vertical: (
-    min: 768px,
-    max: 1023px,
+    min: 768px, // Minimum width for vertical tablets
+    max: 1023px, // Maximum width for vertical tablets
   ),
   tablet-horizontal: (
-    min: 1024px,
-    max: 1439px,
+    min: 1024px, // Minimum width for horizontal tablets
+    max: 1439px, // Maximum width for horizontal tablets
   ),
   desktop: (
-    min: 1440px,
+    min: 1440px, // Minimum width for desktop devices
   ),
 );
 
+// Mixin for media queries based on breakpoints
 @mixin respond-to($breakpoint) {
   $query: map-get($breakpoints, $breakpoint);
 
@@ -65,6 +72,7 @@ $breakpoints: (
   }
 }
 
+// Mixin for applying theme based on color scheme preference
 @mixin theme($scheme) {
   @if $scheme == dark or $scheme == light {
     @media (prefers-color-scheme: #{$scheme}) {
@@ -75,6 +83,7 @@ $breakpoints: (
   }
 }
 
+// Mixin for setting font family and related properties
 @mixin fontFamily() {
   font-family: "Aldrich", sans-serif !important;
   font-weight: 400;
@@ -87,12 +96,21 @@ $breakpoints: (
   text-rendering: optimizeLegibility;
 }
 
-
+// Mixin for CRT animation effect
 @mixin crtAnimation() {
   mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 1) 50%);
   mask-size: 100% 2px;
 }
 
+// Mixin for styling titles
+@mixin title() {
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
+  font-family: "Press Start 2P", serif !important;
+  text-transform: uppercase;
+}
+
+// Mixin for setting container margin and layout
 @mixin containerMargin() {
   display: flex;
   flex-direction: column;
@@ -103,5 +121,38 @@ $breakpoints: (
 
   @include respond-to(mobile) {
     padding: 0 12px;
+  }
+}
+
+// Mixin for space background animation
+@mixin space() {
+  &:after, &:before {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    content: "";
+  }
+
+  &:after {
+    background: #000 url("../shared/assets/images/stars.png") repeat top center;
+    z-index: 0;
+    -moz-animation: move-clouds-back $stars-speed linear infinite;
+    -ms-animation: move-clouds-back $stars-speed linear infinite;
+    -o-animation: move-clouds-back $stars-speed linear infinite;
+    -webkit-animation: move-clouds-back $stars-speed linear infinite;
+    animation: move-clouds-back $stars-speed linear infinite;
+  }
+
+  &:before {
+    background: transparent url("../shared/assets/images/twinkling.png") repeat top center;
+    z-index: 1;
+
+    -moz-animation: move-twink-back $stars-speed linear infinite;
+    -ms-animation: move-twink-back $stars-speed linear infinite;
+    -o-animation: move-twink-back $stars-speed linear infinite;
+    -webkit-animation: move-twink-back $stars-speed linear infinite;
+    animation: move-twink-back $stars-speed linear infinite;
   }
 }

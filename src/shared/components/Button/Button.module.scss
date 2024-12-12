@@ -48,20 +48,20 @@
 
 .solid {
   &.primary {
-    background: $green-03;
-    color: $black;
+    background: #C7D2BE;
+    color: #535050;
 
     .loader {
-      stroke: $black;
+      stroke: #535050;
     }
 
     &:not([disabled]):hover {
-      background: $green-05;
+      background: #afbaa5;
     }
 
     &:focus {
       outline-style: solid;
-      outline-color: $green-03;
+      outline-color: #C7D2BE;
     }
   }
 
@@ -88,20 +88,20 @@
   background: transparent;
 
   &.primary {
-    color: $green-04;
+    color: #c7d2be;
 
     .loader {
-      stroke: $white;
+      stroke: #fff;
     }
 
     &:not([disabled]):hover {
-      background: $green-06;
-      color: $green-03;
+      background: #89f82718;
+      color: #8af827;
     }
 
     &:focus {
       outline-style: solid;
-      outline-color: $green-03;
+      outline-color: #8af827;
     }
   }
 

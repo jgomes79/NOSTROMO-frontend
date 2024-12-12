@@ -31,7 +31,7 @@ export const HowToJoinSection: React.FC = () => {
             as={"h1"}
             className={styles.title}
           >
-            How to Join top trier web
+            How to participate in upcoming IDOs
           </Typography>
           <Typography
             variant={"body"}
@@ -39,7 +39,7 @@ export const HowToJoinSection: React.FC = () => {
             textAlign={"center"}
             className={styles.description}
           >
-            Only three steps are needed for you to start enjoying all the advantages of NOSTROMO
+            3 steps to join NOSTROMO starship
           </Typography>
         </div>
         <div className={styles.steps}>
@@ -47,19 +47,19 @@ export const HowToJoinSection: React.FC = () => {
             steps={[
               {
                 icon: <CardIcon />,
-                title: "Purchase $SFUND Tokens",
+                title: "Purchase $QUBIC",
                 description:
-                  "$SFUND is QUBIC token that enables its holders to participate in IDOs, INOs, stake and farm for passive income",
+                  "$QUBIC is the native token that enables users to participate in IDOs by staking mechanisms. Buy here.",
               },
               {
                 icon: <CoinsIcon />,
-                title: "Stake or farm your $SFUND ",
-                description: "Add your $FUND to one of our staking or farming pools and earn passive income",
+                title: "Stake your $QUBIC",
+                description: "Ass your $QUBIC to Nostromos’ staking pool in order to acquire a tier",
               },
               {
                 icon: <VerifyIcon />,
-                title: "You are all set!",
-                description: "Now you can participate in the sales for tokens and NFTs of the best blockchain projects",
+                title: "Time to participate!",
+                description: "Choose your desired project and be ready for the launch! ",
               },
             ]}
           />

@@ -5,7 +5,7 @@
   padding: 82px 0;
   gap: 62px;
 
-  color: $green-04;
+  color: #8af827;
 
   @include respond-to(mobile) {
     padding: 62px 0;
@@ -14,24 +14,16 @@
 }
 
 .title {
-  color: $green-03;
+  color: #8af827;
   position: relative;
   user-select: none;
 
   font-size: 20px;
-  font-weight: 400;
   line-height: 70px;
-  letter-spacing: -2px;
-  text-align: center;
-  text-underline-position: from-font;
-  text-decoration-skip-ink: none;
 
-  text-align: center;
-  text-underline-position: from-font;
-  text-decoration-skip-ink: none;
   text-shadow: 2px 2px 2px #000000db;
-  font-family: "Press Start 2P", serif !important;
 
+  @include title();
   @include crtAnimation();
 }
 

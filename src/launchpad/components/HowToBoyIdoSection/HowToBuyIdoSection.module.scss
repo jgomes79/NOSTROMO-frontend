@@ -9,21 +9,17 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
-  color: $green-04;
+  color: #8af827;
 }
 
 .title {
-  color: $green-03;
+  color: #C7D2BE;
 }
 
 .stepper {
   border-radius: 12px;
   padding: 32px 12px;
-  background: linear-gradient(-120deg, #151812 0%, rgb(10 17 6) 100%);
+  background: linear-gradient(-120deg, #1518120e 0%, rgba(10, 17, 6, 0.834) 100%);
   border: 1px solid $green-06;
-}
-
-.stepNumber {
-  position: relative;
-  top: 2px;
+  backdrop-filter: blur(12px);
 }

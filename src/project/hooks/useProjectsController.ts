@@ -22,7 +22,7 @@ type NavigationState = { page: number; state: ProjectStates };
 export const useProjectsController = (): UseProjectsProps => {
   const [pagination, setState] = useState<NavigationState>({
     page: 1,
-    state: ProjectStates.UPCOMING,
+    state: ProjectStates.FUNDING_PHASE_1,
   });
   const projects = useProjects(pagination.page, pagination.state);
 

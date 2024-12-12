@@ -20,14 +20,10 @@
   cursor: pointer;
   background-color: transparent;
   border: none;
-  color: $green-01;
+  color: #C7D2BE;
 
-  &:hover {
-    color: $green-02;
-  }
-
-  &.active {
-    color: $green-03;
+  &:hover, &.active {
+    color: #8AF827;
   }
   
   transition: color 120ms linear;

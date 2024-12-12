@@ -59,7 +59,7 @@ export const TVNoise: React.FC<TVNoiseProps> = ({ children, className, opacity =
       const len = b.length;
 
       for (let i = 0; i < len; i++) {
-        b[i] = (((255 * Math.random()) | 0) << 24) | 0x2e8b57;
+        b[i] = (((255 * Math.random()) | 0) << 24) | 0xc7d2be;
       }
 
       ctx.putImageData(d, 0, 0);

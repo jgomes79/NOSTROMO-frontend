@@ -1,8 +1,9 @@
 import React, { useImperativeHandle, forwardRef, useState, useEffect, useRef } from "react";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 
 import styles from "./Slider.module.scss";
+
 /**
  * Props for the Slider component.
  */
@@ -114,18 +115,23 @@ export const Slider = forwardRef(({ components, onMove, delay = 0 }: SliderProps
   }));
 
   return (
-    <div className={styles.slider}>
-      <AnimatePresence mode={"wait"}>
-        <motion.div
-          key={currentIndex}
-          initial={{ opacity: 0, x: 20, filter: "blur(10px)" }}
-          animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
-          exit={{ opacity: 0, x: -20, filter: "blur(10px)" }}
-          transition={{ type: "spring", duration: 0.5 }}
-        >
-          {components[currentIndex]}
-        </motion.div>
-      </AnimatePresence>
+    <div className={styles.slider} style={{ overflow: "hidden" }}>
+      <motion.div
+        initial={{ x: 0 }}
+        animate={{ x: `${-currentIndex * 100}%` }}
+        transition={{ type: "keyframes", duration: 0.4 }}
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          width: `${components.length * 100}%`,
+        }}
+      >
+        {components.map((component, index) => (
+          <div key={index} style={{ flex: "0 0 100%" }}>
+            {component}
+          </div>
+        ))}
+      </motion.div>
     </div>
   );
 });

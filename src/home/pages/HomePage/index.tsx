@@ -97,10 +97,10 @@ export const HomePage: React.FC = () => {
       <section ref={(el) => (sectionRefs.current[3] = el)} className={styles.section}>
         <div className={styles.container}>
           <Banner
-            title="Ready to launch your project on Qubic?"
-            description="Apply today and make it happen!"
+            title="Ready to launch your project in Nostromo?"
+            description="Apply today to become part of Qubic!"
             button={{ caption: "Apply Now!", icon: <RiSendPlaneLine /> }}
-            imageUrl="https://img-new.cgtrader.com/items/3680126/efe442e104/large/sci-fi-material-unreal-engine-4-3d-model-low-poly-uasset-spp-sbs-tbscene.jpg"
+            imageUrl="https://images.unsplash.com/photo-1526392269816-39d8ed656494?q=80&w=2914&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
           />
         </div>
       </section>

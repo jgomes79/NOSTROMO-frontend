@@ -11,13 +11,6 @@
   @include respond-to(tablet-vertical) {
     grid-template-columns: 1fr;
   }
-
-  border: 4px solid $green-02;
-  border-radius: 12px;
-  width: 100%;
-  overflow: hidden;
-  padding: 12px;
-  box-shadow: 0 0 44px 0 rgb(43 73 17);
 }
 
 .banner {

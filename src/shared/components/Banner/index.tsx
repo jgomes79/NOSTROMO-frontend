@@ -60,7 +60,7 @@ export const Banner: React.FC<BannerProps> = ({ title, description, button, imag
           >
             {title}
           </Typography>
-          <Typography variant={"heading"} size={isMobile ? "small" : "large"} textAlign={isMobile ? "center" : "left"}>
+          <Typography variant={"heading"} size={isMobile ? "small" : "medium"} textAlign={isMobile ? "center" : "left"}>
             {description}
           </Typography>
         </div>
