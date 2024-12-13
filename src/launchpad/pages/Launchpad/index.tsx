@@ -78,7 +78,7 @@ export const Launchpad: React.FC = () => {
                 <div className={styles.sliderFrame}>
                   <Slider
                     ref={slider}
-                    delay={8000}
+                    delay={5000}
                     onMove={setCurrentIndex}
                     components={projects.map((project, index) => (
                       <ProjectOverview

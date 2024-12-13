@@ -57,6 +57,11 @@ interface ProjectCardProps {
    * The date when the project registration ends.
    */
   date: Date;
+
+  /**
+   * Project state
+   */
+  state: number;
 }
 
 /**
@@ -75,6 +80,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
   tokenPrice,
   currency,
   date,
+  state,
 }) => {
   /**
    * Renders a field with a label and value.
@@ -138,7 +144,17 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
         </div>
         <div className={styles.footer}>
           <Typography variant={"body"} size={"xsmall"} textTransform={"uppercase"}>
-            Review and Vote
+            {state === 0 || state === 1
+              ? "Edit draft"
+              : state === 2
+                ? "Review and vote"
+                : state === 4
+                  ? "Register to invest"
+                  : state === 5
+                    ? "Invest"
+                    : state === 8
+                      ? "Claim tokens"
+                      : ""}
           </Typography>
         </div>
       </div>

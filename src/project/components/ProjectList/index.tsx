@@ -64,6 +64,7 @@ export const ProjectList: React.FC = () => {
               slug={project.slug}
               title={project.name}
               tokenPrice={project.tokenPrice}
+              state={project.state}
             />
           ))}
         </div>
