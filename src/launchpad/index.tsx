@@ -4,7 +4,7 @@ import { registerModule } from "@/core/modules/modules.helpers";
 import { AppLayout } from "@/shared/layouts/AppLayout";
 
 import { LAUNCHPAD_ROUTES, MODULE_LAUNCHPAD } from "./launchpad.constants";
-import { Launchpad } from "./pages/Launchpad";
+import { LaunchpadPage } from "./pages/LaunchpadPage";
 
 const routes: RouteObject[] = [
   {
@@ -13,7 +13,7 @@ const routes: RouteObject[] = [
     children: [
       {
         path: "",
-        element: <Launchpad />,
+        element: <LaunchpadPage />,
       },
     ],
   },

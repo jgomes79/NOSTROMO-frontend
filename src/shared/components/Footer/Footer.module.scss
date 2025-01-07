@@ -6,6 +6,7 @@
   gap: 12px;
   position: relative;
   color: #C7D2BE;
+  z-index: 12;
 
   @include respond-to(mobile) {
     padding: 30px 12px;

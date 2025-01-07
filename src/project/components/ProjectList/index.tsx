@@ -25,6 +25,26 @@ export const ProjectList: React.FC = () => {
   }, [state]);
 
   /**
+   * Array of project states with their respective IDs and labels.
+   *
+   * @type {Array<{ id: ProjectStates, label: string }>}
+   */
+  const projectStates = [
+    {
+      id: ProjectStates.FUNDING_PHASE_1,
+      label: "Active",
+    },
+    {
+      id: ProjectStates.UPCOMING,
+      label: "Upcoming",
+    },
+    {
+      id: ProjectStates.CLOSED,
+      label: "Closed",
+    },
+  ];
+
+  /**
    * Memoized function to render the list of projects.
    *
    * @returns {JSX.Element | undefined} - A JSX element containing the list of projects or a loading indicator.
@@ -77,20 +97,8 @@ export const ProjectList: React.FC = () => {
       <div className={styles.container}>
         <div className={styles.tabs}>
           <Tabs<ProjectStates>
-            tabs={[
-              {
-                id: ProjectStates.FUNDING_PHASE_1,
-                label: "Active",
-              },
-              {
-                id: ProjectStates.UPCOMING,
-                label: "Upcoming",
-              },
-              {
-                id: ProjectStates.CLOSED,
-                label: "Closed",
-              },
-            ]}
+            activeId={state}
+            tabs={projectStates}
             onRender={renderProjects}
             onChange={(state) => fetchProjects(1, state)}
           />

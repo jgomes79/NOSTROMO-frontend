@@ -61,3 +61,17 @@ export enum ProjectStates {
  * Type for the Project, inferred from the schema.
  */
 export type Project = z.infer<typeof ProjectSchema>;
+
+/**
+ * Enum representing the different tabs available in the ProjectDetails component.
+ *
+ * @enum {string}
+ */
+export enum ProjectDetailsTabs {
+  INFORMATION = "information",
+  RAISING_INFORMATION = "raising-information",
+  TOKEN_INFORMATION = "token-information",
+  VESTING_OPTIONS = "vesting-options",
+  STAKE_OPTIONS = "stake-options",
+  PAYMENT_RULES = "payment-rules",
+}

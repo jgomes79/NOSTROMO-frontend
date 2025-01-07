@@ -12,10 +12,10 @@ import { SectionIndicator } from "@/shared/components/SectionIndicator";
 import { Slider, SliderElement } from "@/shared/components/Slider";
 import { useAppTitle } from "@/shared/hooks/useAppTitle";
 
-import styles from "./Launchpad.module.scss";
+import styles from "./LaunchpadPage.module.scss";
 import { HowToBoyIdoSection } from "../../components/HowToBoyIdoSection";
 
-export const Launchpad: React.FC = () => {
+export const LaunchpadPage: React.FC = () => {
   const slider = useRef<SliderElement>();
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const { projects, isLoading } = useProjectsController();

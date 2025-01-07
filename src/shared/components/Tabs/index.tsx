@@ -24,6 +24,11 @@ interface TabsProps<T> {
   readonly tabs: Tab<T>[];
 
   /**
+   * The ID of the active tab.
+   */
+  readonly activeId: T;
+
+  /**
    * Optional callback function that is called when a tab is changed.
    *
    * @param {T} tabId - The ID of the selected tab.
@@ -35,12 +40,17 @@ interface TabsProps<T> {
    *
    * @type {React.ReactNode}
    */
-  readonly onRender: React.ReactNode;
+  readonly onRender?: React.ReactNode;
+
+  /**
+   * The class name for the tabs container.
+   */
+  readonly itemClassName?: string;
 }
 
-export const Tabs = <T,>({ tabs, onChange, onRender }: TabsProps<T>) => {
+export const Tabs = <T,>({ tabs, activeId, onChange, onRender, itemClassName }: TabsProps<T>) => {
   const { isMobile } = useResponsive();
-  const [activeTab, setActiveTab] = useState(tabs[0].id);
+  const [activeTab, setActiveTab] = useState(activeId);
 
   /**
    * Handles the click event for a tab.
@@ -63,7 +73,7 @@ export const Tabs = <T,>({ tabs, onChange, onRender }: TabsProps<T>) => {
           >
             <Typography
               variant={"heading"}
-              className={styles.text}
+              className={classNames(styles.text, itemClassName)}
               aria-label={"crt"}
               size={isMobile ? "small" : "large"}
             >
@@ -72,7 +82,7 @@ export const Tabs = <T,>({ tabs, onChange, onRender }: TabsProps<T>) => {
           </button>
         ))}
       </div>
-      {onRender}
+      {onRender && onRender}
     </div>
   );
 };
