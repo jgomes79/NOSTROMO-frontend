@@ -17,6 +17,7 @@ import {
 
 import { formatNumber, formatPrice } from "@/lib/number";
 import { Button } from "@/shared/components/Button";
+import { Card } from "@/shared/components/Card";
 import { Countdown } from "@/shared/components/Countdown";
 import { DataLabel } from "@/shared/components/DataLabel";
 import { Links } from "@/shared/components/Links";
@@ -176,26 +177,38 @@ export const ProjectDetailsPage: React.FC = () => {
                   iconLeft={<RiExternalLinkLine />}
                 />
               </div>
+
+              <Separator />
+
+              <div className={styles.grid}>
+                <Card className={styles.card}>
+                  <DataLabel icon={<RiGlobalLine />} label="Network" value={"QUBIC"} />
+                </Card>
+
+                <Card className={styles.card}>
+                  <DataLabel icon={<RiAtLine />} label="Token Name" value={project.data.tokenName} />
+                </Card>
+
+                <Card className={styles.card}>
+                  <DataLabel
+                    icon={<RiStockLine />}
+                    label="Token Price"
+                    value={formatPrice(project.data.tokenPrice, project.data.currency.name, 0)}
+                  />
+                </Card>
+
+                <Card className={styles.card}>
+                  <DataLabel
+                    icon={<RiCoinsLine />}
+                    label="Token Supply"
+                    value={formatNumber(project.data.tokensSupply ?? 0, 0)}
+                  />
+                </Card>
+              </div>
+
+              <Separator />
             </div>
           </div>
-
-          <div className={styles.grid}>
-            <DataLabel icon={<RiGlobalLine />} label="Network" value={"QUBIC"} />
-            <DataLabel icon={<RiAtLine />} label="Token Name" value={project.data.tokenName} />
-            <DataLabel
-              icon={<RiStockLine />}
-              label="Token Price"
-              value={formatPrice(project.data.tokenPrice, project.data.currency.name, 0)}
-            />
-            <DataLabel
-              icon={<RiCoinsLine />}
-              label="Token Supply"
-              value={formatNumber(project.data.tokensSupply ?? 0, 0)}
-            />
-          </div>
-
-          <Separator />
-
           <div className={styles.sections}>{renderSections()}</div>
         </div>
       </div>

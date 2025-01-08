@@ -133,8 +133,14 @@ $avatar-size: 100px;
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: 1fr 1fr 1fr 1fr;
   gap: 22px;
-  place-items: center;
-  place-content: center;
+  padding: 22px 0;
 }
+
+.card {
+  padding: 14px 18px !important;
+  box-shadow: 0 0 22px #203b07;
+  border: 1px solid rgb(55 71 37 / 80%);
+}
+
