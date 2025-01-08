@@ -1,0 +1,31 @@
+.layout {
+  display: grid;
+  grid-template-columns: 0fr 0fr;
+  place-items: center;
+  gap: 12px;
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+
+  svg {
+    width: 34px;
+    height: 34px;
+    color: $green-03;
+  }
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  color: $white;
+
+  span {
+    white-space: nowrap;
+  }
+}
+
+.label {
+  color: $green-03;
+}

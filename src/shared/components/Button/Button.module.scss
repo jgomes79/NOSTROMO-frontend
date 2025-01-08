@@ -82,6 +82,44 @@
       outline-color: #8af827;
     }
   }
+
+  &.yellow {
+    background: #675322;
+    color: #ffbe1f;
+    
+    .loader {
+      stroke: #ffbe1f;
+    }
+
+    &:not([disabled]):hover {
+      background: #8c6e25;
+      color: #ffbe1f;
+    }
+
+    &:focus {
+      outline-style: solid;
+      outline-color: #ffbe1f;
+    }
+  }
+
+  &.red {
+    background: #632a2a;
+    color: #ff5555;
+
+    .loader {
+      stroke: #ff5555;
+    }
+
+    &:not([disabled]):hover {
+      background: #8a3c3c;
+      color: #ff7777;
+    }
+
+    &:focus {
+      outline-style: solid;
+      outline-color: #ff7777;
+    }
+  }
 }
 
 .ghost {

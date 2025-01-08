@@ -9,6 +9,6 @@ import { User } from "./user.types";
  * @returns {Promise<User>} - A promise that resolves to the user data.
  */
 export const getUserByWallet = (wallet: User["wallet"]): Promise<User> =>
-  request<User>(getEndpoint("user-service", `/user/${wallet}`), {
+  request<User>(getEndpoint("users-service", `/user/${wallet}`), {
     method: "GET",
   });

@@ -3,18 +3,22 @@ import { useParams } from "react-router-dom";
 
 import classNames from "clsx";
 import {
+  RiAtLine,
+  RiCoinsLine,
   RiDiscordFill,
   RiExternalLinkLine,
+  RiGlobalLine,
   RiInstagramLine,
   RiMediumFill,
+  RiStockLine,
   RiTelegramFill,
   RiTwitterXFill,
 } from "react-icons/ri";
 
-import { ProjectEvaluation } from "@/project/components/ProjectEvaluation";
-import { ProjectStates } from "@/project/project.types";
+import { formatNumber, formatPrice } from "@/lib/number";
 import { Button } from "@/shared/components/Button";
 import { Countdown } from "@/shared/components/Countdown";
+import { DataLabel } from "@/shared/components/DataLabel";
 import { Links } from "@/shared/components/Links";
 import { Loader } from "@/shared/components/Loader";
 import { Separator } from "@/shared/components/Separator";
@@ -22,7 +26,10 @@ import { Typography } from "@/shared/components/Typography";
 import { ErrorPage } from "@/shared/pages/ErrorPage";
 
 import styles from "./ProjectDetailsPage.module.scss";
+import { ProjectEvaluation } from "../../components/ProjectEvaluation";
+import { ProjectRegister } from "../../components/ProjectRegister";
 import { useProject } from "../../hooks/useProject";
+import { ProjectStates } from "../../project.types";
 
 /**
  * Type representing the parameters for the ProjectDetails component.
@@ -52,6 +59,9 @@ export const ProjectDetailsPage: React.FC = () => {
     switch (data.state) {
       case ProjectStates.DRAFT:
         return <ProjectEvaluation />;
+
+      case ProjectStates.UPCOMING:
+        return <ProjectRegister />;
 
       default:
         return null;
@@ -167,6 +177,21 @@ export const ProjectDetailsPage: React.FC = () => {
                 />
               </div>
             </div>
+          </div>
+
+          <div className={styles.grid}>
+            <DataLabel icon={<RiGlobalLine />} label="Network" value={"QUBIC"} />
+            <DataLabel icon={<RiAtLine />} label="Token Name" value={project.data.tokenName} />
+            <DataLabel
+              icon={<RiStockLine />}
+              label="Token Price"
+              value={formatPrice(project.data.tokenPrice, project.data.currency.name, 0)}
+            />
+            <DataLabel
+              icon={<RiCoinsLine />}
+              label="Token Supply"
+              value={formatNumber(project.data.tokensSupply ?? 0, 0)}
+            />
           </div>
 
           <Separator />

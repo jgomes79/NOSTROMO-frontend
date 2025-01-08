@@ -9,9 +9,13 @@ import { User } from "../user.types";
  * @param {User["wallet"]} wallet - The wallet address of the user.
  * @returns {object} - The result of the query, including status and data.
  */
-export const useUserInfo = (wallet: User["wallet"]) => {
-  return useQuery<User>({
+export const useUserInfo = (wallet?: User["wallet"]) => {
+  return useQuery<User | null>({
     queryKey: ["user", wallet],
-    queryFn: () => getUserByWallet(wallet),
+    queryFn: () => {
+      if (!wallet) return null;
+      return getUserByWallet(wallet);
+    },
+    enabled: !!wallet,
   });
 };

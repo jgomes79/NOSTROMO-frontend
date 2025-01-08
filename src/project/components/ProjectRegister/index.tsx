@@ -1,4 +1,4 @@
-import { Typography } from "@/shared/components/Typography";
+import { Card } from "@/shared/components/Card";
 
 import styles from "./ProjectRegister.module.scss";
 
@@ -9,10 +9,8 @@ import styles from "./ProjectRegister.module.scss";
  */
 export const ProjectRegister: React.FC = () => {
   return (
-    <div className={styles.layout}>
-      <Typography as={"h2"} variant={"heading"} size={"large"}>
-        Project Evaluation
-      </Typography>
-    </div>
+    <Card title="Registrarse">
+      <div className={styles.layout}></div>
+    </Card>
   );
 };

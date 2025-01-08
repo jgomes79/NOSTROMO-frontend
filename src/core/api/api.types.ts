@@ -2,7 +2,7 @@
  * Represents the names of the services available.
  *
  */
-export type ServiceNames = "projects-service" | "user-service";
+export type ServiceNames = "projects-service" | "users-service";
 
 /**
  * Represents an error message.

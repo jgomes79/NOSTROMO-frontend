@@ -5,12 +5,20 @@
  * @param decimals The number of decimal places to show (defaults to 2)
  * @returns The formatted price as a string
  */
-export function formatPrice(value: number, currency: string = "USD", decimals: number = 2): string {
+export function formatPrice(value: number, currency?: string, decimals: number = 2): string {
   const formatter = new Intl.NumberFormat("en-US", {
     style: "decimal",
     minimumFractionDigits: decimals,
     maximumFractionDigits: decimals,
   });
 
-  return `${formatter.format(value)} ${currency}`;
+  return `${formatter.format(value)} ${currency ?? ""}`;
 }
+
+/**
+ * Formats a number with a specified number of decimal places.
+ * @param value The numeric value to format
+ * @param decimals The number of decimal places to show (defaults to 2)
+ * @returns The formatted number as a string
+ */
+export const formatNumber = (value: number, decimals: number = 2): string => formatPrice(value, undefined, decimals);

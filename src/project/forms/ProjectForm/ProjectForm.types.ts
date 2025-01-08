@@ -4,14 +4,14 @@ import { ProjectSchema } from "../../project.schema";
 
 /**
  * Defines a schema for the project form by extracting specific fields from the ProjectSchema.
- * This schema includes 'name', 'description', 'social', 'tokensCreated', 'tokenPrice', and 'amountToRaise'.
+ * This schema includes 'name', 'description', 'social', 'tokensSupply', 'tokenPrice', and 'amountToRaise'.
  * Additionally, it extends the schema to include 'photo', 'banner', 'whitepaper', 'litepaper', and 'tokenomics' fields, all of which are expected to be instances of File.
  */
 export const ProjectFormSchema = ProjectSchema.pick({
   name: true,
   description: true,
   social: true,
-  tokensCreated: true,
+  tokensSupply: true,
   tokenPrice: true,
   amountToRaise: true,
 }).extend({

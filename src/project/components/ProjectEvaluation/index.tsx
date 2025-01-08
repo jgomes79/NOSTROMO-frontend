@@ -1,6 +1,10 @@
+import { useWalletClient } from "wagmi";
+
+import { Button } from "@/shared/components/Button";
 import { Card } from "@/shared/components/Card";
 import { Loader } from "@/shared/components/Loader";
 import { Typography } from "@/shared/components/Typography";
+import { useUserInfo } from "@/user/hooks/useUserInfo";
 
 import styles from "./ProjectEvaluation.module.scss";
 
@@ -10,19 +14,49 @@ import styles from "./ProjectEvaluation.module.scss";
  * @returns {JSX.Element} The JSX code for ProjectEvaluation component.
  */
 export const ProjectEvaluation: React.FC = () => {
+  const { data } = useWalletClient();
+  const { data: user } = useUserInfo(data?.account.address);
+
+  const isAdmin = user?.type === "admin";
+  const mode = isAdmin ? "admin" : "user";
+
+  /**
+   * Object containing literals for different user modes.
+   * @type {{admin: {title: string, description: string}, user: {title: string, description: string}}}
+   */
+  const literals = {
+    admin: {
+      title: "Pending Review",
+      description:
+        "This project is pending review. Please evaluate it and determine if it is suitable to be published on the platform.",
+    },
+    user: {
+      title: "Pending Review",
+      description:
+        "This project is pending review. It will be evaluated by the Nostromo team before being made official for the rest of the community.",
+    },
+  };
+
   return (
     <Card>
       <div className={styles.layout}>
-        <Loader size={42} />
+        <Loader size={52} />
         <div className={styles.field}>
           <Typography as={"h2"} variant={"heading"} size={"medium"} textAlign={"center"}>
-            Pendiente de revision
+            {literals[mode].title}
           </Typography>
-          <Typography as={"h2"} variant={"body"} size={"medium"} textAlign={"center"}>
-            Este proyecto se encuentra pendiente de revision, el mismo sera evaluado por el equipo de mostromo antes de
-            ser oficializado para el resto de la comunidad.
+          <Typography as={"h2"} variant={"body"} size={"medium"} textAlign={"center"} className={styles.description}>
+            {literals[mode].description}
           </Typography>
         </div>
+
+        {isAdmin && (
+          <div className={styles.actions}>
+            <Button caption="Accept" color={"secondary"} />
+            <Button caption="Request More Information" color={"yellow"} />
+            <Button caption="Reject" color={"red"} />
+          </div>
+        )}
       </div>
     </Card>
   );

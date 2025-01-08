@@ -10,6 +10,7 @@ import styles from "./WalletAccount.module.scss";
 
 export const WalletAccount: React.FC = () => {
   const { data } = useWalletClient();
+
   return (
     <div className={styles.layout}>
       <WalletButton.Custom wallet="metamask">

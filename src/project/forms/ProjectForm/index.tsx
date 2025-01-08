@@ -86,12 +86,7 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, onSubmi
               placeholder="Amount to Raise"
             />
             <TextInput label="Token Price" type="number" {...register("tokenPrice")} placeholder="Token Price" />
-            <TextInput
-              label="Tokens Created"
-              type="number"
-              {...register("tokensCreated")}
-              placeholder="Tokens Created"
-            />
+            <TextInput label="Tokens Supply" type="number" {...register("tokensSupply")} placeholder="Tokens Supply" />
           </div>
         </div>
       </fieldset>

@@ -91,7 +91,6 @@ $avatar-size: 100px;
 }
 
 .description {
-  max-width: 800px;
   color: $green-04;
 }
 
@@ -130,4 +129,12 @@ $avatar-size: 100px;
   width: 100%;
   max-width: 900px;
   margin: 0 auto
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 22px;
+  place-items: center;
+  place-content: center;
 }

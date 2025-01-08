@@ -14,7 +14,7 @@ export const useNewProject = () =>
       formData.append("name", data.name);
       formData.append("description", data.description);
       formData.append("tokenPrice", String(data.tokenPrice));
-      formData.append("tokensCreated", String(data.tokensCreated));
+      formData.append("tokensSupply", String(data.tokensSupply));
       formData.append("amountToRaise", String(data.amountToRaise));
       formData.append("instagramUrl", data.social.instagramUrl);
       formData.append("discordUrl", data.social.discordUrl);
