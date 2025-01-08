@@ -1,5 +1,3 @@
-import { ProjectDetailsTabs } from "./project.types";
-
 /**
  * Represents the project module name.
  *
@@ -19,41 +17,6 @@ export const MODULE_PROJECT = "project";
  */
 export const PROJECT_ROUTES = {
   MAIN: "/projects",
-  PROJECT_DETAILS: "/projects/:slug/:tab",
+  PROJECT_DETAILS: "/projects/:slug",
   NEW_PROJECT: "/projects/new",
 };
-
-/**
- * Lists the project tabs with their respective IDs and labels.
- *
- * @constant
- * @type {Array<{ id: ProjectDetailsTabs, label: string }>}
- * @property {ProjectDetailsTabs} id - The unique identifier for each project tab.
- * @property {string} label - The display label for each project tab.
- */
-export const PROJECT_RETAILS_TABS = [
-  {
-    id: ProjectDetailsTabs.INFORMATION,
-    label: "Information",
-  },
-  {
-    id: ProjectDetailsTabs.RAISING_INFORMATION,
-    label: "Raising Information",
-  },
-  {
-    id: ProjectDetailsTabs.TOKEN_INFORMATION,
-    label: "Token Information",
-  },
-  {
-    id: ProjectDetailsTabs.VESTING_OPTIONS,
-    label: "Vesting Options",
-  },
-  {
-    id: ProjectDetailsTabs.STAKE_OPTIONS,
-    label: "Stake Options",
-  },
-  {
-    id: ProjectDetailsTabs.PAYMENT_RULES,
-    label: "Payment Rules",
-  },
-];

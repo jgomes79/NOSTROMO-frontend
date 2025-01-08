@@ -15,7 +15,7 @@ $avatar-size: 100px;
     content: "";
     position: absolute;
     inset: 0;
-    background: linear-gradient(180deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.6) 50%, rgba(0, 0, 0, 0) 100%);
+    background: linear-gradient(180deg, rgb(8 13 4) 0%, rgba(0, 0, 0, 0.6) 50%, rgba(0, 0, 0, 0) 100%);
     z-index: 1;
   }
   
@@ -41,7 +41,7 @@ $avatar-size: 100px;
 
 .bar {
   padding: 10px 0;
-  background: linear-gradient(0deg, #0d1803 0%, rgba(0, 0, 0, 0.7) 100%);
+  background: linear-gradient(270deg, #0d1803 0%, rgba(0, 0, 0, 0.7) 100%);
   border-bottom: 1px solid rgba(42, 53, 30, 0.8);
   border-top: 1px solid rgba(42, 53, 30, 0.8);
   backdrop-filter: blur(6px);
@@ -84,6 +84,10 @@ $avatar-size: 100px;
   grid-template-columns: 0fr 1fr;
   gap: 22px;
   align-items: flex-start;
+
+  &.title {
+    align-items: center;
+  }
 }
 
 .description {
@@ -91,6 +95,39 @@ $avatar-size: 100px;
   color: $green-04;
 }
 
-.tabItem {
-  font-size: 20px !important;
+
+.actions {
+  display: flex;
+  flex-direction: row;
+  gap: 18px;
+  align-items: center;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+
+.links {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  align-items: center;
+
+  a {
+    color: $green-03;
+
+    svg {
+      width: 22px;
+      height: 22px;
+    }
+  }
+}
+
+.sections {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto
 }

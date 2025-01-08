@@ -1,3 +1,5 @@
+import { Card } from "@/shared/components/Card";
+import { Loader } from "@/shared/components/Loader";
 import { Typography } from "@/shared/components/Typography";
 
 import styles from "./ProjectEvaluation.module.scss";
@@ -9,10 +11,19 @@ import styles from "./ProjectEvaluation.module.scss";
  */
 export const ProjectEvaluation: React.FC = () => {
   return (
-    <div className={styles.layout}>
-      <Typography as={"h2"} variant={"heading"} size={"large"}>
-        Este proyecto esta pendiente de revision
-      </Typography>
-    </div>
+    <Card>
+      <div className={styles.layout}>
+        <Loader size={42} />
+        <div className={styles.field}>
+          <Typography as={"h2"} variant={"heading"} size={"medium"} textAlign={"center"}>
+            Pendiente de revision
+          </Typography>
+          <Typography as={"h2"} variant={"body"} size={"medium"} textAlign={"center"}>
+            Este proyecto se encuentra pendiente de revision, el mismo sera evaluado por el equipo de mostromo antes de
+            ser oficializado para el resto de la comunidad.
+          </Typography>
+        </div>
+      </div>
+    </Card>
   );
 };

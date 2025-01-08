@@ -1,0 +1,15 @@
+.separator {
+  position: relative;
+  height: 1px;
+  z-index: 8;
+
+  &:before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, $green-06 50%, rgba(0, 0, 0, 0) 100%);
+  }
+}

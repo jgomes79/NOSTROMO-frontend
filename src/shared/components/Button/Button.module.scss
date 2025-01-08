@@ -66,11 +66,11 @@
   }
 
   &.secondary {
-    background: #3b4533;
+    background: #2b3027;
     color: #bbdaa2;
 
     .loader {
-      stroke: red;
+      stroke: #8af827;
     }
 
     &:not([disabled]):hover {
@@ -79,7 +79,7 @@
 
     &:focus {
       outline-style: solid;
-      outline-color: red;
+      outline-color: #8af827;
     }
   }
 }
