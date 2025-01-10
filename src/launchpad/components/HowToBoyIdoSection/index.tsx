@@ -61,7 +61,7 @@ export const HowToBoyIdoSection: React.FC = () => {
                     {
                       icon: <CoinsIcon />,
                       title: "Stake your $QUBIC",
-                      description: "Ass your $QUBIC to Nostromos’ staking pool in order to acquire a tier",
+                      description: "Stake your $QUBIC to Nostromos’ staking pool in order to acquire a tier",
                     },
                     {
                       icon: <VerifyIcon />,
