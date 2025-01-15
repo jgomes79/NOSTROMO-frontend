@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 import classNames from "clsx";
 
@@ -50,7 +50,16 @@ interface TabsProps<T> {
 
 export const Tabs = <T,>({ tabs, activeId, onChange, onRender, itemClassName }: TabsProps<T>) => {
   const { isMobile } = useResponsive();
-  const [activeTab, setActiveTab] = useState(activeId);
+  const [activeTab, setActiveTab] = useState<T>(activeId);
+  const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
+
+  useEffect(() => {
+    setActiveTab(activeId);
+    const activeTabIndex = tabs.findIndex((tab) => tab.id === activeId);
+    if (tabRefs.current[activeTabIndex]) {
+      tabRefs.current[activeTabIndex]?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+    }
+  }, [activeId, tabs]);
 
   /**
    * Handles the click event for a tab.
@@ -68,6 +77,7 @@ export const Tabs = <T,>({ tabs, activeId, onChange, onRender, itemClassName }: 
         {tabs.map((tab, index) => (
           <button
             key={index}
+            ref={(el) => (tabRefs.current[index] = el)}
             className={classNames(styles.tab, { [styles.active]: activeTab === tab.id })}
             onClick={() => handleClickTab(tab.id)}
           >

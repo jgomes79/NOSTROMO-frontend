@@ -98,7 +98,7 @@ $breakpoints: (
 
 // Mixin for CRT animation effect
 @mixin crtAnimation() {
-  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 1) 50%);
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.5) 50%, rgba(0, 0, 0, 1) 50%);
   mask-size: 100% 2px;
 }
 
@@ -154,5 +154,27 @@ $breakpoints: (
     -o-animation: move-twink-back $stars-speed linear infinite;
     -webkit-animation: move-twink-back $stars-speed linear infinite;
     animation: move-twink-back $stars-speed linear infinite;
+  }
+}
+
+@mixin bottomLighting() {
+  position: relative;
+  
+  &:after, &:before {
+    content: "";
+    position: absolute;
+  }
+
+  &:after {
+    inset: 0;
+    background: radial-gradient(circle at bottom, rgb(23, 40, 8) -12%, rgba(0, 0, 0, 0) 55%, rgba(0, 0, 0, 0) 100%);
+  }
+
+  &:before {
+    height: 1px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgb(92 133 48 / 80%) 50%, rgba(0, 0, 0, 0) 100%);
   }
 }

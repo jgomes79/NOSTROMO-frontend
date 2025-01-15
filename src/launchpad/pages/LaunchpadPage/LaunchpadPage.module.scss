@@ -47,27 +47,11 @@
   }
 
   &.bottomLighting {
-    position: relative;
     padding-top: 128px;
     padding-bottom: 42px;
 
-    &:after, &:before {
-      content: "";
-      position: absolute;
-    }
-
-    &:after {
-      inset: 0;
-      background: radial-gradient(circle at bottom, rgb(23, 40, 8) -12%, rgba(0, 0, 0, 0) 55%, rgba(0, 0, 0, 0) 100%);
-    }
-
-    &:before {
-      height: 1px;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgb(92 133 48 / 80%) 50%, rgba(0, 0, 0, 0) 100%);
-    }
+    
+    @include bottomLighting();
   }
 }
 

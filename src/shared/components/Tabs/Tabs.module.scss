@@ -4,7 +4,9 @@
   flex-direction: column;
   gap: 22px;
   width: 100%;
-
+  position: relative;
+  z-index: 6;
+  
   @include respond-to(mobile) {
     gap: 12px;
     align-items: center;
@@ -31,13 +33,19 @@
   border: none;
   color: #C7D2BE;
 
-  &:hover, &.active {
-    color: #8AF827;
+  &.active {
+    color: #8AF827 !important;
+  }
+
+  &:hover {
+    color: $white;
   }
 
   white-space: nowrap;
   user-select: none;
-  transition: color 120ms linear;
+  * {
+    transition: color 120ms linear;
+  }
 }
 
 

@@ -12,11 +12,12 @@ export type Value = string | File;
 interface FileUploadProps {
   readonly icon: React.ReactNode;
   readonly title: string;
-  readonly description: string;
+  readonly description?: string;
   readonly maxFiles: number;
 
   readonly value: Value[];
   readonly accept: "images" | "documents";
+  readonly className?: string;
   readonly onChange: (files: Value[]) => void;
   readonly onRender: (files: Value[], getUrl: (file: Value) => string) => React.ReactNode;
 }
@@ -39,8 +40,27 @@ const acceptedFormats: Record<Required<FileUploadProps>["accept"], Accept> = {
   },
 };
 
+/**
+ * FileUpload component.
+ *
+ * This component provides a drag-and-drop interface for uploading files.
+ *
+ * @param {FileUploadProps} props - The properties for the FileUpload component.
+ * @param {React.ReactNode} props.icon - The icon to display in the upload area.
+ * @param {string} props.title - The title text to display in the upload area.
+ * @param {string} props.description - The description text to display in the upload area.
+ * @param {"images" | "documents"} props.accept - The type of files to accept.
+ * @param {number} props.maxFiles - The maximum number of files that can be uploaded.
+ * @param {Value[]} props.value - The current value of the uploaded files.
+ * @param {function} props.onRender - A function to render the uploaded files.
+ * @param {function} props.onChange - A callback function triggered when files are dropped.
+ * @param {string} [props.className] - Additional class names for styling.
+ * @param {React.Ref<HTMLDivElement>} ref - The ref to the root div element.
+ *
+ * @returns {JSX.Element} The rendered FileUpload component.
+ */
 export const FileUpload = React.forwardRef<HTMLDivElement, FileUploadProps>(
-  ({ icon, title, description, accept, maxFiles, value, onRender, onChange }, ref) => {
+  ({ icon, title, description, accept, maxFiles, value, onRender, onChange, className }, ref) => {
     /**
      * Handles the file drop event and triggers the onChange callback.
      *
@@ -93,7 +113,11 @@ export const FileUpload = React.forwardRef<HTMLDivElement, FileUploadProps>(
       <div
         ref={ref}
         {...getRootProps()}
-        className={classNames([styles.layout, { [styles.isDragActive]: isDragActive, [styles.hasValue]: hasValue }])}
+        className={classNames([
+          styles.layout,
+          className,
+          { [styles.isDragActive]: isDragActive, [styles.hasValue]: hasValue },
+        ])}
       >
         {hasValue ? (
           onRender(value, getURL)
@@ -101,12 +125,20 @@ export const FileUpload = React.forwardRef<HTMLDivElement, FileUploadProps>(
           <>
             <div className={styles.icon}>{icon}</div>
             <div className={styles.container}>
-              <Typography variant={"heading"} size={"medium"} textAlign={"center"}>
+              <Typography variant={"heading"} as={"h3"} size={"medium"} textAlign={"center"}>
                 {title}
               </Typography>
-              <Typography variant={"body"} size={"medium"} textAlign={"center"}>
-                {description}
-              </Typography>
+              {description && (
+                <Typography
+                  as={"p"}
+                  variant={"body"}
+                  size={"small"}
+                  textAlign={"center"}
+                  className={styles.description}
+                >
+                  {description}
+                </Typography>
+              )}
             </div>
           </>
         )}

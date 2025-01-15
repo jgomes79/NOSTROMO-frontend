@@ -1,0 +1,26 @@
+
+.layout {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  color: $white;
+  cursor: default;
+
+  background: linear-gradient(20deg, #0d1803 0%, rgba(0, 0, 0, 0.7) 100%);
+  border: 1px solid rgba(42, 53, 30, 0.8);
+  border-radius: 12px;
+  backdrop-filter: blur(12px);
+
+  legend {
+    color: $green-03;
+    margin-left: 22px;
+    padding: 0 12px;
+  }
+
+  .inner {
+    display: flex;
+    flex-direction: column;
+    padding: 34px;
+    gap: 32px;
+  }
+}

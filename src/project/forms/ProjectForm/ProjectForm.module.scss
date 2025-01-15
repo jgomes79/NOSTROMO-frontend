@@ -4,36 +4,27 @@
   width: 100%;
 
   gap: 42px;
-  padding: 22px;
   cursor: pointer;
   user-select: none;
+  padding-bottom: 42px;
 }
 
-.field {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-  color: $white;
-  border-color: $black;
-  border-style: solid;
-  cursor: default;
+.tabs {
+  padding-top: 128px;
+  padding-bottom: 42px;
 
-  legend {
-    color: $green-03;
-    margin-left: 22px;
-  }
 
-  .inner {
-    display: flex;
-    flex-direction: column;
-    padding: 22px;
-    gap: 32px;
+  @include bottomLighting();
+
+  .tab {
+    font-size: 20px;
   }
 }
 
 .grid {
   display: grid;
   gap: 22px;
+  align-items: flex-end;
 
   &.two {
     grid-template-columns: 1fr 1fr;
@@ -44,15 +35,61 @@
   }
 }
 
+.banner {
+  position: relative;
+  height: 500px;
+}
+
+.bannerImg, .avatarImg {
+  height: 100%;
+  width: 100%;
+}
+
+.avatarImg {
+
+  h3 {
+    font-size: 18px !important;
+    line-height: 24px !important;
+  }
+
+  svg {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+
+.avatar {
+  left: 22px;
+  bottom: 22px;
+  position: absolute;
+
+  width: 182px;
+  height: 182px;
+}
+
 .actions {
   display: flex;
   justify-content: flex-end;
+  gap: 16px;
 }
 
 .imagePreview {
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 0 0 4px #303529a1;
+
+  &:hover {
+    box-shadow: 0 0 0 4px yellowgreen;
+  }
+
+  transition: box-shadow 120ms linear;
+
   img {
     width: 100%;
-    aspect-ratio: 1/1;
+    height: 100%;
     object-fit: cover;
   }
 }

@@ -6,7 +6,7 @@ import styles from "./Button.module.scss";
 import { Loader } from "../Loader";
 import { Typography } from "../Typography";
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   type?: React.ButtonHTMLAttributes<HTMLButtonElement>["type"];
   caption: string;
   isLoading?: boolean;

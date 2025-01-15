@@ -3,10 +3,17 @@ import React, { useCallback } from "react";
 import { ProjectForm } from "@/project/forms/ProjectForm";
 import { useNewProject } from "@/project/hooks/useNewProject";
 
-import styles from "./NewProject.module.scss";
+import styles from "./NewProjectPage.module.scss";
 import { ProjectFormValues } from "../../forms/ProjectForm";
 
-export const NewProject: React.FC = () => {
+/**
+ * NewProjectPage component.
+ *
+ * This component renders the new project page, which includes a form for creating a new project.
+ *
+ * @returns {JSX.Element} The rendered new project page component.
+ */
+export const NewProjectPage: React.FC = () => {
   const newProjectMutation = useNewProject();
 
   /**
@@ -23,6 +30,9 @@ export const NewProject: React.FC = () => {
 
   return (
     <div className={styles.layout}>
+      <div className={styles.header}>
+        <div className={styles.gradient} />
+      </div>
       <div className={styles.form}>
         <ProjectForm onSubmit={handleClickSubmit} onCancel={() => {}} />
       </div>

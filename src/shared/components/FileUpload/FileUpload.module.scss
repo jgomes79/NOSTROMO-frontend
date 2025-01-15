@@ -2,15 +2,17 @@
   display: flex;
   flex-direction: column;
   padding: 38px 22px;
-  border: 1px solid #333;
+  background-color: #151614;
+  border: 1px solid #303429;
   align-items: center;
   justify-content: center;
   gap: 22px;
   cursor: pointer;
+  border-radius: 8px;
 
   &:not(.isDragActive):hover {
     border-color: greenyellow;
-    background: #171e06;
+    background: #151614;
   }
 
   &.isDragActive {
@@ -41,4 +43,8 @@
   flex-direction: column;
   gap: 4px;
   max-width: 500px;
+}
+
+.description {
+  color: $green-04;
 }

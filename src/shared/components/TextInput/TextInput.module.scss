@@ -5,17 +5,65 @@
 }
 
 .input {
+  width: 100%;
   padding: 18px;
-  background: #222;
+  background: #151614;
   border: none;
   border-radius: 8px;
-  outline: 1px solid #333;
+  outline: 1px solid #303429;
   color: #fff;
-  font-size: 14px;
+  font-size: 16px;
 
   &:focus {
     outline: 1px solid yellowgreen;
   }
 
+  &::placeholder {
+    color: $green-04;
+  }
+
   transition: 120ms linear;
+
+  &.withIcon {
+    padding-left: 48px;
+  }
+}
+
+.inputContainer {
+  width: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 22px;
+}
+
+.icon {
+  left: 16px;
+  top: 16px;
+  position: absolute;
+
+  svg {
+    width: 18px;
+    height: 18px;
+    color: $green-04;
+    transition: color 120ms linear;
+  }
+}
+
+.symbol {
+  background-color: #2e3625;
+  border-radius: 8px;
+  padding: 4px 20px;
+  color: $green-03;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  line-height: 32px !important;
+}
+
+.description {
+  color: $green-04;
 }

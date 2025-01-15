@@ -2,29 +2,44 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
+  position: relative;
 }
 
-.input {
+.container {
+  position: relative;
+}
+
+.select {
+  width: 100%;
   padding: 18px;
   background: #151614;
   border: none;
   border-radius: 8px;
   outline: 1px solid #303429;
   color: #fff;
-  font-size: 16px;
-  line-height: 28px;
-  resize: vertical;
+  font-size: 14px;
+  height: 100%;
+  appearance: none;
 
   &:focus {
     outline: 1px solid yellowgreen;
   }
 
-  min-height: 250px;
-
-  transition: 120ms linear;
-  transition: 120ms linear;
-
   &::placeholder {
     color: $green-04;
   }
+
+  transition: 120ms linear;
+
+}
+
+.icon {
+  position: absolute;
+  right: 12px;
+  top: 12px;
+}
+
+
+.description {
+  color: $green-04;
 }
