@@ -7,7 +7,7 @@
 .input {
   width: 100%;
   padding: 18px;
-  background: #151614;
+  background: #11140d;
   border: none;
   border-radius: 8px;
   outline: 1px solid #303429;
@@ -26,6 +26,10 @@
 
   &.withIcon {
     padding-left: 48px;
+  }
+
+  &.withError {
+    outline: 1px solid $red-03;
   }
 }
 
@@ -54,16 +58,24 @@
 .symbol {
   background-color: #2e3625;
   border-radius: 8px;
-  padding: 4px 20px;
+  padding: 4px 12px;
   color: $green-03;
 
   display: flex;
   align-items: center;
   justify-content: center;
   
-  line-height: 32px !important;
+  font-size: 12px !important;
+  line-height: 24px !important;
+
+  position: absolute;
+  right: 8px;
 }
 
 .description {
   color: $green-04;
+}
+
+.error {
+  color: $red-01;
 }

@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
 
-import classNames from "clsx";
 import { motion } from "framer-motion";
 
 /**
@@ -16,6 +15,11 @@ interface AnimatableProps {
    * Optional additional class names to apply to the component.
    */
   readonly className?: string;
+
+  /**
+   * The duration of the animation in seconds.
+   */
+  readonly duration?: number;
 }
 
 /**
@@ -26,7 +30,7 @@ interface AnimatableProps {
  * @param {AnimatableProps} props - The props for the component.
  * @returns {JSX.Element} The animated component.
  */
-export const Animatable: React.FC<AnimatableProps> = ({ children, className }) => {
+export const Animatable: React.FC<AnimatableProps> = ({ children, className, duration = 0.1 }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [height, setHeight] = useState<number | "auto">("auto");
 
@@ -49,10 +53,10 @@ export const Animatable: React.FC<AnimatableProps> = ({ children, className }) =
 
   return (
     <motion.div
-      className={classNames(className, "overflow-hidden")}
+      className={className}
       style={{ height }}
       animate={{ height }}
-      transition={{ duration: 0.1 }}
+      transition={{ type: "spring", stiffness: 400, damping: 30, duration }}
     >
       <div ref={containerRef}>{children}</div>
     </motion.div>

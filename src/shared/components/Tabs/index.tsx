@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 
 import classNames from "clsx";
 
@@ -10,6 +10,7 @@ import { Typography } from "../Typography";
 interface Tab<T> {
   id: T;
   label: string;
+  iconLeft?: React.ReactNode;
 }
 
 /**
@@ -68,12 +69,16 @@ export const Tabs = <T,>({ tabs, activeId, onChange, onRender, itemClassName }: 
     }
   };
 
+  useEffect(() => {
+    setActiveTab(activeId);
+  }, [activeId]);
+
   return (
     <div className={styles.layout}>
       <div className={styles.tabs}>
         {tabs.map((tab, index) => (
           <button
-            key={index}
+            key={`--tab-${tab.id}`}
             ref={(el) => (tabRefs.current[index] = el)}
             className={classNames(styles.tab, { [styles.active]: activeTab === tab.id })}
             onClick={() => handleClickTab(tab.id)}
@@ -86,6 +91,7 @@ export const Tabs = <T,>({ tabs, activeId, onChange, onRender, itemClassName }: 
             >
               {tab.label}
             </Typography>
+            {tab.iconLeft && <div className={styles.icon}>{tab.iconLeft}</div>}
           </button>
         ))}
       </div>

@@ -32,7 +32,19 @@
   background-color: transparent;
   border: none;
   color: #C7D2BE;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
 
+  .icon {
+    svg {
+      width: 24px;
+      height: 24px;
+    }
+  }
+  
   &.active {
     color: #8AF827 !important;
   }

@@ -13,7 +13,6 @@
   padding-top: 128px;
   padding-bottom: 42px;
 
-
   @include bottomLighting();
 
   .tab {
@@ -24,7 +23,6 @@
 .grid {
   display: grid;
   gap: 22px;
-  align-items: flex-end;
 
   &.two {
     grid-template-columns: 1fr 1fr;
@@ -32,6 +30,34 @@
 
   &.three {
     grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  &.twoAlignLeft {
+    grid-template-columns: 200px 1fr;
+  }
+
+  @include respond-to(mobile) {
+    grid-template-columns: 1fr !important;
+
+    &.withPaddingTop {
+      padding-top: 72px;
+    }
+  }
+
+  @include respond-to(tablet-vertical) {
+    grid-template-columns: 1fr !important;
+
+    &.withPaddingTop {
+      padding-top: 72px;
+    }
+  }
+
+
+  transition: all 120ms linear;
+
+  &.disabled {
+    opacity: 0.5;
+    filter: grayscale(1);
   }
 }
 
@@ -56,6 +82,11 @@
     width: 40px;
     height: 40px;
   }
+
+  img {
+    width: 200px !important;
+    height: 200px !important;
+  }
 }
 
 
@@ -66,12 +97,22 @@
 
   width: 182px;
   height: 182px;
+
+  @include respond-to(mobile) {
+    left: calc(50% - 91px);
+    bottom: -62px;
+  }
+
+  @include respond-to(tablet-vertical) {
+    left: calc(50% - 91px);
+    bottom: -62px;
+  }
 }
 
 .actions {
   display: flex;
-  justify-content: flex-end;
   gap: 16px;
+  justify-content: flex-end;
 }
 
 .imagePreview {
@@ -92,4 +133,11 @@
     height: 100%;
     object-fit: cover;
   }
+}
+
+.amountToRaise {
+  background-color: #151613;
+  padding: 18px;
+  border-radius: 8px;
+  border: 1px solid #303529;
 }

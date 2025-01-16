@@ -1,9 +1,10 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm, SubmitHandler, Controller } from "react-hook-form";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import classNames from "clsx";
 import {
+  RiCheckLine,
   RiDiscordFill,
   RiFileAddLine,
   RiImageAddLine,
@@ -14,14 +15,19 @@ import {
 } from "react-icons/ri";
 
 import { useCurrencies } from "@/currency/hooks/useCurrencies";
+import { formatPrice } from "@/lib/number";
+import { Animatable } from "@/shared/components/Animatable";
 import { Button, ButtonProps } from "@/shared/components/Button";
+import { DateInput } from "@/shared/components/DateInput";
 import { Fieldset } from "@/shared/components/Fieldset";
 import { FileUpload } from "@/shared/components/FileUpload";
 import { Loader } from "@/shared/components/Loader";
+import { RangeInput } from "@/shared/components/RangeInput";
 import { Selector } from "@/shared/components/Selector";
 import { Tabs } from "@/shared/components/Tabs";
 import { TextArea } from "@/shared/components/TextArea";
 import { TextInput } from "@/shared/components/TextInput";
+import { Typography } from "@/shared/components/Typography";
 
 import styles from "./ProjectForm.module.scss";
 import { ProjectFormValues, ProjectFormSchema, ProjectFormProps } from "./ProjectForm.types";
@@ -33,8 +39,8 @@ enum ProjectFormTabs {
   BASIC_INFORMATION = "basic-information",
   SOCIAL_NETWORKS = "social-networks",
   DOCUMENTATION = "documentation",
-  RAISING_FUNDS = "raising-funds",
   TOKEN_INFORMATION = "token-information",
+  RAISING_FUNDS = "raising-funds",
   VESTING_OPTIONS = "vesting-options",
 }
 
@@ -62,19 +68,86 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, onSubmi
 
   const [activeTab, setActiveTab] = useState<ProjectFormTabs>(ProjectFormTabs.BASIC_INFORMATION);
 
-  const { register, setValue, handleSubmit, watch } = useForm<ProjectFormValues>({
+  const {
+    control,
+    register,
+    setValue,
+    handleSubmit,
+    watch,
+    formState: { errors, dirtyFields },
+  } = useForm<ProjectFormValues>({
     defaultValues,
+    progressive: true,
     resolver: zodResolver(ProjectFormSchema),
-    reValidateMode: "onBlur",
+    reValidateMode: "onChange",
     mode: "all",
   });
 
-  const photo = watch("photo"),
-    banner = watch("banner"),
-    whitepaper = watch("whitepaper"),
+  const whitepaper = watch("whitepaper"),
     litepaper = watch("litepaper"),
     tokenomics = watch("tokenomics"),
+    amountToRaise = watch("amountToRaise"),
+    threshold = watch("threshold"),
+    tokenName = watch("tokenName"),
+    tokenImage = watch("tokenImage"),
     currencyId = watch("currency.id");
+
+  const tabCompletionChecks: Record<ProjectFormTabs, boolean | undefined> = {
+    [ProjectFormTabs.BASIC_INFORMATION]:
+      !errors.banner &&
+      !errors.photo &&
+      !errors.name &&
+      !errors.description &&
+      dirtyFields.banner &&
+      dirtyFields.photo &&
+      dirtyFields.name &&
+      dirtyFields.description,
+    [ProjectFormTabs.SOCIAL_NETWORKS]:
+      !errors.social?.discordUrl &&
+      !errors.social?.instagramUrl &&
+      !errors.social?.mediumUrl &&
+      !errors.social?.xUrl &&
+      !errors.social?.telegramUrl &&
+      dirtyFields.social?.discordUrl &&
+      dirtyFields.social?.instagramUrl &&
+      dirtyFields.social?.mediumUrl &&
+      dirtyFields.social?.xUrl &&
+      dirtyFields.social?.telegramUrl,
+    [ProjectFormTabs.DOCUMENTATION]:
+      !errors.whitepaper &&
+      !errors.tokenomics &&
+      !errors.litepaper &&
+      dirtyFields.whitepaper &&
+      dirtyFields.tokenomics &&
+      dirtyFields.litepaper,
+    [ProjectFormTabs.TOKEN_INFORMATION]:
+      !errors.tokenImage &&
+      !errors.tokenName &&
+      !errors.tokensSupply &&
+      !errors.tokenDecimals &&
+      dirtyFields.tokenImage &&
+      dirtyFields.tokenName &&
+      dirtyFields.tokensSupply &&
+      dirtyFields.tokenDecimals,
+    [ProjectFormTabs.RAISING_FUNDS]:
+      !errors.currency?.id &&
+      !errors.amountToRaise &&
+      !errors.threshold &&
+      !errors.tokensForSale &&
+      !errors.startDate &&
+      dirtyFields.currency?.id &&
+      dirtyFields.amountToRaise &&
+      dirtyFields.threshold &&
+      dirtyFields.tokensForSale &&
+      dirtyFields.startDate,
+    [ProjectFormTabs.VESTING_OPTIONS]: false,
+  };
+
+  const currentTabs = Object.values(ProjectFormTabs).map((tab) => ({
+    id: tab,
+    label: ProjectTabLabels[tab],
+    iconLeft: tabCompletionChecks[tab] && <RiCheckLine />,
+  }));
 
   /**
    * Handles the form submission.
@@ -105,14 +178,14 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, onSubmi
     },
     [ProjectFormTabs.DOCUMENTATION]: {
       left: { caption: "Back", type: "button", onClick: () => setActiveTab(ProjectFormTabs.SOCIAL_NETWORKS) },
-      right: { caption: "Continue", type: "button", onClick: () => setActiveTab(ProjectFormTabs.RAISING_FUNDS) },
-    },
-    [ProjectFormTabs.RAISING_FUNDS]: {
-      left: { caption: "Back", type: "button", onClick: () => setActiveTab(ProjectFormTabs.DOCUMENTATION) },
       right: { caption: "Continue", type: "button", onClick: () => setActiveTab(ProjectFormTabs.TOKEN_INFORMATION) },
     },
     [ProjectFormTabs.TOKEN_INFORMATION]: {
-      left: { caption: "Back", type: "button", onClick: () => setActiveTab(ProjectFormTabs.RAISING_FUNDS) },
+      left: { caption: "Back", type: "button", onClick: () => setActiveTab(ProjectFormTabs.DOCUMENTATION) },
+      right: { caption: "Continue", type: "button", onClick: () => setActiveTab(ProjectFormTabs.RAISING_FUNDS) },
+    },
+    [ProjectFormTabs.RAISING_FUNDS]: {
+      left: { caption: "Back", type: "button", onClick: () => setActiveTab(ProjectFormTabs.TOKEN_INFORMATION) },
       right: { caption: "Continue", type: "button", onClick: () => setActiveTab(ProjectFormTabs.VESTING_OPTIONS) },
     },
     [ProjectFormTabs.VESTING_OPTIONS]: {
@@ -139,187 +212,320 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, onSubmi
    */
   const renderTab = (tab: ProjectFormTabs): JSX.Element | null => {
     switch (tab) {
-      case ProjectFormTabs.RAISING_FUNDS:
+      case ProjectFormTabs.TOKEN_INFORMATION:
         return (
-          <Fieldset title={ProjectTabLabels[tab]}>
-            <div className={classNames(styles.grid, styles.three)}>
-              {currencies && (
-                <Selector
-                  label={"Currency"}
-                  description={"Select the type of currency with which your project will be funded"}
-                  options={currencies.map((currency) => ({
-                    label: currency.name,
-                    value: currency.id,
-                  }))}
-                  {...register("currency.id")}
-                />
+          <div className={classNames(styles.grid, styles.twoAlignLeft)}>
+            <FileUpload
+              icon={<RiImageAddLine />}
+              title={"Token Image"}
+              maxFiles={1}
+              className={styles.avatarImg}
+              accept="images"
+              value={[tokenImage]}
+              onChange={(files) => setValue("tokenImage", files[0])}
+              onRender={(photos, getUrl) => (
+                <div className={styles.imagePreview}>
+                  <img src={getUrl(photos[0])} />
+                </div>
               )}
-            </div>
-            {isCurrenciesLoading ? (
-              <Loader />
-            ) : (
+            />
+            <div className={classNames(styles.grid, styles.one)}>
               <div className={classNames(styles.grid, styles.two)}>
+                <TextInput label="Token Name" placeholder="Tokens Name" {...register("tokenName")} />
+              </div>
+              <div className={classNames(styles.grid, styles.two, !tokenName && styles.disabled)}>
                 <TextInput
-                  label="Amount to Raise"
+                  label="Total Supply"
                   type="number"
-                  placeholder="Amount to Raise"
-                  symbol={currency?.name ?? ""}
-                  description={
-                    "Indicate the amount of funds you need to raise to make your project work. These will be expressed in the currency you select"
-                  }
-                  {...register("amountToRaise")}
-                />
-                <TextInput label="Token Price" type="number" {...register("tokenPrice")} placeholder="Token Price" />
-                <TextInput
-                  label="Tokens Supply"
-                  type="number"
+                  placeholder={formatPrice(500000)}
+                  symbol={tokenName ?? ""}
+                  disabled={!tokenName}
+                  error={dirtyFields.tokensSupply ? errors.tokensSupply?.message : undefined}
                   {...register("tokensSupply")}
-                  placeholder="Tokens Supply"
+                />
+
+                <TextInput
+                  label="Tokens Decimals"
+                  type="number"
+                  placeholder="Tokens Decimals"
+                  maxLength={2}
+                  disabled={!tokenName}
+                  error={dirtyFields.tokenDecimals ? errors.tokenDecimals?.message : undefined}
+                  {...register("tokenDecimals")}
                 />
               </div>
-            )}
-          </Fieldset>
-        );
-
-      case ProjectFormTabs.DOCUMENTATION:
-        return (
-          <Fieldset title={ProjectTabLabels[tab]}>
-            <div className={classNames(styles.grid, styles.three)}>
-              <FileUpload
-                icon={<RiFileAddLine />}
-                title={"Whitepaper"}
-                description={"Drag and drop, or click to upload the project whitepaper"}
-                maxFiles={1}
-                accept="documents"
-                value={[whitepaper]}
-                onChange={(files) => setValue("whitepaper", files[0])}
-                onRender={(photos, getUrl) => (
-                  <div className={styles.imagePreview}>
-                    <img src={getUrl(photos[0])} />
-                  </div>
-                )}
-              />
-              <FileUpload
-                icon={<RiFileAddLine />}
-                title={"Tokenomics"}
-                description={"Drag and drop, or click to upload the tokenomics document"}
-                maxFiles={1}
-                accept="documents"
-                value={[tokenomics]}
-                onChange={(files) => setValue("tokenomics", files[0])}
-                onRender={(photos, getUrl) => (
-                  <div className={styles.imagePreview}>
-                    <img src={getUrl(photos[0])} />
-                  </div>
-                )}
-              />
-              <FileUpload
-                icon={<RiFileAddLine />}
-                title={"Litepaper"}
-                description={"Drag and drop, or click to upload the project litepaper"}
-                maxFiles={1}
-                accept="documents"
-                value={[litepaper]}
-                onChange={(files) => setValue("litepaper", files[0])}
-                onRender={(photos, getUrl) => (
-                  <div className={styles.imagePreview}>
-                    <img src={getUrl(photos[0])} />
-                  </div>
-                )}
-              />
             </div>
-          </Fieldset>
+          </div>
         );
 
-      case ProjectFormTabs.SOCIAL_NETWORKS:
+      case ProjectFormTabs.RAISING_FUNDS:
         return (
-          <Fieldset title={ProjectTabLabels[tab]}>
+          <div className={classNames(styles.grid, styles.one)}>
             <div className={classNames(styles.grid, styles.two)}>
-              <TextInput
-                label="Discord URL"
-                type="text"
-                {...register("social.discordUrl")}
-                placeholder="https://discord.com/invite..."
-                icon={<RiDiscordFill />}
-              />
-              <TextInput
-                label="Instagram URL"
-                type="text"
-                {...register("social.instagramUrl")}
-                placeholder="https://www.instagram.com/..."
-                icon={<RiInstagramFill />}
-              />
-              <TextInput
-                label="Medium URL"
-                type="text"
-                {...register("social.mediumUrl")}
-                placeholder="https://medium.com/@..."
-                icon={<RiMediumFill />}
-              />
-              <TextInput
-                label="X URL"
-                type="text"
-                {...register("social.xUrl")}
-                placeholder="https://x.com/..."
-                icon={<RiTwitterXFill />}
-              />
-              <TextInput
-                label="Telegram URL"
-                type="text"
-                {...register("social.telegramUrl")}
-                placeholder="https://t.me/..."
-                icon={<RiTelegramFill />}
-              />
-            </div>
-          </Fieldset>
-        );
-
-      case ProjectFormTabs.BASIC_INFORMATION:
-        return (
-          <Fieldset title={ProjectTabLabels[tab]}>
-            <div className={styles.banner}>
-              <FileUpload
-                icon={<RiImageAddLine />}
-                title={"Cover Photo"}
-                description={"Drag and drop, or click to upload the cover photo of your project"}
-                maxFiles={1}
-                accept="images"
-                className={styles.bannerImg}
-                value={[banner]}
-                onChange={(files) => setValue("banner", files[0])}
-                onRender={(photos, getUrl) => (
-                  <div className={styles.imagePreview}>
-                    <img src={getUrl(photos[0])} />
-                  </div>
+              <div className={classNames(styles.grid, styles.one)}>
+                {currencies && (
+                  <Selector
+                    label={"Currency"}
+                    description={"Select the type of currency with which your project will be funded"}
+                    options={currencies.map((currency) => ({
+                      label: currency.name,
+                      value: currency.id,
+                    }))}
+                    {...register("currency.id")}
+                  />
                 )}
-              />
-              <div className={styles.avatar}>
-                <FileUpload
-                  icon={<RiImageAddLine />}
-                  title={"Project Photo"}
-                  maxFiles={1}
-                  className={styles.avatarImg}
-                  accept="images"
-                  value={[photo]}
-                  onChange={(files) => setValue("photo", files[0])}
-                  onRender={(photos, getUrl) => (
-                    <div className={styles.imagePreview}>
-                      <img src={getUrl(photos[0])} />
+
+                {isCurrenciesLoading ? (
+                  <Loader />
+                ) : (
+                  <TextInput
+                    label="Amount to Raise"
+                    type="number"
+                    placeholder="Amount to Raise"
+                    symbol={currency?.name ?? ""}
+                    description={
+                      "Indicate the amount of funds you need to raise to make your project work. These will be expressed in the currency you select"
+                    }
+                    {...register("amountToRaise")}
+                    error={dirtyFields.amountToRaise ? errors.amountToRaise?.message : undefined}
+                  />
+                )}
+              </div>
+              <div className={classNames(styles.grid, styles.one)}>
+                <Controller
+                  name="threshold"
+                  control={control}
+                  render={({ field }) => (
+                    <div className={classNames(styles.grid, styles.one, !amountToRaise && styles.disabled)}>
+                      <RangeInput
+                        label={"Threshold"}
+                        description={
+                          "Specify the minimum threshold value required for the project to be considered successful. (Minimum 5% and maximum 25%)"
+                        }
+                        min={5}
+                        max={25}
+                        value={field.value}
+                        onChange={field.onChange}
+                        disabled={!amountToRaise}
+                        renderValue={(value) => <Typography size={"small"}>{value}%</Typography>}
+                      />
+                      {threshold > 0 && (
+                        <div className={classNames(styles.grid, styles.two, styles.amountToRaise)}>
+                          <TextInput
+                            label="Minimum Amount"
+                            type="number"
+                            placeholder="Minimum Amount"
+                            symbol={currency?.name ?? ""}
+                            value={formatPrice(amountToRaise - (amountToRaise * threshold) / 100)}
+                            disabled
+                          />
+                          <TextInput
+                            label="Maximum Amount"
+                            type="number"
+                            placeholder="Maximum Amount"
+                            symbol={currency?.name ?? ""}
+                            value={formatPrice(amountToRaise + (amountToRaise * threshold) / 100)}
+                            disabled
+                          />
+                        </div>
+                      )}
                     </div>
                   )}
                 />
               </div>
             </div>
             <div className={classNames(styles.grid, styles.two)}>
-              <TextInput label="Project Name" type="text" {...register("name")} placeholder="Project Name" />
+              <TextInput
+                label="Token For Sale"
+                type="number"
+                placeholder={formatPrice(500000, undefined, 0)}
+                symbol={currency?.name ?? ""}
+                description={
+                  "Indicate the amount of funds you need to raise to make your project work. These will be expressed in the currency you select"
+                }
+                {...register("tokensForSale")}
+              />
+              <Controller
+                name={"startDate"}
+                control={control}
+                render={({ field }) => (
+                  <DateInput
+                    {...field}
+                    label="ICO Start date"
+                    description={"Select the date you want your project to start its initial registration phase."}
+                    placeholder="YYYY-MM-DD"
+                    error={dirtyFields.startDate ? errors.startDate?.message : undefined}
+                  />
+                )}
+              />
+            </div>
+          </div>
+        );
+
+      case ProjectFormTabs.DOCUMENTATION:
+        return (
+          <div className={classNames(styles.grid, styles.three)}>
+            <FileUpload
+              icon={<RiFileAddLine />}
+              title={"Whitepaper"}
+              description={"Drag and drop, or click to upload the project whitepaper"}
+              maxFiles={1}
+              accept="documents"
+              value={[whitepaper]}
+              error={errors.whitepaper?.message}
+              onChange={(files) => setValue("whitepaper", files[0])}
+              onRender={(photos, getUrl) => (
+                <div className={styles.imagePreview}>
+                  <img src={getUrl(photos[0])} />
+                </div>
+              )}
+            />
+            <FileUpload
+              icon={<RiFileAddLine />}
+              title={"Tokenomics"}
+              description={"Drag and drop, or click to upload the tokenomics document"}
+              maxFiles={1}
+              accept="documents"
+              value={[tokenomics]}
+              error={dirtyFields.tokenomics ? errors.tokenomics?.message : undefined}
+              onChange={(files) => setValue("tokenomics", files[0])}
+              onRender={(photos, getUrl) => (
+                <div className={styles.imagePreview}>
+                  <img src={getUrl(photos[0])} />
+                </div>
+              )}
+            />
+            <FileUpload
+              icon={<RiFileAddLine />}
+              title={"Litepaper"}
+              description={"Drag and drop, or click to upload the project litepaper"}
+              maxFiles={1}
+              accept="documents"
+              value={[litepaper]}
+              error={dirtyFields.litepaper ? errors.litepaper?.message : undefined}
+              onChange={(files) => setValue("litepaper", files[0])}
+              onRender={(photos, getUrl) => (
+                <div className={styles.imagePreview}>
+                  <img src={getUrl(photos[0])} />
+                </div>
+              )}
+            />
+          </div>
+        );
+
+      case ProjectFormTabs.SOCIAL_NETWORKS:
+        return (
+          <div className={classNames(styles.grid, styles.two)}>
+            <TextInput
+              label="Discord URL"
+              type="text"
+              {...register("social.discordUrl")}
+              placeholder="https://discord.com/invite..."
+              icon={<RiDiscordFill />}
+              error={dirtyFields.social?.discordUrl ? errors.social?.discordUrl?.message : undefined}
+            />
+            <TextInput
+              label="Instagram URL"
+              type="text"
+              {...register("social.instagramUrl")}
+              placeholder="https://www.instagram.com/..."
+              icon={<RiInstagramFill />}
+              error={dirtyFields.social?.instagramUrl ? errors.social?.instagramUrl?.message : undefined}
+            />
+            <TextInput
+              label="Medium URL"
+              type="text"
+              {...register("social.mediumUrl")}
+              placeholder="https://medium.com/@..."
+              icon={<RiMediumFill />}
+              error={dirtyFields.social?.mediumUrl ? errors.social?.mediumUrl?.message : undefined}
+            />
+            <TextInput
+              label="X URL"
+              type="text"
+              {...register("social.xUrl")}
+              placeholder="https://x.com/..."
+              icon={<RiTwitterXFill />}
+              error={dirtyFields.social?.xUrl ? errors.social?.xUrl?.message : undefined}
+            />
+            <TextInput
+              label="Telegram URL"
+              type="text"
+              {...register("social.telegramUrl")}
+              placeholder="https://t.me/..."
+              icon={<RiTelegramFill />}
+              error={dirtyFields.social?.telegramUrl ? errors.social?.telegramUrl?.message : undefined}
+            />
+          </div>
+        );
+
+      case ProjectFormTabs.BASIC_INFORMATION:
+        return (
+          <div className={classNames(styles.grid, styles.one)}>
+            <div className={styles.banner}>
+              <Controller
+                name="banner"
+                control={control}
+                render={({ field }) => (
+                  <FileUpload
+                    icon={<RiImageAddLine />}
+                    title={"Cover Photo"}
+                    description={"Drag and drop, or click to upload the cover photo of your project"}
+                    maxFiles={1}
+                    accept="images"
+                    className={styles.bannerImg}
+                    value={[field.value]}
+                    error={dirtyFields.banner ? errors.banner?.message : undefined}
+                    onChange={(files) => field.onChange(files[0])}
+                    onRender={(photos, getUrl) => (
+                      <div className={styles.imagePreview}>
+                        <img src={getUrl(photos[0])} />
+                      </div>
+                    )}
+                  />
+                )}
+              />
+              <div className={styles.avatar}>
+                <Controller
+                  name="photo"
+                  control={control}
+                  render={({ field }) => (
+                    <FileUpload
+                      icon={<RiImageAddLine />}
+                      title={"Project Photo"}
+                      maxFiles={1}
+                      className={styles.avatarImg}
+                      accept="images"
+                      value={[field.value]}
+                      error={dirtyFields.photo ? errors.photo?.message : undefined}
+                      onChange={(files) => field.onChange(files[0])}
+                      onRender={(photos, getUrl) => (
+                        <div className={styles.imagePreview}>
+                          <img src={getUrl(photos[0])} />
+                        </div>
+                      )}
+                    />
+                  )}
+                />
+              </div>
+            </div>
+            <div className={classNames(styles.grid, styles.two, styles.withPaddingTop)}>
+              <TextInput
+                label="Project Name"
+                type="text"
+                {...register("name")}
+                placeholder="Project Name"
+                error={dirtyFields.name ? errors.name?.message : undefined}
+              />
             </div>
 
             <TextArea
               label="Project Description"
               {...register("description")}
               placeholder="Write an appropriate and detailed description of your project that is attractive and clear for users. Make sure to include objectives, main features, and any relevant information that may capture the interest of potential users."
+              error={dirtyFields.description ? errors.description?.message : undefined}
             />
-          </Fieldset>
+          </div>
         );
 
       default:
@@ -337,19 +543,13 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, onSubmi
     <form onSubmit={handleSubmit(onSubmitHandler)} className={styles.form}>
       {/* Tabs */}
       <div className={styles.tabs}>
-        <Tabs
-          activeId={activeTab}
-          itemClassName={styles.tab}
-          tabs={Object.values(ProjectFormTabs).map((tab) => ({
-            id: tab,
-            label: ProjectTabLabels[tab],
-          }))}
-          onChange={setActiveTab}
-        />
+        <Tabs activeId={activeTab} itemClassName={styles.tab} tabs={currentTabs} onChange={setActiveTab} />
       </div>
 
       {/* Page Container */}
-      {renderTab(activeTab)}
+      <Fieldset title={ProjectTabLabels[activeTab]}>
+        <Animatable>{renderTab(activeTab)}</Animatable>
+      </Fieldset>
 
       {/* Actions */}
       <div className={styles.actions}>

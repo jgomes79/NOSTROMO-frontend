@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   padding: 38px 22px;
-  background-color: #151614;
+  background-color: #11140d;
   border: 1px solid #303429;
   align-items: center;
   justify-content: center;
@@ -12,7 +12,7 @@
 
   &:not(.isDragActive):hover {
     border-color: greenyellow;
-    background: #151614;
+    background: #11140d;
   }
 
   &.isDragActive {
@@ -25,7 +25,7 @@
     border: none;
   }
 
-  transition: 120ms linear;
+  transition: background-color 120ms linear, border-color 120ms linear;
 }
 
 .icon {

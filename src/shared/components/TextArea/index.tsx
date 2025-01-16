@@ -1,6 +1,10 @@
 import React from "react";
 
+import classNames from "clsx";
+import { RiAlertLine } from "react-icons/ri";
+
 import styles from "./TextArea.module.scss";
+import { TagLabel } from "../TagLabel";
 
 /**
  * Props for the TextArea component.
@@ -10,6 +14,7 @@ import styles from "./TextArea.module.scss";
  */
 interface TextAreaProps extends React.HTMLProps<HTMLTextAreaElement> {
   readonly label: string;
+  readonly error?: string;
 }
 
 /**
@@ -19,13 +24,13 @@ interface TextAreaProps extends React.HTMLProps<HTMLTextAreaElement> {
  * @param {React.Ref<HTMLTextAreaElement>} ref - The ref to be forwarded to the textarea element.
  * @returns {JSX.Element} The rendered TextArea component.
  */
-export const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(({ label, ...props }, ref) => {
+export const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(({ label, error, ...props }, ref) => {
   return (
     <div className={styles.layout}>
       <label htmlFor={props.name}>{label}</label>
       <textarea
         ref={ref}
-        className={styles.input}
+        className={classNames(styles.input, error && styles.withError)}
         style={{ height: "auto", overflowY: "hidden" }}
         onInput={(e) => {
           const target = e.target as HTMLTextAreaElement;
@@ -34,6 +39,7 @@ export const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(({ 
         }}
         {...props}
       />
+      {error && <TagLabel text={error} icon={<RiAlertLine />} color="red" />}
     </div>
   );
 });

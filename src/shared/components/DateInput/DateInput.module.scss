@@ -1,0 +1,16 @@
+.layout {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+
+.description {
+  color: $green-04;
+}
+
+.input {
+  &.withError {
+    outline: 1px solid $red-03;
+  }
+}

@@ -34,7 +34,13 @@ export const NewProjectPage: React.FC = () => {
         <div className={styles.gradient} />
       </div>
       <div className={styles.form}>
-        <ProjectForm onSubmit={handleClickSubmit} onCancel={() => {}} />
+        <ProjectForm
+          defaultValues={{
+            threshold: 5,
+          }}
+          onSubmit={handleClickSubmit}
+          onCancel={() => {}}
+        />
       </div>
     </div>
   );

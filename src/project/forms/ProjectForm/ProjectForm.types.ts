@@ -14,13 +14,19 @@ export const ProjectFormSchema = ProjectSchema.pick({
   tokensSupply: true,
   tokenPrice: true,
   amountToRaise: true,
+  startDate: true,
+  tokenName: true,
+  tokenDecimals: true,
+  tokensForSale: true,
   currency: true,
+  threshold: true,
 }).extend({
   photo: z.union([z.instanceof(File), z.string()]),
   banner: z.union([z.instanceof(File), z.string()]),
   whitepaper: z.union([z.instanceof(File), z.string()]),
   litepaper: z.union([z.instanceof(File), z.string()]),
   tokenomics: z.union([z.instanceof(File), z.string()]),
+  tokenImage: z.union([z.instanceof(File), z.string()]),
 });
 
 /**
@@ -35,7 +41,7 @@ export type ProjectFormValues = z.infer<typeof ProjectFormSchema>;
  * @param onCancel - Callback function that executes to navigate back from the form.
  */
 export interface ProjectFormProps {
-  defaultValues?: ProjectFormValues;
+  defaultValues?: Partial<ProjectFormValues>;
   onSubmit: (data: ProjectFormValues) => void;
   onCancel: () => void;
 }

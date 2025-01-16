@@ -1,0 +1,27 @@
+.layout {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+}
+
+.icon {
+
+  svg {
+    width: 16px;
+    height: 16px;
+    color: inherit;
+  }
+}
+
+.green {
+  color: $green-04;
+}
+
+.red {
+  color: $red-03;
+}
+
+.yellow {
+  color: $yellow-01;
+}

@@ -1,8 +1,10 @@
 import React from "react";
 
 import classNames from "clsx";
+import { RiAlertLine } from "react-icons/ri";
 
 import styles from "./TextInput.module.scss";
+import { TagLabel } from "../TagLabel";
 import { Typography } from "../Typography";
 
 /**
@@ -13,6 +15,7 @@ interface TextInputProps extends React.HTMLProps<HTMLInputElement> {
   readonly icon?: React.ReactNode;
   readonly symbol?: string;
   readonly description?: string;
+  readonly error?: string;
 }
 /**
  * TextInput component.
@@ -22,7 +25,7 @@ interface TextInputProps extends React.HTMLProps<HTMLInputElement> {
  * @returns {JSX.Element} The rendered TextInput component.
  */
 export const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(
-  ({ label, icon, symbol, type, description, ...props }, ref) => {
+  ({ label, icon, symbol, type, description, error, ...props }, ref) => {
     /**
      * Handles the input event for the TextInput component.
      *
@@ -34,7 +37,7 @@ export const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(
     const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
       if (type === "number") {
         const value = event.target.value;
-        const sanitizedValue = value.replace(/[^0-9,]/g, ""); // Remove non-numeric characters except comma
+        const sanitizedValue = value.replace(/[^0-9.]/g, ""); // Remove non-numeric characters except comma
         event.target.value = sanitizedValue;
       }
     };
@@ -56,13 +59,14 @@ export const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(
 
           {icon && <div className={styles.icon}>{icon}</div>}
           <input
-            className={classNames(styles.input, icon && styles.withIcon)}
+            className={classNames(styles.input, icon && styles.withIcon, error && styles.withError)}
             type="text"
             onInput={handleInput}
             ref={ref}
             {...props}
           />
         </div>
+        {error && <TagLabel text={error} icon={<RiAlertLine />} color="red" />}
       </div>
     );
   },

@@ -6,7 +6,7 @@
 
 .input {
   padding: 18px;
-  background: #151614;
+  background: #11140d;
   border: none;
   border-radius: 8px;
   outline: 1px solid #303429;
@@ -26,5 +26,9 @@
 
   &::placeholder {
     color: $green-04;
+  }
+
+  &.withError {
+    outline: 1px solid $red-03;
   }
 }

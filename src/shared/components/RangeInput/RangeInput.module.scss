@@ -1,0 +1,22 @@
+.layout {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.description {
+  color: $green-04;
+}
+
+.container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  height: 52px;
+}
+
+.range {
+  width: 100%;
+  accent-color: $green-03;
+}

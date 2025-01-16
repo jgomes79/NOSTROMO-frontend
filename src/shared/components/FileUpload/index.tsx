@@ -14,7 +14,7 @@ interface FileUploadProps {
   readonly title: string;
   readonly description?: string;
   readonly maxFiles: number;
-
+  readonly error?: string;
   readonly value: Value[];
   readonly accept: "images" | "documents";
   readonly className?: string;
@@ -55,12 +55,13 @@ const acceptedFormats: Record<Required<FileUploadProps>["accept"], Accept> = {
  * @param {function} props.onRender - A function to render the uploaded files.
  * @param {function} props.onChange - A callback function triggered when files are dropped.
  * @param {string} [props.className] - Additional class names for styling.
+ * @param {string} [props.error] - The error message to display.
  * @param {React.Ref<HTMLDivElement>} ref - The ref to the root div element.
  *
  * @returns {JSX.Element} The rendered FileUpload component.
  */
 export const FileUpload = React.forwardRef<HTMLDivElement, FileUploadProps>(
-  ({ icon, title, description, accept, maxFiles, value, onRender, onChange, className }, ref) => {
+  ({ icon, title, description, accept, maxFiles, value, onRender, onChange, className, error }, ref) => {
     /**
      * Handles the file drop event and triggers the onChange callback.
      *
@@ -143,6 +144,11 @@ export const FileUpload = React.forwardRef<HTMLDivElement, FileUploadProps>(
           </>
         )}
         <input {...getInputProps()} />
+        {error && (
+          <Typography size={"medium"} variant="body" className={styles.error}>
+            {error}
+          </Typography>
+        )}
       </div>
     );
   },
