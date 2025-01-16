@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useState, useRef } from "react";
 
 import classNames from "clsx";
 
@@ -53,14 +53,6 @@ export const Tabs = <T,>({ tabs, activeId, onChange, onRender, itemClassName }: 
   const [activeTab, setActiveTab] = useState<T>(activeId);
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
-  useEffect(() => {
-    setActiveTab(activeId);
-    const activeTabIndex = tabs.findIndex((tab) => tab.id === activeId);
-    if (tabRefs.current[activeTabIndex]) {
-      tabRefs.current[activeTabIndex]?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
-    }
-  }, [activeId, tabs]);
-
   /**
    * Handles the click event for a tab.
    *
@@ -69,6 +61,11 @@ export const Tabs = <T,>({ tabs, activeId, onChange, onRender, itemClassName }: 
   const handleClickTab = (tabId: Tab<T>["id"]) => {
     setActiveTab(tabId);
     onChange?.(tabId);
+
+    const activeTabIndex = tabs.findIndex((tab) => tab.id === tabId);
+    if (tabRefs.current[activeTabIndex]) {
+      tabRefs.current[activeTabIndex]?.scrollIntoView({ behavior: "smooth", inline: "center" });
+    }
   };
 
   return (
