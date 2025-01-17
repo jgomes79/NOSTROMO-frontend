@@ -41,13 +41,16 @@ export const ErrorPage: React.FC<ErrorPageProps> = ({ code, title, description, 
             {code}
           </Typography>
         )}
-        <Typography as="h1" variant="heading" size="large" textAlign="center">
-          {title}
-        </Typography>
-        <Typography as="p" textAlign="center" size="medium">
-          {description}
-        </Typography>
-
+        <div className={styles.field}>
+          <div>
+            <Typography as="h1" variant="heading" size="large" textAlign="center">
+              {title}
+            </Typography>
+            <Typography as="p" textAlign="center" size="medium">
+              {description}
+            </Typography>
+          </div>
+        </div>
         {(actions && actions.length) > 0 && (
           <footer className={styles.footer}>
             <div className={styles.actions}>{actions.map((action) => action)}</div>

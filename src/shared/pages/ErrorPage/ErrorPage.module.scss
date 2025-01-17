@@ -7,6 +7,8 @@
 
 .field {
   @include containerMargin();
+
+  gap: 22px;
 }
 
 .title, .symbol, .description {
@@ -29,10 +31,9 @@
 }
 
 .footer {
-  display: flex;
-  flex-direction: row;
+  display: grid;
   padding: 22px 0;
-
+  justify-content: center;
 }
 
 .actions {

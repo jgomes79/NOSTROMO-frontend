@@ -18,5 +18,6 @@ export const MODULE_PROJECT = "project";
 export const PROJECT_ROUTES = {
   MAIN: "/projects",
   PROJECT_DETAILS: "/projects/:slug",
-  NEW_PROJECT: "/projects/new",
+  NEW_PROJECT_INIT: "/projects/new/:slug?",
+  EDIT_PROJECT: "/projects/:slug/edit",
 };

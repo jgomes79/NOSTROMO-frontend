@@ -3,7 +3,7 @@ import { RouteObject } from "react-router-dom";
 import { registerModule } from "@/core/modules/modules.helpers";
 import { AppLayout } from "@/shared/layouts/AppLayout";
 
-import { NewProjectPage } from "./pages/NewProjectPage";
+import { CreateOrEditProjectPage } from "./pages/CreateOrEditProjectPage";
 import { ProjectDetailsPage } from "./pages/ProjectDetailsPage";
 import { MODULE_PROJECT, PROJECT_ROUTES } from "./project.constants";
 
@@ -17,8 +17,12 @@ const routes: RouteObject[] = [
         element: <ProjectDetailsPage />,
       },
       {
-        path: PROJECT_ROUTES.NEW_PROJECT,
-        element: <NewProjectPage />,
+        path: PROJECT_ROUTES.NEW_PROJECT_INIT,
+        element: <CreateOrEditProjectPage />,
+      },
+      {
+        path: PROJECT_ROUTES.EDIT_PROJECT,
+        element: <CreateOrEditProjectPage />,
       },
     ],
   },
