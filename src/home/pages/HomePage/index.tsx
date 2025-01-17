@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 
 import classNames from "clsx";
 import { RiSendPlaneLine } from "react-icons/ri";
@@ -21,6 +22,7 @@ import { MainSection } from "../../components/MainSection";
 export const HomePage: React.FC = () => {
   const sectionRefs = useRef<(HTMLElement | null)[]>([]);
   const [currentSection, setCurrentSection] = useState(0);
+  const navigate = useNavigate();
 
   useAppTitle("Enter the Gateway of Blockchain Innovation");
 
@@ -99,7 +101,13 @@ export const HomePage: React.FC = () => {
           <Banner
             title="Ready to launch your project in Nostromo?"
             description="Apply today to become part of Qubic!"
-            button={{ caption: "Apply Now!", icon: <RiSendPlaneLine /> }}
+            button={{
+              caption: "Apply Now!",
+              icon: <RiSendPlaneLine />,
+              onClick: () => {
+                navigate("/projects/new");
+              },
+            }}
             imageUrl="https://images.unsplash.com/photo-1526392269816-39d8ed656494?q=80&w=2914&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
           />
         </div>

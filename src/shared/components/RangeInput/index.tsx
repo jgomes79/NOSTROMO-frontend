@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import styles from "./RangeInput.module.scss";
 import { Typography } from "../Typography";
@@ -6,7 +6,7 @@ import { Typography } from "../Typography";
 /**
  * Props for the RangeInput component.
  */
-interface RangeInputProps extends React.HTMLProps<HTMLInputElement> {
+interface RangeInputProps extends Omit<React.HTMLProps<HTMLInputElement>, "value" | "defaultValue"> {
   /**
    * The step value for the range input, which determines the intervals between selectable values.
    * @default 1
@@ -38,7 +38,17 @@ interface RangeInputProps extends React.HTMLProps<HTMLInputElement> {
   /**
    * A function that renders the value of the range input.
    */
-  readonly renderValue?: (value: React.HTMLProps<HTMLInputElement>["value"]) => React.ReactNode;
+  readonly renderValue?: (value: string | number) => React.ReactNode;
+
+  /**
+   * The controlled value of the range input.
+   */
+  readonly value?: string | number;
+
+  /**
+   * The default value of the range input for uncontrolled usage.
+   */
+  readonly defaultValue?: string | number;
 }
 
 /**
@@ -54,8 +64,31 @@ export const RangeInput: React.FC<RangeInputProps> = ({
   max = 100,
   step = 1,
   renderValue,
+  value,
+  defaultValue,
   ...props
 }) => {
+  const [internalValue, setInternalValue] = useState<string | number>(defaultValue || min);
+
+  /**
+   * Handles the change event for the range input.
+   *
+   * @param {React.ChangeEvent<HTMLInputElement>} event - The change event.
+   */
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setInternalValue(event.target.value);
+    if (props.onChange) {
+      props.onChange(event);
+    }
+  };
+
+  /**
+   * Determines the value of the range input.
+   * If a controlled value is provided, it uses that value.
+   * Otherwise, it uses the internal state value.
+   */
+  const inputValue = value !== undefined ? value : internalValue;
+
   return (
     <div className={styles.layout}>
       <label htmlFor={props.name}>{label}</label>
@@ -66,8 +99,17 @@ export const RangeInput: React.FC<RangeInputProps> = ({
       )}
 
       <div className={styles.container}>
-        <input type="range" className={styles.range} min={min} max={max} step={step} {...props} />
-        {renderValue && renderValue(props.value)}
+        <input
+          type="range"
+          className={styles.range}
+          min={min}
+          max={max}
+          step={step}
+          value={inputValue}
+          onChange={handleChange}
+          {...props}
+        />
+        {renderValue && renderValue(inputValue)}
       </div>
     </div>
   );

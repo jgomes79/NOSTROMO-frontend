@@ -37,6 +37,11 @@ interface BannerProps {
      * The icon to be displayed on the button.
      */
     icon: React.ReactNode;
+
+    /**
+     * The onClick handler for the button.
+     */
+    onClick: () => void;
   };
 }
 
@@ -64,7 +69,12 @@ export const Banner: React.FC<BannerProps> = ({ title, description, button, imag
             {description}
           </Typography>
         </div>
-        <Button caption={button.caption} iconRight={button.icon} size={isMobile ? "small" : "large"} />
+        <Button
+          caption={button.caption}
+          iconRight={button.icon}
+          size={isMobile ? "small" : "large"}
+          onClick={button.onClick}
+        />
       </div>
     </div>
   );

@@ -84,6 +84,7 @@ export const LaunchpadPage: React.FC = () => {
                       <ProjectOverview
                         key={index}
                         name={project.name}
+                        slug={project.slug}
                         description={project.description}
                         photoUrl={project.photoUrl}
                         bannerUrl={project.bannerUrl}

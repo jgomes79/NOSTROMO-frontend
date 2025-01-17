@@ -83,15 +83,17 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, onSubmi
     mode: "all",
   });
 
-  const whitepaper = watch("whitepaper"),
-    litepaper = watch("litepaper"),
-    tokenomics = watch("tokenomics"),
-    amountToRaise = watch("amountToRaise"),
+  const amountToRaise = watch("amountToRaise"),
     threshold = watch("threshold"),
     tokenName = watch("tokenName"),
     tokenImage = watch("tokenImage"),
     currencyId = watch("currency.id");
 
+  /**
+   * An object that checks the completion status of each tab in the project form.
+   * Each key corresponds to a tab, and the value is a boolean indicating whether
+   * all required fields in that tab are filled and error-free.
+   */
   const tabCompletionChecks: Record<ProjectFormTabs, boolean | undefined> = {
     [ProjectFormTabs.BASIC_INFORMATION]:
       !errors.banner &&
@@ -130,7 +132,6 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, onSubmi
       dirtyFields.tokensSupply &&
       dirtyFields.tokenDecimals,
     [ProjectFormTabs.RAISING_FUNDS]:
-      !errors.currency?.id &&
       !errors.amountToRaise &&
       !errors.threshold &&
       !errors.tokensForSale &&
@@ -140,9 +141,20 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, onSubmi
       dirtyFields.threshold &&
       dirtyFields.tokensForSale &&
       dirtyFields.startDate,
-    [ProjectFormTabs.VESTING_OPTIONS]: false,
+    [ProjectFormTabs.VESTING_OPTIONS]:
+      !errors.TGEDate &&
+      !errors.cliff &&
+      !errors.vestingDays &&
+      dirtyFields.TGEDate &&
+      dirtyFields.cliff &&
+      dirtyFields.vestingDays,
   };
 
+  /**
+   * An array of objects representing the current tabs in the project form.
+   * Each object contains the tab's id, label, and an optional icon indicating
+   * the completion status of the tab.
+   */
   const currentTabs = Object.values(ProjectFormTabs).map((tab) => ({
     id: tab,
     label: ProjectTabLabels[tab],
@@ -212,26 +224,85 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, onSubmi
    */
   const renderTab = (tab: ProjectFormTabs): JSX.Element | null => {
     switch (tab) {
+      case ProjectFormTabs.VESTING_OPTIONS:
+        return (
+          <div className={classNames(styles.grid, styles.two)}>
+            <Controller
+              name={"TGEDate"}
+              control={control}
+              key={"TGEDate"}
+              render={({ field }) => (
+                <DateInput
+                  {...field}
+                  label="Token Listing Date"
+                  description={"Select the date when your token will be listed."}
+                  placeholder="YYYY-MM-DD"
+                  error={dirtyFields.startDate ? errors.startDate?.message : undefined}
+                />
+              )}
+            />
+            <TextInput
+              label="Tokens Unlocked at TGE"
+              type="number"
+              placeholder="Tokens Unlocked at TGE"
+              description={"Specify the number of tokens to be unlocked on the listing date."}
+              maxLength={2}
+              disabled={!tokenName}
+              symbol={tokenName}
+              error={dirtyFields.unlockTokensTGE ? errors.unlockTokensTGE?.message : undefined}
+              {...register("unlockTokensTGE", { valueAsNumber: true })}
+            />
+            <TextInput
+              label="Cliff Period"
+              type="number"
+              placeholder="Cliff Period"
+              description={"Enter the number of days required before tokens can be released."}
+              maxLength={2}
+              disabled={!tokenName}
+              error={dirtyFields.cliff ? errors.cliff?.message : undefined}
+              {...register("cliff", { valueAsNumber: true })}
+            />
+            <TextInput
+              label="Vesting Duration"
+              type="number"
+              placeholder="Vesting Duration"
+              maxLength={2}
+              description={"Specify the number of days over which the token vesting will occur."}
+              disabled={!tokenName}
+              error={dirtyFields.vestingDays ? errors.vestingDays?.message : undefined}
+              {...register("vestingDays", { valueAsNumber: true })}
+            />
+          </div>
+        );
+
       case ProjectFormTabs.TOKEN_INFORMATION:
         return (
           <div className={classNames(styles.grid, styles.twoAlignLeft)}>
-            <FileUpload
-              icon={<RiImageAddLine />}
-              title={"Token Image"}
-              maxFiles={1}
-              className={styles.avatarImg}
-              accept="images"
-              value={[tokenImage]}
-              onChange={(files) => setValue("tokenImage", files[0])}
-              onRender={(photos, getUrl) => (
-                <div className={styles.imagePreview}>
-                  <img src={getUrl(photos[0])} />
-                </div>
+            <Controller
+              name="tokenImage"
+              key={"tokenImage"}
+              control={control}
+              render={({ field }) => (
+                <FileUpload
+                  name={"tokenImage"}
+                  icon={<RiImageAddLine />}
+                  title={"Token Image"}
+                  maxFiles={1}
+                  className={styles.avatarImg}
+                  accept="images"
+                  value={[tokenImage]}
+                  onChange={(files) => field.onChange(files[0])}
+                  onRender={(photos, getUrl) => (
+                    <div className={styles.imagePreview}>
+                      <img src={getUrl(photos[0])} />
+                    </div>
+                  )}
+                />
               )}
             />
             <div className={classNames(styles.grid, styles.one)}>
               <div className={classNames(styles.grid, styles.two)}>
-                <TextInput label="Token Name" placeholder="Tokens Name" {...register("tokenName")} />
+                <TextInput label="Token Name" placeholder="Tokens Name" upperCase={true} {...register("tokenName")} />
               </div>
               <div className={classNames(styles.grid, styles.two, !tokenName && styles.disabled)}>
                 <TextInput
@@ -241,7 +312,7 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, onSubmi
                   symbol={tokenName ?? ""}
                   disabled={!tokenName}
                   error={dirtyFields.tokensSupply ? errors.tokensSupply?.message : undefined}
-                  {...register("tokensSupply")}
+                  {...register("tokensSupply", { valueAsNumber: true })}
                 />
 
                 <TextInput
@@ -251,7 +322,7 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, onSubmi
                   maxLength={2}
                   disabled={!tokenName}
                   error={dirtyFields.tokenDecimals ? errors.tokenDecimals?.message : undefined}
-                  {...register("tokenDecimals")}
+                  {...register("tokenDecimals", { valueAsNumber: true })}
                 />
               </div>
             </div>
@@ -286,8 +357,8 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, onSubmi
                     description={
                       "Indicate the amount of funds you need to raise to make your project work. These will be expressed in the currency you select"
                     }
-                    {...register("amountToRaise")}
                     error={dirtyFields.amountToRaise ? errors.amountToRaise?.message : undefined}
+                    {...register("amountToRaise", { valueAsNumber: true })}
                   />
                 )}
               </div>
@@ -295,6 +366,7 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, onSubmi
                 <Controller
                   name="threshold"
                   control={control}
+                  key={"threshold"}
                   render={({ field }) => (
                     <div className={classNames(styles.grid, styles.one, !amountToRaise && styles.disabled)}>
                       <RangeInput
@@ -305,7 +377,7 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, onSubmi
                         min={5}
                         max={25}
                         value={field.value}
-                        onChange={field.onChange}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => field.onChange(Number(e.target.value))}
                         disabled={!amountToRaise}
                         renderValue={(value) => <Typography size={"small"}>{value}%</Typography>}
                       />
@@ -313,18 +385,22 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, onSubmi
                         <div className={classNames(styles.grid, styles.two, styles.amountToRaise)}>
                           <TextInput
                             label="Minimum Amount"
-                            type="number"
+                            type="string"
                             placeholder="Minimum Amount"
                             symbol={currency?.name ?? ""}
-                            value={formatPrice(amountToRaise - (amountToRaise * threshold) / 100)}
+                            value={
+                              amountToRaise > 0 ? formatPrice(amountToRaise - (amountToRaise * threshold) / 100) : 0
+                            }
                             disabled
                           />
                           <TextInput
                             label="Maximum Amount"
-                            type="number"
+                            type="string"
                             placeholder="Maximum Amount"
                             symbol={currency?.name ?? ""}
-                            value={formatPrice(amountToRaise + (amountToRaise * threshold) / 100)}
+                            value={
+                              amountToRaise > 0 ? formatPrice(amountToRaise + (amountToRaise * threshold) / 100) : 0
+                            }
                             disabled
                           />
                         </div>
@@ -343,11 +419,13 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, onSubmi
                 description={
                   "Indicate the amount of funds you need to raise to make your project work. These will be expressed in the currency you select"
                 }
-                {...register("tokensForSale")}
+                error={dirtyFields.tokensForSale ? errors.tokensForSale?.message : undefined}
+                {...register("tokensForSale", { valueAsNumber: true })}
               />
               <Controller
                 name={"startDate"}
                 control={control}
+                key={"startDate"}
                 render={({ field }) => (
                   <DateInput
                     {...field}
@@ -365,49 +443,58 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, onSubmi
       case ProjectFormTabs.DOCUMENTATION:
         return (
           <div className={classNames(styles.grid, styles.three)}>
-            <FileUpload
-              icon={<RiFileAddLine />}
-              title={"Whitepaper"}
-              description={"Drag and drop, or click to upload the project whitepaper"}
-              maxFiles={1}
-              accept="documents"
-              value={[whitepaper]}
-              error={errors.whitepaper?.message}
-              onChange={(files) => setValue("whitepaper", files[0])}
-              onRender={(photos, getUrl) => (
-                <div className={styles.imagePreview}>
-                  <img src={getUrl(photos[0])} />
-                </div>
+            <Controller
+              name="whitepaper"
+              control={control}
+              key={"whitepaper"}
+              render={({ field }) => (
+                <FileUpload
+                  name={"whitepaper"}
+                  icon={<RiFileAddLine />}
+                  title={"Whitepaper"}
+                  description={"Drag and drop, or click to upload the project whitepaper"}
+                  maxFiles={1}
+                  accept="documents"
+                  value={[field.value]}
+                  error={errors.whitepaper?.message}
+                  onChange={(files) => field.onChange(files[0])}
+                />
               )}
             />
-            <FileUpload
-              icon={<RiFileAddLine />}
-              title={"Tokenomics"}
-              description={"Drag and drop, or click to upload the tokenomics document"}
-              maxFiles={1}
-              accept="documents"
-              value={[tokenomics]}
-              error={dirtyFields.tokenomics ? errors.tokenomics?.message : undefined}
-              onChange={(files) => setValue("tokenomics", files[0])}
-              onRender={(photos, getUrl) => (
-                <div className={styles.imagePreview}>
-                  <img src={getUrl(photos[0])} />
-                </div>
+            <Controller
+              name="tokenomics"
+              control={control}
+              key={"tokenomics"}
+              render={({ field }) => (
+                <FileUpload
+                  name={"tokenomics"}
+                  icon={<RiFileAddLine />}
+                  title={"Tokenomics"}
+                  description={"Drag and drop, or click to upload the tokenomics document"}
+                  maxFiles={1}
+                  accept="documents"
+                  value={[field.value]}
+                  error={dirtyFields.tokenomics ? errors.tokenomics?.message : undefined}
+                  onChange={(files) => field.onChange(files[0])}
+                />
               )}
             />
-            <FileUpload
-              icon={<RiFileAddLine />}
-              title={"Litepaper"}
-              description={"Drag and drop, or click to upload the project litepaper"}
-              maxFiles={1}
-              accept="documents"
-              value={[litepaper]}
-              error={dirtyFields.litepaper ? errors.litepaper?.message : undefined}
-              onChange={(files) => setValue("litepaper", files[0])}
-              onRender={(photos, getUrl) => (
-                <div className={styles.imagePreview}>
-                  <img src={getUrl(photos[0])} />
-                </div>
+            <Controller
+              name="litepaper"
+              control={control}
+              key={"litepaper"}
+              render={({ field }) => (
+                <FileUpload
+                  name={"litepaper"}
+                  icon={<RiFileAddLine />}
+                  title={"Litepaper"}
+                  description={"Drag and drop, or click to upload the project litepaper"}
+                  maxFiles={1}
+                  accept="documents"
+                  value={[field.value]}
+                  error={dirtyFields.litepaper ? errors.litepaper?.message : undefined}
+                  onChange={(files) => field.onChange(files[0])}
+                />
               )}
             />
           </div>
@@ -466,8 +553,10 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, onSubmi
               <Controller
                 name="banner"
                 control={control}
+                key={"banner"}
                 render={({ field }) => (
                   <FileUpload
+                    name={"banner"}
                     icon={<RiImageAddLine />}
                     title={"Cover Photo"}
                     description={"Drag and drop, or click to upload the cover photo of your project"}
@@ -489,8 +578,10 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, onSubmi
                 <Controller
                   name="photo"
                   control={control}
+                  key={"photo"}
                   render={({ field }) => (
                     <FileUpload
+                      name={"photo"}
                       icon={<RiImageAddLine />}
                       title={"Project Photo"}
                       maxFiles={1}

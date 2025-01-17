@@ -62,31 +62,25 @@ interface DateInputProps {
  * @param {DateInputProps} props - The props for the DateInput component.
  * @returns {JSX.Element} The rendered date input component.
  */
-export const DateInput: React.FC<DateInputProps> = ({
-  name,
-  label,
-  placeholder,
-  description,
-  value,
-  onChange,
-  error,
-}) => {
-  return (
-    <div className={styles.layout}>
-      <label htmlFor={name}>{label}</label>
-      {description && (
-        <Typography size={"small"} className={styles.description}>
-          {description}
-        </Typography>
-      )}
-      <DatePicker
-        className={classNames(styles.input, error && styles.withError)}
-        selected={value}
-        onChange={onChange}
-        placeholderText={placeholder}
-        dateFormat="yyyy/MM/dd"
-      />
-      {error && <TagLabel text={error} icon={<RiAlertLine />} color="red" />}
-    </div>
-  );
-};
+export const DateInput = React.forwardRef<HTMLDivElement, DateInputProps>(
+  ({ name, label, placeholder, description, value, onChange, error }, ref) => {
+    return (
+      <div className={styles.layout} ref={ref}>
+        <label htmlFor={name}>{label}</label>
+        {description && (
+          <Typography size={"small"} className={styles.description}>
+            {description}
+          </Typography>
+        )}
+        <DatePicker
+          className={classNames(styles.input, error && styles.withError)}
+          selected={value}
+          onChange={onChange}
+          placeholderText={placeholder}
+          dateFormat="yyyy/MM/dd"
+        />
+        {error && <TagLabel text={error} icon={<RiAlertLine />} color="red" />}
+      </div>
+    );
+  },
+);

@@ -48,3 +48,17 @@
 .description {
   color: $green-04;
 }
+
+.fileAttachment {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  padding: 42px 0;
+  flex: 1;
+  width: 100%;
+  border: 1px solid $green-01;
+  border-radius: 8px;
+  background: radial-gradient(ellipse at bottom, #1d2d0f 0%, #070905 100%);
+  align-items: center;
+  justify-content: center;
+}

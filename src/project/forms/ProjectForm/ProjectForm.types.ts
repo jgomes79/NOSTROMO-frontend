@@ -20,6 +20,10 @@ export const ProjectFormSchema = ProjectSchema.pick({
   tokensForSale: true,
   currency: true,
   threshold: true,
+  cliff: true,
+  TGEDate: true,
+  unlockTokensTGE: true,
+  vestingDays: true,
 }).extend({
   photo: z.union([z.instanceof(File), z.string()]),
   banner: z.union([z.instanceof(File), z.string()]),

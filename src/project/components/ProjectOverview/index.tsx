@@ -3,7 +3,9 @@ import React from "react";
 import { RiDiscordFill, RiMediumFill, RiTelegramFill, RiTwitterXFill, RiWallet2Line } from "react-icons/ri";
 
 import { formatPrice } from "@/lib/number";
+import { getRoute } from "@/lib/router";
 import { trimString } from "@/lib/string";
+import { PROJECT_ROUTES } from "@/project/project.constants";
 import { Button } from "@/shared/components/Button";
 import { Countdown } from "@/shared/components/Countdown";
 import { Links } from "@/shared/components/Links";
@@ -20,6 +22,11 @@ interface ProjectOverviewProps {
    * The name of the project.
    */
   readonly name: string;
+
+  /**
+   * The slug of the project.
+   */
+  readonly slug: string;
 
   /**
    * The description of the project.
@@ -66,6 +73,7 @@ interface ProjectOverviewProps {
  */
 export const ProjectOverview: React.FC<ProjectOverviewProps> = ({
   name,
+  slug,
   description,
   photoUrl,
   bannerUrl,
@@ -111,11 +119,11 @@ export const ProjectOverview: React.FC<ProjectOverviewProps> = ({
 
   return (
     <div className={styles.layout}>
-      <div className={styles.banner}>
+      <a href={getRoute(PROJECT_ROUTES.PROJECT_DETAILS, { slug })} className={styles.banner}>
         <img src={bannerUrl} alt={name} />
 
         {isMobile && renderHeader()}
-      </div>
+      </a>
 
       <div className={styles.content}>
         {!isMobile && renderHeader()}

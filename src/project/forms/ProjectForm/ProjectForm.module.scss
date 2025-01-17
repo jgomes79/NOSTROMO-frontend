@@ -123,7 +123,7 @@
   box-shadow: 0 0 0 4px #303529a1;
 
   &:hover {
-    box-shadow: 0 0 0 4px yellowgreen;
+    box-shadow: 0 0 0 4px $green-01;
   }
 
   transition: box-shadow 120ms linear;
