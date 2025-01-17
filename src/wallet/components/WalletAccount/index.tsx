@@ -8,6 +8,11 @@ import { shortHex } from "@/wallet/wallet.helpers";
 
 import styles from "./WalletAccount.module.scss";
 
+/**
+ * WalletAccount component that displays the connected wallet address or a button to connect the wallet.
+ *
+ * @returns {JSX.Element} The WalletAccount component.
+ */
 export const WalletAccount: React.FC = () => {
   const { data } = useWalletClient();
 

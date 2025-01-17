@@ -1,6 +1,6 @@
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
 
-import { getProjectById } from "../project.service";
+import { getProjectBySlug } from "../project.service";
 import { Project } from "../project.types";
 
 /**
@@ -15,7 +15,7 @@ export const useProject = (slug?: Project["slug"]): UseQueryResult<Project | nul
     queryFn: () => {
       if (!slug) return null;
 
-      return getProjectById(slug);
+      return getProjectBySlug(slug);
     },
     enabled: !!slug,
   });
