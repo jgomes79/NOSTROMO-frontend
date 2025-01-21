@@ -1,6 +1,8 @@
 import React, { useCallback, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
+import { WalletButton } from "@rainbow-me/rainbowkit";
+import { RiAliensFill, RiWallet2Line } from "react-icons/ri";
 import { useWalletClient } from "wagmi";
 
 import { getRoute } from "@/lib/router";
@@ -76,6 +78,34 @@ export const CreateOrEditProjectPage: React.FC = () => {
 
     initializeProject();
   }, [params.slug, wallet]);
+
+  if (!wallet || !wallet?.account) {
+    return (
+      <ErrorPage
+        code={<RiAliensFill className={styles.alien} />}
+        title={"No Signal"}
+        description={"To create a project, you need to be connected to a wallet."}
+        actions={[
+          <WalletButton.Custom wallet="metamask" key={"connect"}>
+            {({ connected, connect }) => (
+              <>
+                {!connected && (
+                  <Button
+                    variant={"solid"}
+                    color={"secondary"}
+                    size={"small"}
+                    caption={"Connect Wallet"}
+                    onClick={connect}
+                    iconLeft={<RiWallet2Line />}
+                  />
+                )}
+              </>
+            )}
+          </WalletButton.Custom>,
+        ]}
+      />
+    );
+  }
 
   if (project.isLoading || initProjectMutation.isPending || !params.slug) {
     return <Loader variant={"full"} size={52} />;

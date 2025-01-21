@@ -17,7 +17,7 @@ import {
 import { useCurrencies } from "@/currency/hooks/useCurrencies";
 import { formatPrice } from "@/lib/number";
 import { Animatable } from "@/shared/components/Animatable";
-import { Button, ButtonProps } from "@/shared/components/Button";
+import { Button } from "@/shared/components/Button";
 import { DateInput } from "@/shared/components/DateInput";
 import { Fieldset } from "@/shared/components/Fieldset";
 import { FileUpload } from "@/shared/components/FileUpload";
@@ -167,44 +167,6 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, onSubmi
    * @param data - The data from the form.
    */
   const onSubmitHandler: SubmitHandler<ProjectFormValues> = (data: ProjectFormValues) => onSubmit(data);
-
-  /**
-   * Action buttons for each tab in the project form.
-   *
-   * This object maps each tab to its corresponding action buttons, which include
-   * a left button for navigation or cancellation and a right button for proceeding
-   * to the next tab or submitting the form.
-   */
-  const actionButtons: Record<ProjectFormTabs, { left: ButtonProps; right: ButtonProps }> = {
-    [ProjectFormTabs.BASIC_INFORMATION]: {
-      left: {
-        caption: "Discard and Cancel",
-        type: "button",
-        onClick: () => setActiveTab(ProjectFormTabs.BASIC_INFORMATION),
-      },
-      right: { caption: "Continue", type: "button", onClick: () => setActiveTab(ProjectFormTabs.SOCIAL_NETWORKS) },
-    },
-    [ProjectFormTabs.SOCIAL_NETWORKS]: {
-      left: { caption: "Back", type: "button", onClick: () => setActiveTab(ProjectFormTabs.BASIC_INFORMATION) },
-      right: { caption: "Continue", type: "button", onClick: () => setActiveTab(ProjectFormTabs.DOCUMENTATION) },
-    },
-    [ProjectFormTabs.DOCUMENTATION]: {
-      left: { caption: "Back", type: "button", onClick: () => setActiveTab(ProjectFormTabs.SOCIAL_NETWORKS) },
-      right: { caption: "Continue", type: "button", onClick: () => setActiveTab(ProjectFormTabs.TOKEN_INFORMATION) },
-    },
-    [ProjectFormTabs.TOKEN_INFORMATION]: {
-      left: { caption: "Back", type: "button", onClick: () => setActiveTab(ProjectFormTabs.DOCUMENTATION) },
-      right: { caption: "Continue", type: "button", onClick: () => setActiveTab(ProjectFormTabs.RAISING_FUNDS) },
-    },
-    [ProjectFormTabs.RAISING_FUNDS]: {
-      left: { caption: "Back", type: "button", onClick: () => setActiveTab(ProjectFormTabs.TOKEN_INFORMATION) },
-      right: { caption: "Continue", type: "button", onClick: () => setActiveTab(ProjectFormTabs.VESTING_OPTIONS) },
-    },
-    [ProjectFormTabs.VESTING_OPTIONS]: {
-      left: { caption: "Back", type: "button", onClick: () => setActiveTab(ProjectFormTabs.TOKEN_INFORMATION) },
-      right: { caption: "Submit for Review", type: "submit" },
-    },
-  };
 
   /**
    * Memoized value for the selected currency based on the currencyId.
@@ -644,8 +606,8 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, onSubmi
 
       {/* Actions */}
       <div className={styles.actions}>
-        <Button variant={"ghost"} {...actionButtons[activeTab].left} />
-        <Button variant={"solid"} {...actionButtons[activeTab].right} />
+        <Button type={"reset"} variant={"solid"} color={"red"} caption={"Discard Changes"} />
+        <Button type={"submit"} variant={"solid"} color={"secondary"} caption={"Save Changes"} />
       </div>
     </form>
   );
