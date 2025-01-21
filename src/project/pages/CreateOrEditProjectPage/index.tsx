@@ -71,6 +71,7 @@ export const CreateOrEditProjectPage: React.FC = () => {
       if (!params.slug && wallet && wallet.account) {
         const data = await initProjectMutation.mutateAsync(wallet.account.address);
         if (data && data.slug) {
+          console.log("data", data);
           navigate(getRoute(PROJECT_ROUTES.EDIT_PROJECT, { slug: data.slug }));
         }
       }
@@ -78,6 +79,10 @@ export const CreateOrEditProjectPage: React.FC = () => {
 
     initializeProject();
   }, [params.slug, wallet]);
+
+  console.log("wallet", wallet);
+  console.log("project", project);
+  console.log("initProjectMutation", initProjectMutation);
 
   if (!wallet || !wallet?.account) {
     return (
