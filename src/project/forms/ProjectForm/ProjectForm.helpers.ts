@@ -1,0 +1,32 @@
+import { addMonths } from "date-fns/addMonths";
+
+export const getDefaultProjectFormValues = () => ({
+  name: "",
+  slug: "",
+  description: "",
+  photoUrl: undefined,
+  bannerUrl: undefined,
+  social: {
+    discordUrl: "",
+    instagramUrl: "",
+    mediumUrl: "",
+    xUrl: "",
+    telegramUrl: "",
+  },
+  whitepaperUrl: undefined,
+  tokenomicsUrl: undefined,
+  litepaperUrl: undefined,
+  tokenName: "",
+  tokenImageUrl: undefined,
+  tokensSupply: 0,
+  tokenDecimals: 0,
+  amountToRaise: 0,
+  threshold: 15,
+  tokensForSale: 0,
+  unlockTokensTGE: 0,
+  startDate: addMonths(new Date(), 1),
+  TGEDate: addMonths(new Date(), 1),
+  cliff: 0,
+  vestingDays: 0,
+  currency: undefined,
+});

@@ -29,7 +29,7 @@ $avatar-size: 100px;
 }
 
 .content {
-  @include containerMargin();
+  @include pageMargin();
 
   &.extended {
     padding: 62px 22px;

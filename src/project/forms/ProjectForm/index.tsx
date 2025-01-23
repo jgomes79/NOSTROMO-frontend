@@ -3,7 +3,6 @@ import { useForm, SubmitHandler, Controller } from "react-hook-form";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import classNames from "clsx";
-import { addMonths } from "date-fns";
 import {
   RiCheckLine,
   RiDiscordFill,
@@ -30,6 +29,7 @@ import { TextArea } from "@/shared/components/TextArea";
 import { TextInput } from "@/shared/components/TextInput";
 import { Typography } from "@/shared/components/Typography";
 
+import { getDefaultProjectFormValues } from "./ProjectForm.helpers";
 import styles from "./ProjectForm.module.scss";
 import { ProjectFormValues, ProjectFormSchema, ProjectFormProps } from "./ProjectForm.types";
 
@@ -77,36 +77,7 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
     watch,
     formState: { errors, dirtyFields },
   } = useForm<ProjectFormValues>({
-    defaultValues: defaultValues ?? {
-      name: "",
-      slug: "",
-      description: "",
-      photoUrl: undefined,
-      bannerUrl: undefined,
-      social: {
-        discordUrl: "",
-        instagramUrl: "",
-        mediumUrl: "",
-        xUrl: "",
-        telegramUrl: "",
-      },
-      whitepaperUrl: undefined,
-      tokenomicsUrl: undefined,
-      litepaperUrl: undefined,
-      tokenName: "",
-      tokenImageUrl: undefined,
-      tokensSupply: 0,
-      tokenDecimals: 0,
-      amountToRaise: 0,
-      threshold: 15,
-      tokensForSale: 0,
-      unlockTokensTGE: 0,
-      startDate: addMonths(new Date(), 1),
-      TGEDate: addMonths(new Date(), 1),
-      cliff: 0,
-      vestingDays: 0,
-      currency: undefined,
-    },
+    defaultValues: defaultValues ?? getDefaultProjectFormValues(),
     resolver: zodResolver(ProjectFormSchema),
     reValidateMode: "onChange",
     mode: "all",
@@ -123,61 +94,50 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
    * Each key corresponds to a tab, and the value is a boolean indicating whether
    * all required fields in that tab are filled and error-free.
    */
-  const tabCompletionChecks: Record<ProjectFormTabs, boolean | undefined> = {
-    [ProjectFormTabs.BASIC_INFORMATION]:
-      !errors.bannerUrl &&
-      !errors.photoUrl &&
-      !errors.name &&
-      !errors.slug &&
-      !errors.description &&
-      dirtyFields.bannerUrl &&
-      dirtyFields.photoUrl &&
-      dirtyFields.name &&
-      dirtyFields.slug &&
-      dirtyFields.description,
-    [ProjectFormTabs.SOCIAL_NETWORKS]:
-      !errors.social?.discordUrl &&
-      !errors.social?.instagramUrl &&
-      !errors.social?.mediumUrl &&
-      !errors.social?.xUrl &&
-      !errors.social?.telegramUrl &&
-      dirtyFields.social?.discordUrl &&
-      dirtyFields.social?.instagramUrl &&
-      dirtyFields.social?.mediumUrl &&
-      dirtyFields.social?.xUrl &&
-      dirtyFields.social?.telegramUrl,
-    [ProjectFormTabs.DOCUMENTATION]:
-      !errors.whitepaperUrl &&
-      !errors.tokenomicsUrl &&
-      !errors.litepaperUrl &&
-      dirtyFields.whitepaperUrl &&
-      dirtyFields.tokenomicsUrl &&
-      dirtyFields.litepaperUrl,
-    [ProjectFormTabs.TOKEN_INFORMATION]:
-      !errors.tokenImageUrl &&
-      !errors.tokenName &&
-      !errors.tokensSupply &&
-      !errors.tokenDecimals &&
-      dirtyFields.tokenImageUrl &&
-      dirtyFields.tokenName &&
-      dirtyFields.tokensSupply &&
-      dirtyFields.tokenDecimals,
-    [ProjectFormTabs.RAISING_FUNDS]:
-      !errors.amountToRaise &&
-      !errors.threshold &&
-      !errors.tokensForSale &&
-      !errors.startDate &&
-      dirtyFields.amountToRaise &&
-      dirtyFields.threshold &&
-      dirtyFields.tokensForSale &&
-      dirtyFields.startDate,
-    [ProjectFormTabs.VESTING_OPTIONS]:
-      !errors.TGEDate &&
-      !errors.cliff &&
-      !errors.vestingDays &&
-      dirtyFields.TGEDate &&
-      dirtyFields.cliff &&
-      dirtyFields.vestingDays,
+  const tabCompletionChecks: Record<ProjectFormTabs, boolean> = {
+    [ProjectFormTabs.BASIC_INFORMATION]: (() => {
+      const fields = ["bannerUrl", "photoUrl", "name", "slug", "description"] as const;
+      return fields.every(
+        (field) => !errors[field as keyof ProjectFormValues] && dirtyFields[field as keyof ProjectFormValues],
+      );
+    })(),
+
+    [ProjectFormTabs.SOCIAL_NETWORKS]: (() => {
+      const socialFields = ["discordUrl", "instagramUrl", "mediumUrl", "xUrl", "telegramUrl"] as const;
+      return socialFields.every(
+        (field) =>
+          !errors.social?.[field as keyof ProjectFormValues["social"]] &&
+          dirtyFields.social?.[field as keyof ProjectFormValues["social"]],
+      );
+    })(),
+
+    [ProjectFormTabs.DOCUMENTATION]: (() => {
+      const docFields = ["whitepaperUrl", "tokenomicsUrl", "litepaperUrl"] as const;
+      return docFields.every(
+        (field) => !errors[field as keyof ProjectFormValues] && dirtyFields[field as keyof ProjectFormValues],
+      );
+    })(),
+
+    [ProjectFormTabs.TOKEN_INFORMATION]: (() => {
+      const tokenFields = ["tokenImageUrl", "tokenName", "tokensSupply", "tokenDecimals"] as const;
+      return tokenFields.every(
+        (field) => !errors[field as keyof ProjectFormValues] && dirtyFields[field as keyof ProjectFormValues],
+      );
+    })(),
+
+    [ProjectFormTabs.RAISING_FUNDS]: (() => {
+      const fundFields = ["amountToRaise", "threshold", "tokensForSale", "startDate"] as const;
+      return fundFields.every(
+        (field) => !errors[field as keyof ProjectFormValues] && dirtyFields[field as keyof ProjectFormValues],
+      );
+    })(),
+
+    [ProjectFormTabs.VESTING_OPTIONS]: (() => {
+      const vestingFields = ["TGEDate", "cliff", "vestingDays"] as const;
+      return vestingFields.every(
+        (field) => !errors[field as keyof ProjectFormValues] && dirtyFields[field as keyof ProjectFormValues],
+      );
+    })(),
   };
 
   /**
@@ -671,7 +631,6 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
 
       {/* Actions */}
       <div className={styles.actions}>
-        <Button type={"reset"} variant={"solid"} color={"red"} caption={"Discard Changes"} />
         <Button type={"submit"} isLoading={isLoading} variant={"solid"} color={"secondary"} caption={"Save Changes"} />
       </div>
     </form>

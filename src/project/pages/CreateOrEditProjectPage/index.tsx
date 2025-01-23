@@ -120,7 +120,6 @@ export const CreateOrEditProjectPage: React.FC = () => {
           isLoading={upsertProject.isPending}
           defaultValues={project.data || undefined}
           onSubmit={handleClickSubmit}
-          onCancel={() => {}}
         />
       </div>
     </div>

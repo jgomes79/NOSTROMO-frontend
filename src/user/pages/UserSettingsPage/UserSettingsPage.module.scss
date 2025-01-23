@@ -1,0 +1,40 @@
+.layout {
+  @include pageMargin();
+}
+
+.container {
+  &.lighten {
+    padding-top: 140px !important;
+    @include bottomLighting();
+  }
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+
+  color: $white;
+
+  svg {
+    color: $green-03;
+  }
+}
+
+.tabs {
+  padding: 22px 0;
+}
+
+.tabItem {
+  font-size: 24px !important;
+}
+
+.inline {
+  display: flex;
+  flex-direction: row;
+  gap: 22px;
+
+  &.center {
+    align-items: center;
+  }
+}

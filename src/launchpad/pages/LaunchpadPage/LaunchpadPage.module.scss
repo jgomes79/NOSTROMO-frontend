@@ -32,7 +32,7 @@
 }
 
 .container {
-  @include containerMargin();
+  @include pageMargin();
 
   display: flex;
   flex-direction: column;

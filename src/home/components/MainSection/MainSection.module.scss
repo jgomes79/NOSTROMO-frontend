@@ -197,7 +197,7 @@ $planet-box-shadow: (
   position: relative;
   z-index: 5;
   flex: 1;
-  @include containerMargin();
+  @include pageMargin();
 }
 
 

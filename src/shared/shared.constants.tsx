@@ -15,6 +15,14 @@ export const navigationMenu = [
   },
 ];
 
+/**
+ * Array of social network links and their corresponding icons.
+ * Used to display social media links in the application.
+ *
+ * @type {Array<{path: string, icon: JSX.Element}>}
+ * @property {string} path - The URL of the social network
+ * @property {JSX.Element} icon - React icon component for the social network
+ */
 export const socialNetworks = [
   {
     path: "https://discord.com",

@@ -6,7 +6,7 @@
 }
 
 .field {
-  @include containerMargin();
+  @include pageMargin();
 
   gap: 22px;
 }
@@ -40,5 +40,5 @@
   display: inline-flex;
   flex-direction: row;
   gap: 12px;
-  @include containerMargin();
+  @include pageMargin();
 }

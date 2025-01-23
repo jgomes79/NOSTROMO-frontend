@@ -131,7 +131,7 @@ $breakpoints: (
 }
 
 // Mixin for setting container margin and layout
-@mixin containerMargin() {
+@mixin pageMargin() {
   display: flex;
   flex-direction: column;
   margin: 0 auto;

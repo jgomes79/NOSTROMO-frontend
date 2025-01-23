@@ -41,6 +41,6 @@
 }
 
 .container {
-  @include containerMargin();
+  @include pageMargin();
   gap: 42px;
 }

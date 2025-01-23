@@ -4,7 +4,7 @@
 
 .form {
   display: flex;
-  @include containerMargin();
+  @include pageMargin();
 
   position: relative;
   z-index: 4;

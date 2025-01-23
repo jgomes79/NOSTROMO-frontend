@@ -6,6 +6,11 @@ import { WagmiProvider } from "wagmi";
 
 import { walletConfig } from "./wallet.constants";
 
+/**
+ * Interface for WalletProvider component props
+ * @interface WalletProviderProps
+ * @property {React.ReactNode} children - Child components to be wrapped by the wallet providers
+ */
 interface WalletProviderProps {
   readonly children: React.ReactNode;
 }
