@@ -9,47 +9,57 @@ import { ProjectStates } from "./project.types";
  */
 export const ProjectSchema = z.object({
   id: z.number().nonnegative("ID must be a non-negative number"),
+
   state: z.nativeEnum(ProjectStates),
+
   name: z.string().min(1, { message: "Name is required" }),
-  slug: z.string().min(1, { message: "Slug is required" }),
+
+  slug: z
+    .string()
+    .min(1, { message: "Slug is required" })
+    .regex(/^[a-zA-Z0-9-]+$/, {
+      message: "Slug must not contain spaces or symbols, only letters, numbers, and hyphens are allowed",
+    }),
+
   description: z.string().min(1, { message: "Description is required" }),
+
   photoUrl: z.string().url({ message: "Invalid URL format" }),
+
   bannerUrl: z.string().url({ message: "Invalid URL format" }),
+
   whitepaperUrl: z.string().url({ message: "Invalid URL format" }),
+
   litepaperUrl: z.string().url({ message: "Invalid URL format" }),
+
   tokenomicsUrl: z.string().url({ message: "Invalid URL format" }),
+
   tokenImageUrl: z.string().url({ message: "Invalid URL format" }),
+
   tokenName: z.string().min(1, { message: "Token name is required" }),
 
   tokensSupply: z
     .number({ invalid_type_error: "Tokens supply must be a number" })
-    .positive("Tokens supply must be a positive number")
-    .min(1, { message: "Tokens supply must be greater than zero" }),
+    .nonnegative("Tokens supply must be zero or greater"),
 
-  tokenPrice: z
-    .number({ invalid_type_error: "Token price must be a number" })
-    .positive("Token price must be a positive number")
-    .min(1, { message: "Token price must be greater than zero" }),
+  tokenPrice: z.number({ invalid_type_error: "Token price must be a number" }),
 
   tokenDecimals: z
     .number({ invalid_type_error: "Token decimals must be a number" })
     .int()
     .nonnegative("Token decimals must be a non-negative integer")
-    .min(1, { message: "Token decimals must be greater than zero" }),
+    .max(18, { message: "Token decimals must be less than 18" }),
 
   tokensForSale: z
     .number({ invalid_type_error: "Tokens for sale must be a number" })
-    .positive("Tokens for sale must be a positive number")
-    .min(1, { message: "Tokens for sale must be greater than zero" }),
+    .nonnegative("Tokens for sale must be zero or greater"),
 
   amountToRaise: z
     .number({ invalid_type_error: "Amount to raise must be a number" })
-    .positive("Amount to raise must be a positive number")
-    .min(1, { message: "Amount to raise must be greater than zero" }),
+    .nonnegative("Amount to raise must be zero or greater"),
 
   threshold: z
     .number({ invalid_type_error: "Threshold must be a number" })
-    .positive("Threshold must be a positive number"),
+    .nonnegative("Threshold must be zero or greater"),
 
   startDate: z.date().superRefine((date, ctx) => {
     if (date <= new Date()) {
@@ -69,22 +79,13 @@ export const ProjectSchema = z.object({
     }
   }),
 
-  unlockTokensTGE: z
-    .number({ invalid_type_error: "Unlock tokens TGE must be a number" })
-    .positive("Unlock tokens TGE must be a positive number")
-    .refine((val) => val > 0, {
-      message: "Unlock tokens TGE must be greater than zero",
-    }),
+  unlockTokensTGE: z.number({ invalid_type_error: "Unlock tokens TGE must be a number" }).nullable(),
 
-  cliff: z
-    .number({ invalid_type_error: "Cliff must be a number" })
-    .positive("Cliff must be a positive number")
-    .min(1, { message: "Cliff must be greater than zero" }),
+  cliff: z.number({ invalid_type_error: "Cliff must be a number" }).nonnegative("Cliff must be zero or greater"),
 
   vestingDays: z
     .number({ invalid_type_error: "Vesting days must be a number" })
-    .positive("Vesting days must be a positive number")
-    .min(1, { message: "Vesting days must be greater than zero" }),
+    .nonnegative("Vesting days must be zero or greater"),
 
   currency: CurrencySchema,
 

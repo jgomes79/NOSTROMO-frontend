@@ -8,7 +8,7 @@ import { Typography } from "@/shared/components/Typography";
 
 import styles from "./FileUpload.module.scss";
 
-export type Value = string | File;
+export type Value = string | File | undefined;
 
 /**
  * Props for the FileUpload component.
@@ -151,6 +151,8 @@ export const FileUpload = React.forwardRef<HTMLDivElement, FileUploadProps>(
      * @returns {string} - The generated URL for the file.
      */
     const getURL = (file: Value): string => {
+      if (!file) return "";
+
       if (file instanceof File) {
         return URL.createObjectURL(file).toString();
       }

@@ -12,10 +12,15 @@ import { Project } from "../project.types";
 export const useProject = (slug?: Project["slug"]): UseQueryResult<Project | null> =>
   useQuery<Project | null>({
     queryKey: ["project", slug],
-    queryFn: () => {
+    queryFn: async () => {
       if (!slug) return null;
 
-      return getProjectBySlug(slug);
+      const project = await getProjectBySlug(slug);
+
+      project.startDate = new Date(project.startDate);
+      project.TGEDate = new Date(project.TGEDate);
+
+      return project;
     },
     enabled: !!slug,
   });

@@ -74,7 +74,7 @@ export const DateInput = React.forwardRef<HTMLDivElement, DateInputProps>(
         )}
         <DatePicker
           className={classNames(styles.input, error && styles.withError)}
-          selected={value}
+          selected={new Date(value)}
           onChange={onChange}
           placeholderText={placeholder}
           dateFormat="yyyy/MM/dd"

@@ -39,10 +39,11 @@ export const getProjects = (page: number, state: ProjectStates) =>
   });
 
 /**
- * Creates a new project.
+ * Creates or updates a project.
  *
+ * @param {string} id - The unique identifier of the project. If not provided, a new project will be created.
  * @param {FormData} data - The form data containing project details.
- * @returns {Promise<Project>} - A promise that resolves to the newly created project data.
+ * @returns {Promise<Project>} - A promise that resolves to the created or updated project data.
  */
-export const createProject = (data: FormData): Promise<Project> =>
-  requestWithFile<Project>(getEndpoint("projects-service", "/projects/create"), data);
+export const upsertProject = (id: Project["id"] | undefined, data: FormData): Promise<Project> =>
+  requestWithFile<Project>(getEndpoint("projects-service", id ? `/projects/${id}/update` : "/projects/create"), data);

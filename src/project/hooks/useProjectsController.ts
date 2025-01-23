@@ -1,6 +1,10 @@
 import { useCallback, useState } from "react";
 
+import { UseMutationResult } from "@tanstack/react-query";
+
 import { useProjects } from "./useProjects";
+import { useUpsertProject } from "./useUpsertProject";
+import { ProjectFormValues } from "../forms/ProjectForm";
 import { Project, ProjectStates } from "../project.types";
 
 type UseProjectsProps = {
@@ -10,6 +14,7 @@ type UseProjectsProps = {
   projects: Project[];
   isLoading: boolean;
   fetchProjects: (page: number, state: ProjectStates) => void;
+  upsertProject: UseMutationResult<Project | Error, Error, ProjectFormValues>;
 };
 
 type NavigationState = { page: number; state: ProjectStates };
@@ -20,6 +25,8 @@ type NavigationState = { page: number; state: ProjectStates };
  * @returns {UseProjectsControllerResult} - The result object containing the current page, state, setters for page and state, and the fetched data.
  */
 export const useProjectsController = (): UseProjectsProps => {
+  const upsertProject = useUpsertProject();
+
   const [pagination, setState] = useState<NavigationState>({
     page: 1,
     state: ProjectStates.FUNDING_PHASE_1,
@@ -48,5 +55,6 @@ export const useProjectsController = (): UseProjectsProps => {
     isLoading: projects.isLoading,
 
     fetchProjects,
+    upsertProject,
   };
 };

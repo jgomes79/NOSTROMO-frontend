@@ -3,6 +3,7 @@ import { useForm, SubmitHandler, Controller } from "react-hook-form";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import classNames from "clsx";
+import { addMonths } from "date-fns";
 import {
   RiCheckLine,
   RiDiscordFill,
@@ -78,6 +79,7 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
   } = useForm<ProjectFormValues>({
     defaultValues: defaultValues ?? {
       name: "",
+      slug: "",
       description: "",
       photo: undefined,
       banner: undefined,
@@ -98,13 +100,13 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
       amountToRaise: 0,
       threshold: 15,
       tokensForSale: 0,
-      startDate: undefined,
-      TGEDate: undefined,
+      unlockTokensTGE: 0,
+      startDate: addMonths(new Date(), 1),
+      TGEDate: addMonths(new Date(), 1),
       cliff: 0,
       vestingDays: 0,
       currency: undefined,
     },
-    progressive: true,
     resolver: zodResolver(ProjectFormSchema),
     reValidateMode: "onChange",
     mode: "all",
@@ -128,10 +130,12 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
       !errors.banner &&
       !errors.photo &&
       !errors.name &&
+      !errors.slug &&
       !errors.description &&
       dirtyFields.banner &&
       dirtyFields.photo &&
       dirtyFields.name &&
+      dirtyFields.slug &&
       dirtyFields.description,
     [ProjectFormTabs.SOCIAL_NETWORKS]:
       !errors.social?.discordUrl &&
@@ -380,7 +384,7 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
                         disabled={!amountToRaise}
                         renderValue={(value) => <Typography size={"small"}>{value}%</Typography>}
                       />
-                      {threshold > 0 && (
+                      {threshold && threshold > 0 && (
                         <div className={classNames(styles.grid, styles.two, styles.amountToRaise)}>
                           <TextInput
                             label="Minimum Amount"
@@ -388,7 +392,9 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
                             placeholder="Minimum Amount"
                             symbol={currency?.name ?? ""}
                             value={
-                              amountToRaise > 0 ? formatPrice(amountToRaise - (amountToRaise * threshold) / 100) : 0
+                              amountToRaise && amountToRaise > 0
+                                ? formatPrice(amountToRaise - (amountToRaise * threshold) / 100)
+                                : 0
                             }
                             disabled
                           />
@@ -398,7 +404,9 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
                             placeholder="Maximum Amount"
                             symbol={currency?.name ?? ""}
                             value={
-                              amountToRaise > 0 ? formatPrice(amountToRaise + (amountToRaise * threshold) / 100) : 0
+                              amountToRaise && amountToRaise > 0
+                                ? formatPrice(amountToRaise + (amountToRaise * threshold) / 100)
+                                : 0
                             }
                             disabled
                           />
@@ -603,9 +611,16 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
               <TextInput
                 label="Project Name"
                 type="text"
-                {...register("name")}
                 placeholder="Project Name"
                 error={dirtyFields.name ? errors.name?.message : undefined}
+                {...register("name")}
+              />
+              <TextInput
+                label="Project Slug"
+                type="text"
+                placeholder="Project Slug"
+                error={dirtyFields.slug ? errors.slug?.message : undefined}
+                {...register("slug")}
               />
             </div>
 
@@ -625,7 +640,7 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
 
   useEffect(() => {
     if (!isCurrenciesLoading && currencies && currencies.length > 0) {
-      setValue("currency.id", currencies[0].id);
+      setValue("currency", currencies[0]);
     }
   }, [isCurrenciesLoading, currencies]);
 
@@ -644,14 +659,7 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
       {/* Actions */}
       <div className={styles.actions}>
         <Button type={"reset"} variant={"solid"} color={"red"} caption={"Discard Changes"} />
-        <Button
-          type={"submit"}
-          disabled={Object.keys(errors).length > 0}
-          isLoading={isLoading}
-          variant={"solid"}
-          color={"secondary"}
-          caption={"Save Changes"}
-        />
+        <Button type={"submit"} isLoading={isLoading} variant={"solid"} color={"secondary"} caption={"Save Changes"} />
       </div>
     </form>
   );

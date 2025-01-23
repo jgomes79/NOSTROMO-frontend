@@ -6,6 +6,7 @@ import { RiAliensFill, RiWallet2Line } from "react-icons/ri";
 import { useWalletClient } from "wagmi";
 
 import { useProject } from "@/project/hooks/useProject";
+import { useProjectsController } from "@/project/hooks/useProjectsController";
 import { Button } from "@/shared/components/Button";
 import { Loader } from "@/shared/components/Loader";
 import { ErrorPage } from "@/shared/pages/ErrorPage";
@@ -13,7 +14,6 @@ import { ErrorPage } from "@/shared/pages/ErrorPage";
 import styles from "./CreateOrEditProjectPage.module.scss";
 import { ProjectForm } from "../../forms/ProjectForm";
 import { ProjectFormValues } from "../../forms/ProjectForm";
-import { useNewProject } from "../../hooks/useNewProject";
 import { Project } from "../../project.types";
 
 /**
@@ -33,7 +33,7 @@ type CreateOrEditProjectPageParams = {
  * @returns {JSX.Element} The rendered new project page component.
  */
 export const CreateOrEditProjectPage: React.FC = () => {
-  const newProjectMutation = useNewProject();
+  const { upsertProject } = useProjectsController();
 
   const params = useParams<CreateOrEditProjectPageParams>();
 
@@ -47,9 +47,9 @@ export const CreateOrEditProjectPage: React.FC = () => {
    */
   const handleClickSubmit = useCallback(
     (values: ProjectFormValues) => {
-      newProjectMutation.mutateAsync(values);
+      upsertProject.mutateAsync(values);
     },
-    [newProjectMutation],
+    [upsertProject],
   );
 
   /**
@@ -117,7 +117,7 @@ export const CreateOrEditProjectPage: React.FC = () => {
       </div>
       <div className={styles.form}>
         <ProjectForm
-          isLoading={newProjectMutation.isPending}
+          isLoading={upsertProject.isPending}
           defaultValues={project.data || undefined}
           onSubmit={handleClickSubmit}
           onCancel={() => {}}
