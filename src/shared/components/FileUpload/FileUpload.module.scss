@@ -11,12 +11,12 @@
   border-radius: 8px;
 
   &:not(.isDragActive):hover {
-    border-color: greenyellow;
+    border-color: $green-03;;
     background: #11140d;
   }
 
   &.isDragActive {
-    border: 1px solid greenyellow;
+    border: 1px solid $green-03;;
   }
 
   &.hasValue {
@@ -29,7 +29,7 @@
 }
 
 .icon {
-  color: greenyellow;
+  color: $green-03;
 
   svg {
     width: 62px;

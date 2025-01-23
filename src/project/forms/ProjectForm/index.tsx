@@ -81,8 +81,8 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
       name: "",
       slug: "",
       description: "",
-      photo: undefined,
-      banner: undefined,
+      photoUrl: undefined,
+      bannerUrl: undefined,
       social: {
         discordUrl: "",
         instagramUrl: "",
@@ -90,11 +90,11 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
         xUrl: "",
         telegramUrl: "",
       },
-      whitepaper: undefined,
-      tokenomics: undefined,
-      litepaper: undefined,
+      whitepaperUrl: undefined,
+      tokenomicsUrl: undefined,
+      litepaperUrl: undefined,
       tokenName: "",
-      tokenImage: undefined,
+      tokenImageUrl: undefined,
       tokensSupply: 0,
       tokenDecimals: 0,
       amountToRaise: 0,
@@ -112,12 +112,10 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
     mode: "all",
   });
 
-  console.log(errors);
-
   const amountToRaise = watch("amountToRaise"),
     threshold = watch("threshold"),
     tokenName = watch("tokenName"),
-    tokenImage = watch("tokenImage"),
+    tokenImage = watch("tokenImageUrl"),
     currencyId = watch("currency.id");
 
   /**
@@ -127,13 +125,13 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
    */
   const tabCompletionChecks: Record<ProjectFormTabs, boolean | undefined> = {
     [ProjectFormTabs.BASIC_INFORMATION]:
-      !errors.banner &&
-      !errors.photo &&
+      !errors.bannerUrl &&
+      !errors.photoUrl &&
       !errors.name &&
       !errors.slug &&
       !errors.description &&
-      dirtyFields.banner &&
-      dirtyFields.photo &&
+      dirtyFields.bannerUrl &&
+      dirtyFields.photoUrl &&
       dirtyFields.name &&
       dirtyFields.slug &&
       dirtyFields.description,
@@ -149,18 +147,18 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
       dirtyFields.social?.xUrl &&
       dirtyFields.social?.telegramUrl,
     [ProjectFormTabs.DOCUMENTATION]:
-      !errors.whitepaper &&
-      !errors.tokenomics &&
-      !errors.litepaper &&
-      dirtyFields.whitepaper &&
-      dirtyFields.tokenomics &&
-      dirtyFields.litepaper,
+      !errors.whitepaperUrl &&
+      !errors.tokenomicsUrl &&
+      !errors.litepaperUrl &&
+      dirtyFields.whitepaperUrl &&
+      dirtyFields.tokenomicsUrl &&
+      dirtyFields.litepaperUrl,
     [ProjectFormTabs.TOKEN_INFORMATION]:
-      !errors.tokenImage &&
+      !errors.tokenImageUrl &&
       !errors.tokenName &&
       !errors.tokensSupply &&
       !errors.tokenDecimals &&
-      dirtyFields.tokenImage &&
+      dirtyFields.tokenImageUrl &&
       dirtyFields.tokenName &&
       dirtyFields.tokensSupply &&
       dirtyFields.tokenDecimals,
@@ -273,22 +271,21 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
         return (
           <div className={classNames(styles.grid, styles.twoAlignLeft)}>
             <Controller
-              name="tokenImage"
-              key={"tokenImage"}
+              name="tokenImageUrl"
+              key={"tokenImageUrl"}
               control={control}
               render={({ field }) => (
                 <FileUpload
                   name={"tokenImage"}
                   icon={<RiImageAddLine />}
                   title={"Token Image"}
-                  maxFiles={1}
                   className={styles.avatarImg}
                   accept="images"
-                  value={[tokenImage]}
-                  onChange={(files) => field.onChange(files[0])}
-                  onRender={(photos, getUrl) => (
+                  value={tokenImage}
+                  onChange={(file) => field.onChange(file)}
+                  onRender={(photo, getUrl) => (
                     <div className={styles.imagePreview}>
-                      <img src={getUrl(photos[0])} />
+                      <img src={getUrl(photo)} />
                     </div>
                   )}
                 />
@@ -451,56 +448,74 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
         return (
           <div className={classNames(styles.grid, styles.three)}>
             <Controller
-              name="whitepaper"
+              name="whitepaperUrl"
               control={control}
-              key={"whitepaper"}
+              key={"whitepaperUrl"}
               render={({ field }) => (
                 <FileUpload
                   name={"whitepaper"}
                   icon={<RiFileAddLine />}
                   title={"Whitepaper"}
                   description={"Drag and drop, or click to upload the project whitepaper"}
-                  maxFiles={1}
                   accept="documents"
-                  value={[field.value]}
-                  error={errors.whitepaper?.message}
-                  onChange={(files) => field.onChange(files[0])}
+                  value={field.value}
+                  error={errors.whitepaperUrl?.message}
+                  onChange={(file) => field.onChange(file)}
+                  {...(typeof field.value === "string" && {
+                    attachmentLabels: {
+                      icon: <RiCheckLine />,
+                      title: "Whitepaper Uploaded",
+                      description: "The whitepaper has been uploaded successfully",
+                    },
+                  })}
                 />
               )}
             />
             <Controller
-              name="tokenomics"
+              name="tokenomicsUrl"
               control={control}
-              key={"tokenomics"}
+              key={"tokenomicsUrl"}
               render={({ field }) => (
                 <FileUpload
                   name={"tokenomics"}
                   icon={<RiFileAddLine />}
                   title={"Tokenomics"}
                   description={"Drag and drop, or click to upload the tokenomics document"}
-                  maxFiles={1}
                   accept="documents"
-                  value={[field.value]}
-                  error={dirtyFields.tokenomics ? errors.tokenomics?.message : undefined}
-                  onChange={(files) => field.onChange(files[0])}
+                  value={field.value}
+                  error={dirtyFields.tokenomicsUrl ? errors.tokenomicsUrl?.message : undefined}
+                  onChange={(file) => field.onChange(file)}
+                  {...(typeof field.value === "string" && {
+                    attachmentLabels: {
+                      icon: <RiCheckLine />,
+                      title: "Tokenomics Uploaded",
+                      description: "The tokenomics has been uploaded successfully",
+                    },
+                  })}
                 />
               )}
             />
             <Controller
-              name="litepaper"
+              name="litepaperUrl"
               control={control}
-              key={"litepaper"}
+              key={"litepaperUrl"}
               render={({ field }) => (
                 <FileUpload
                   name={"litepaper"}
                   icon={<RiFileAddLine />}
                   title={"Litepaper"}
                   description={"Drag and drop, or click to upload the project litepaper"}
-                  maxFiles={1}
                   accept="documents"
-                  value={[field.value]}
-                  error={dirtyFields.litepaper ? errors.litepaper?.message : undefined}
-                  onChange={(files) => field.onChange(files[0])}
+                  value={field.value}
+                  error={dirtyFields.litepaperUrl ? errors.litepaperUrl?.message : undefined}
+                  onChange={(file) => field.onChange(file)}
+                  {...(typeof field.value === "string" && {
+                    attachmentLabels: {
+                      icon: <RiCheckLine />,
+                      title: "Litepaper Uploaded",
+                      description: "The litepaper has been uploaded successfully",
+                    },
+                  })}
                 />
               )}
             />
@@ -558,24 +573,23 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
           <div className={classNames(styles.grid, styles.one)}>
             <div className={styles.banner}>
               <Controller
-                name="banner"
+                name="bannerUrl"
                 control={control}
-                key={"banner"}
+                key={"bannerUrl"}
                 render={({ field }) => (
                   <FileUpload
                     name={"banner"}
                     icon={<RiImageAddLine />}
                     title={"Cover Photo"}
                     description={"Drag and drop, or click to upload the cover photo of your project"}
-                    maxFiles={1}
                     accept="images"
                     className={styles.bannerImg}
-                    value={[field.value]}
-                    error={dirtyFields.banner ? errors.banner?.message : undefined}
-                    onChange={(files) => field.onChange(files[0])}
-                    onRender={(photos, getUrl) => (
+                    value={field.value}
+                    error={dirtyFields.bannerUrl ? errors.bannerUrl?.message : undefined}
+                    onChange={(file) => field.onChange(file)}
+                    onRender={(photo, getUrl) => (
                       <div className={styles.imagePreview}>
-                        <img src={getUrl(photos[0])} />
+                        <img src={getUrl(photo)} />
                       </div>
                     )}
                   />
@@ -583,7 +597,7 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
               />
               <div className={styles.avatar}>
                 <Controller
-                  name="photo"
+                  name="photoUrl"
                   control={control}
                   key={"photo"}
                   render={({ field }) => (
@@ -591,15 +605,14 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
                       name={"photo"}
                       icon={<RiImageAddLine />}
                       title={"Project Photo"}
-                      maxFiles={1}
                       className={styles.avatarImg}
                       accept="images"
-                      value={[field.value]}
-                      error={dirtyFields.photo ? errors.photo?.message : undefined}
-                      onChange={(files) => field.onChange(files[0])}
-                      onRender={(photos, getUrl) => (
+                      value={field.value}
+                      error={dirtyFields.photoUrl ? errors.photoUrl?.message : undefined}
+                      onChange={(file) => field.onChange(file)}
+                      onRender={(photo, getUrl) => (
                         <div className={styles.imagePreview}>
-                          <img src={getUrl(photos[0])} />
+                          <img src={getUrl(photo)} />
                         </div>
                       )}
                     />

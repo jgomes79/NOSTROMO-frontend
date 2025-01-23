@@ -80,6 +80,7 @@ export const Tabs = <T,>({ tabs, activeId, onChange, onRender, itemClassName }: 
           <button
             key={`--tab-${tab.id}`}
             ref={(el) => (tabRefs.current[index] = el)}
+            type="button"
             className={classNames(styles.tab, { [styles.active]: activeTab === tab.id })}
             onClick={() => handleClickTab(tab.id)}
           >

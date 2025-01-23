@@ -28,12 +28,12 @@ export const useUpsertProject = () => {
       }
 
       // Basic Info
-      if (data.photo && data.photo instanceof File) {
-        formData.append("photo", data.photo);
+      if (data.photoUrl && data.photoUrl instanceof File) {
+        formData.append("photo", data.photoUrl);
       }
 
-      if (data.banner && data.banner instanceof File) {
-        formData.append("banner", data.banner);
+      if (data.bannerUrl && data.bannerUrl instanceof File) {
+        formData.append("banner", data.bannerUrl);
       }
 
       formData.append("name", data.name);
@@ -43,8 +43,8 @@ export const useUpsertProject = () => {
       // Token Info
       formData.append("tokenName", data.tokenName ?? "");
 
-      if (data.tokenImage && data.tokenImage instanceof File) {
-        formData.append("tokenImage", data.tokenImage);
+      if (data.tokenImageUrl && data.tokenImageUrl instanceof File) {
+        formData.append("tokenImage", data.tokenImageUrl);
       }
 
       formData.append("tokensSupply", String(data.tokensSupply));
@@ -65,16 +65,16 @@ export const useUpsertProject = () => {
       formData.append("telegramUrl", data.social?.telegramUrl ?? "");
 
       // Documents
-      if (data.whitepaper && data.whitepaper instanceof File) {
-        formData.append("whitepaper", data.whitepaper);
+      if (data.whitepaperUrl && data.whitepaperUrl instanceof File) {
+        formData.append("whitepaper", data.whitepaperUrl);
       }
 
-      if (data.tokenomics && data.tokenomics instanceof File) {
-        formData.append("tokenomics", data.tokenomics);
+      if (data.tokenomicsUrl && data.tokenomicsUrl instanceof File) {
+        formData.append("tokenomics", data.tokenomicsUrl);
       }
 
-      if (data.litepaper && data.litepaper instanceof File) {
-        formData.append("litepaper", data.litepaper);
+      if (data.litepaperUrl && data.litepaperUrl instanceof File) {
+        formData.append("litepaper", data.litepaperUrl);
       }
 
       // Currency

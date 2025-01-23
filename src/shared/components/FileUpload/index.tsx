@@ -8,7 +8,7 @@ import { Typography } from "@/shared/components/Typography";
 
 import styles from "./FileUpload.module.scss";
 
-export type Value = string | File | undefined;
+export type Value = File | string | undefined | null;
 
 /**
  * Props for the FileUpload component.
@@ -35,9 +35,13 @@ interface FileUploadProps {
   readonly description?: string;
 
   /**
-   * The maximum number of files that can be uploaded.
+   * The labels to display in the upload area.
    */
-  readonly maxFiles: number;
+  readonly attachmentLabels?: {
+    icon: React.ReactNode;
+    title: string;
+    description?: string;
+  };
 
   /**
    * The error message to display.
@@ -45,9 +49,9 @@ interface FileUploadProps {
   readonly error?: string;
 
   /**
-   * The current value of the uploaded files.
+   * The current value of the uploaded file.
    */
-  readonly value: Value[];
+  readonly value: Value;
 
   /**
    * The type of files to accept.
@@ -60,20 +64,20 @@ interface FileUploadProps {
   readonly className?: string;
 
   /**
-   * A callback function triggered when files are dropped.
+   * A callback function triggered when a file is dropped.
    *
-   * @param {Value[]} files - The files that were dropped.
+   * @param {Value} file - The file that was dropped.
    */
-  readonly onChange: (files: Value[]) => void;
+  readonly onChange: (file: Value) => void;
 
   /**
-   * A function to render the uploaded files.
+   * A function to render the uploaded file.
    *
-   * @param {Value[]} files - The files that were uploaded.
+   * @param {Value} file - The file that was uploaded.
    * @param {function} getUrl - A function to get the URL of a file.
-   * @returns {React.ReactNode} The rendered files.
+   * @returns {React.ReactNode} The rendered file.
    */
-  readonly onRender?: (files: Value[], getUrl: (file: Value) => string) => React.ReactNode;
+  readonly onRender?: (file: Value, getUrl: (file: Value) => string) => React.ReactNode;
 }
 
 /**
@@ -105,10 +109,9 @@ const acceptedFormats: Record<Required<FileUploadProps>["accept"], Accept> = {
  * @param {string} props.title - The title text to display in the upload area.
  * @param {string} props.description - The description text to display in the upload area.
  * @param {"images" | "documents"} props.accept - The type of files to accept.
- * @param {number} props.maxFiles - The maximum number of files that can be uploaded.
- * @param {Value[]} props.value - The current value of the uploaded files.
- * @param {function} props.onRender - A function to render the uploaded files.
- * @param {function} props.onChange - A callback function triggered when files are dropped.
+ * @param {Value} props.value - The current value of the uploaded file.
+ * @param {function} props.onRender - A function to render the uploaded file.
+ * @param {function} props.onChange - A callback function triggered when a file is dropped.
  * @param {string} [props.className] - Additional class names for styling.
  * @param {string} [props.error] - The error message to display.
  * @param {React.Ref<HTMLDivElement>} ref - The ref to the root div element.
@@ -116,14 +119,14 @@ const acceptedFormats: Record<Required<FileUploadProps>["accept"], Accept> = {
  * @returns {JSX.Element} The rendered FileUpload component.
  */
 export const FileUpload = React.forwardRef<HTMLDivElement, FileUploadProps>(
-  ({ name, icon, title, description, accept, maxFiles, value, onRender, onChange, className, error }, ref) => {
+  ({ name, icon, title, description, accept, value, attachmentLabels, onRender, onChange, className, error }, ref) => {
     /**
      * Handles the file drop event and triggers the onChange callback.
      *
      * @param {File[]} acceptedFiles - The files dropped by the user.
      */
     const onDrop: NonNullable<DropzoneOptions["onDrop"]> = (acceptedFiles) => {
-      onChange(acceptedFiles);
+      onChange(acceptedFiles[0]);
     };
 
     /**
@@ -140,7 +143,7 @@ export const FileUpload = React.forwardRef<HTMLDivElement, FileUploadProps>(
      */
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
       accept: acceptedFormats[accept],
-      maxFiles,
+      maxFiles: 1,
       onDrop,
     });
 
@@ -160,11 +163,11 @@ export const FileUpload = React.forwardRef<HTMLDivElement, FileUploadProps>(
     };
 
     /**
-     * Checks if there are any defined values in the array.
+     * Checks if there is a defined value.
      *
      * @type {boolean}
      */
-    const hasValue = value.some((e) => typeof e !== "undefined");
+    const hasValue = !!value;
 
     /**
      * Renders the file attachment component.
@@ -189,6 +192,27 @@ export const FileUpload = React.forwardRef<HTMLDivElement, FileUploadProps>(
         </div>
       </>
     );
+    /**
+     * Renders the input component based on the current value and provided props.
+     *
+     * @returns {React.ReactNode} The rendered input component.
+     */
+    const renderInput = (): React.ReactNode => {
+      if (hasValue) {
+        if (onRender) {
+          return onRender(value, getURL);
+        }
+
+        if (attachmentLabels) {
+          return renderFileAttachment(attachmentLabels.title, attachmentLabels.icon, attachmentLabels.description);
+        }
+
+        if (value instanceof File) {
+          return renderFileAttachment(value.name, getFileIcon(value.type), formatSize(value.size));
+        }
+      }
+      return renderFileAttachment(title, icon, description);
+    };
 
     return (
       <div
@@ -200,15 +224,7 @@ export const FileUpload = React.forwardRef<HTMLDivElement, FileUploadProps>(
           { [styles.isDragActive]: isDragActive, [styles.hasValue]: hasValue && !!onRender },
         ])}
       >
-        {hasValue
-          ? onRender
-            ? onRender(value, getURL)
-            : renderFileAttachment(
-                (value as File[])[0].name,
-                getFileIcon((value as File[])[0].type),
-                formatSize((value as File[])[0].size),
-              )
-          : renderFileAttachment(title, icon, description)}
+        {renderInput()}
 
         <input name={name} {...getInputProps()} />
 

@@ -38,27 +38,13 @@ export const ProjectFormSchema = z.object({
   TGEDate: ProjectSchema.shape.TGEDate,
   unlockTokensTGE: ProjectSchema.shape.unlockTokensTGE.optional().or(z.literal("")),
   vestingDays: ProjectSchema.shape.vestingDays.optional().or(z.literal("")),
-  photo: z.union([z.instanceof(File), z.string()]).optional(),
-  banner: z
-    .union([z.instanceof(File), z.string()])
-    .optional()
-    .or(z.literal("")),
-  whitepaper: z
-    .union([z.instanceof(File), z.string()])
-    .optional()
-    .or(z.literal("")),
-  litepaper: z
-    .union([z.instanceof(File), z.string()])
-    .optional()
-    .or(z.literal("")),
-  tokenomics: z
-    .union([z.instanceof(File), z.string()])
-    .optional()
-    .or(z.literal("")),
-  tokenImage: z
-    .union([z.instanceof(File), z.string()])
-    .optional()
-    .or(z.literal("")),
+
+  photoUrl: z.union([z.instanceof(File), z.string(), z.undefined(), z.null()]).optional(),
+  bannerUrl: z.union([z.instanceof(File), z.string(), z.undefined(), z.null()]).optional(),
+  whitepaperUrl: z.union([z.instanceof(File), z.string(), z.undefined(), z.null()]).optional(),
+  litepaperUrl: z.union([z.instanceof(File), z.string(), z.undefined(), z.null()]).optional(),
+  tokenomicsUrl: z.union([z.instanceof(File), z.string(), z.undefined(), z.null()]).optional(),
+  tokenImageUrl: z.union([z.instanceof(File), z.string(), z.undefined(), z.null()]).optional(),
 });
 
 /**

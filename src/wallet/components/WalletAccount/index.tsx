@@ -1,9 +1,12 @@
+import { useNavigate } from "react-router-dom";
+
 import { WalletButton } from "@rainbow-me/rainbowkit";
-import { RiWallet2Line } from "react-icons/ri";
+import { RiAliensFill, RiWallet2Line } from "react-icons/ri";
 import { useWalletClient } from "wagmi";
 
+import { getRoute } from "@/lib/router";
 import { Button } from "@/shared/components/Button";
-import { Typography } from "@/shared/components/Typography";
+import { USER_ROUTES } from "@/user/user.constants";
 import { shortHex } from "@/wallet/wallet.helpers";
 
 import styles from "./WalletAccount.module.scss";
@@ -15,6 +18,15 @@ import styles from "./WalletAccount.module.scss";
  */
 export const WalletAccount: React.FC = () => {
   const { data } = useWalletClient();
+  const navigate = useNavigate();
+
+  /**
+   * Handles the click event for the account button.
+   * Navigates to the user settings page.
+   */
+  const handleClickAccount = () => {
+    navigate(getRoute(USER_ROUTES.SETTINGS, {}));
+  };
 
   return (
     <div className={styles.layout}>
@@ -22,7 +34,13 @@ export const WalletAccount: React.FC = () => {
         {({ connected, connect }) => (
           <>
             {connected && data ? (
-              <Typography>{shortHex(data.account.address, 5)}</Typography>
+              <Button
+                size={"small"}
+                variant={"ghost"}
+                iconRight={<RiAliensFill />}
+                caption={shortHex(data.account.address, 5)}
+                onClick={handleClickAccount}
+              />
             ) : (
               <Button
                 variant={"solid"}
