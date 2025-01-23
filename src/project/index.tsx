@@ -17,7 +17,7 @@ const routes: RouteObject[] = [
         element: <ProjectDetailsPage />,
       },
       {
-        path: PROJECT_ROUTES.NEW_PROJECT_INIT,
+        path: PROJECT_ROUTES.NEW_PROJECT,
         element: <CreateOrEditProjectPage />,
       },
       {

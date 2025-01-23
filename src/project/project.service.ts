@@ -1,6 +1,5 @@
 import { getEndpoint, request, requestWithFile } from "@/core/api/api.helpers";
 import { Project, ProjectStates } from "@/project/project.types";
-import { User } from "@/user/user.types";
 
 /**
  * Fetches a project by its slug.
@@ -11,20 +10,6 @@ import { User } from "@/user/user.types";
 export const getProjectBySlug = (slug: Project["slug"]): Promise<Project> =>
   request<Project>(getEndpoint("projects-service", `/project/${slug}`), {
     method: "GET",
-  });
-
-/**
- * Initializes a new project with the given wallet address.
- *
- * @param {User["wallet"]} walletAddress - The wallet address to associate with the new project.
- * @returns {Promise<Pick<Project, "id">>} - A promise that resolves to an object containing the project ID.
- */
-export const initProject = (walletAddress: User["wallet"]): Promise<Pick<Project, "slug">> =>
-  request<Pick<Project, "slug">>(getEndpoint("projects-service", `/initialize`), {
-    method: "POST",
-    data: {
-      walletAddress,
-    },
   });
 
 /**

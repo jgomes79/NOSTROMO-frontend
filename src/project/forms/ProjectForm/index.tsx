@@ -63,7 +63,7 @@ const ProjectTabLabels = {
  * @param onSubmit - The function to call when the form is submitted.
  * @returns A JSX element representing the project form.
  */
-export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, onSubmit }) => {
+export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoading, onSubmit }) => {
   const { data: currencies, isLoading: isCurrenciesLoading } = useCurrencies();
 
   const [activeTab, setActiveTab] = useState<ProjectFormTabs>(ProjectFormTabs.BASIC_INFORMATION);
@@ -76,12 +76,41 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, onSubmi
     watch,
     formState: { errors, dirtyFields },
   } = useForm<ProjectFormValues>({
-    defaultValues,
+    defaultValues: defaultValues ?? {
+      name: "",
+      description: "",
+      photo: undefined,
+      banner: undefined,
+      social: {
+        discordUrl: "",
+        instagramUrl: "",
+        mediumUrl: "",
+        xUrl: "",
+        telegramUrl: "",
+      },
+      whitepaper: undefined,
+      tokenomics: undefined,
+      litepaper: undefined,
+      tokenName: "",
+      tokenImage: undefined,
+      tokensSupply: 0,
+      tokenDecimals: 0,
+      amountToRaise: 0,
+      threshold: 15,
+      tokensForSale: 0,
+      startDate: undefined,
+      TGEDate: undefined,
+      cliff: 0,
+      vestingDays: 0,
+      currency: undefined,
+    },
     progressive: true,
     resolver: zodResolver(ProjectFormSchema),
     reValidateMode: "onChange",
     mode: "all",
   });
+
+  console.log(errors);
 
   const amountToRaise = watch("amountToRaise"),
     threshold = watch("threshold"),
@@ -136,7 +165,6 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, onSubmi
       !errors.threshold &&
       !errors.tokensForSale &&
       !errors.startDate &&
-      dirtyFields.currency?.id &&
       dirtyFields.amountToRaise &&
       dirtyFields.threshold &&
       dirtyFields.tokensForSale &&
@@ -297,14 +325,23 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, onSubmi
             <div className={classNames(styles.grid, styles.two)}>
               <div className={classNames(styles.grid, styles.one)}>
                 {currencies && (
-                  <Selector
-                    label={"Currency"}
-                    description={"Select the type of currency with which your project will be funded"}
-                    options={currencies.map((currency) => ({
-                      label: currency.name,
-                      value: currency.id,
-                    }))}
-                    {...register("currency.id")}
+                  <Controller
+                    name="currency"
+                    control={control}
+                    render={({ field }) => (
+                      <Selector
+                        label={"Currency"}
+                        description={"Select the type of currency with which your project will be funded"}
+                        options={currencies.map((currency) => ({
+                          label: currency.name,
+                          value: currency.id,
+                        }))}
+                        value={field.value?.id}
+                        onChange={(e) =>
+                          field.onChange(currencies.find((currency) => currency.id === Number(e.target.value)))
+                        }
+                      />
+                    )}
                   />
                 )}
 
@@ -607,7 +644,14 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, onSubmi
       {/* Actions */}
       <div className={styles.actions}>
         <Button type={"reset"} variant={"solid"} color={"red"} caption={"Discard Changes"} />
-        <Button type={"submit"} variant={"solid"} color={"secondary"} caption={"Save Changes"} />
+        <Button
+          type={"submit"}
+          disabled={Object.keys(errors).length > 0}
+          isLoading={isLoading}
+          variant={"solid"}
+          color={"secondary"}
+          caption={"Save Changes"}
+        />
       </div>
     </form>
   );

@@ -12,7 +12,6 @@ export const ProjectFormSchema = ProjectSchema.pick({
   description: true,
   social: true,
   tokensSupply: true,
-  tokenPrice: true,
   amountToRaise: true,
   startDate: true,
   tokenName: true,
@@ -45,6 +44,7 @@ export type ProjectFormValues = z.infer<typeof ProjectFormSchema>;
  * @param onCancel - Callback function that executes to navigate back from the form.
  */
 export interface ProjectFormProps {
+  isLoading: boolean;
   defaultValues?: Partial<ProjectFormValues>;
   onSubmit: (data: ProjectFormValues) => void;
   onCancel: () => void;

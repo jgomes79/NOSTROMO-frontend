@@ -1,13 +1,11 @@
-import React, { useCallback, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import React, { useCallback } from "react";
+import { useParams } from "react-router-dom";
 
 import { WalletButton } from "@rainbow-me/rainbowkit";
 import { RiAliensFill, RiWallet2Line } from "react-icons/ri";
 import { useWalletClient } from "wagmi";
 
-import { getRoute } from "@/lib/router";
 import { useProject } from "@/project/hooks/useProject";
-import { PROJECT_ROUTES } from "@/project/project.constants";
 import { Button } from "@/shared/components/Button";
 import { Loader } from "@/shared/components/Loader";
 import { ErrorPage } from "@/shared/pages/ErrorPage";
@@ -15,7 +13,6 @@ import { ErrorPage } from "@/shared/pages/ErrorPage";
 import styles from "./CreateOrEditProjectPage.module.scss";
 import { ProjectForm } from "../../forms/ProjectForm";
 import { ProjectFormValues } from "../../forms/ProjectForm";
-import { useInitProject } from "../../hooks/useInitProject";
 import { useNewProject } from "../../hooks/useNewProject";
 import { Project } from "../../project.types";
 
@@ -36,10 +33,7 @@ type CreateOrEditProjectPageParams = {
  * @returns {JSX.Element} The rendered new project page component.
  */
 export const CreateOrEditProjectPage: React.FC = () => {
-  const navigate = useNavigate();
-
-  const newProjectMutation = useNewProject(),
-    initProjectMutation = useInitProject();
+  const newProjectMutation = useNewProject();
 
   const params = useParams<CreateOrEditProjectPageParams>();
 
@@ -53,37 +47,16 @@ export const CreateOrEditProjectPage: React.FC = () => {
    */
   const handleClickSubmit = useCallback(
     (values: ProjectFormValues) => {
-      newProjectMutation.mutate(values);
+      newProjectMutation.mutateAsync(values);
     },
     [newProjectMutation],
   );
 
   /**
-   * useEffect hook to initialize a new project if the projectId is not present and the wallet is available.
+   * Renders an error page if the wallet is not connected or the account is unavailable.
    *
-   * @remarks
-   * This effect runs whenever the `params.projectId` or `wallet` changes.
-   * If the `projectId` is not present in the URL parameters and the wallet is connected,
-   * it triggers the `initProjectMutation` to initialize a new project with the wallet's account address.
+   * @returns {JSX.Element} The error page component prompting the user to connect their wallet.
    */
-  useEffect(() => {
-    const initializeProject = async () => {
-      if (!params.slug && wallet && wallet.account) {
-        const data = await initProjectMutation.mutateAsync(wallet.account.address);
-        if (data && data.slug) {
-          console.log("data", data);
-          navigate(getRoute(PROJECT_ROUTES.EDIT_PROJECT, { slug: data.slug }));
-        }
-      }
-    };
-
-    initializeProject();
-  }, [params.slug, wallet]);
-
-  console.log("wallet", wallet);
-  console.log("project", project);
-  console.log("initProjectMutation", initProjectMutation);
-
   if (!wallet || !wallet?.account) {
     return (
       <ErrorPage
@@ -112,11 +85,21 @@ export const CreateOrEditProjectPage: React.FC = () => {
     );
   }
 
-  if (project.isLoading || initProjectMutation.isPending || !params.slug) {
+  /**
+   * Renders a loader if the project data is still loading, the initialization mutation is pending, or the slug is not provided.
+   *
+   * @returns {JSX.Element} The loader component.
+   */
+  if (project.isLoading) {
     return <Loader variant={"full"} size={52} />;
   }
 
-  if ((!project.isLoading && params.slug && project.error) || !project.data) {
+  /**
+   * Renders an error page if the project data is not found or unavailable.
+   *
+   * @returns {JSX.Element} The error page component indicating the project is not found.
+   */
+  if (!project.isLoading && params.slug && project.error) {
     return (
       <ErrorPage
         code={"404"}
@@ -133,7 +116,12 @@ export const CreateOrEditProjectPage: React.FC = () => {
         <div className={styles.gradient} />
       </div>
       <div className={styles.form}>
-        <ProjectForm defaultValues={project.data} onSubmit={handleClickSubmit} onCancel={() => {}} />
+        <ProjectForm
+          isLoading={newProjectMutation.isPending}
+          defaultValues={project.data || undefined}
+          onSubmit={handleClickSubmit}
+          onCancel={() => {}}
+        />
       </div>
     </div>
   );

@@ -12,12 +12,13 @@ export const MODULE_PROJECT = "project";
  * @constant
  * @type {Object}
  * @property {string} MAIN - The main route for accessing projects.
- * @property {string} DETAILS - The route for accessing project details, including slug and tab parameters.
+ * @property {string} PROJECT_DETAILS - The route for accessing project details, including slug parameter.
  * @property {string} NEW_PROJECT - The route for creating a new project.
+ * @property {string} EDIT_PROJECT - The route for editing an existing project, including slug parameter.
  */
 export const PROJECT_ROUTES = {
   MAIN: "/projects",
   PROJECT_DETAILS: "/projects/:slug",
-  NEW_PROJECT_INIT: "/projects/new/:slug?",
+  NEW_PROJECT: "/projects/new",
   EDIT_PROJECT: "/projects/:slug/edit",
 };

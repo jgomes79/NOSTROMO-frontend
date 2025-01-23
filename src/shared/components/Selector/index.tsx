@@ -7,7 +7,7 @@ import { Typography } from "../Typography";
 
 type Option = { value: string | number; label: string };
 
-interface SelectorProps {
+interface SelectorProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
   /**
    * The options to be displayed in the selector.
    */

@@ -20,7 +20,6 @@ export const useNewProject = () =>
       // Token Info
       formData.append("tokenName", data.tokenName);
       formData.append("tokenImage", data.tokenImage);
-      formData.append("tokenPrice", String(data.tokenPrice));
       formData.append("tokensSupply", String(data.tokensSupply));
       formData.append("tokenDecimals", String(data.tokenDecimals));
 
