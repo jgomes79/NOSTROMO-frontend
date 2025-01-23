@@ -86,7 +86,7 @@ export const CreateOrEditProjectPage: React.FC = () => {
   }
 
   /**
-   * Renders a loader if the project data is still loading, the initialization mutation is pending, or the slug is not provided.
+   * Renders a loader if the project data is still loading.
    *
    * @returns {JSX.Element} The loader component.
    */
