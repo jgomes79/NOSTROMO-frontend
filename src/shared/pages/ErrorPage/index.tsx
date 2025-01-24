@@ -37,13 +37,13 @@ export const ErrorPage: React.FC<ErrorPageProps> = ({ code, title, description, 
     <div className={styles.layout}>
       <div className={styles.field}>
         {code && (
-          <Typography as="div" variant="heading" size="xlarge" className={styles.title} textAlign="center">
+          <Typography as="div" variant="heading" size="xxlarge" className={styles.title} textAlign="center">
             {code}
           </Typography>
         )}
         <div className={styles.field}>
           <div>
-            <Typography as="h1" variant="heading" size="large" textAlign="center">
+            <Typography as="h1" variant="heading" size="xlarge" textAlign="center">
               {title}
             </Typography>
             <Typography as="p" textAlign="center" size="medium">

@@ -6,7 +6,7 @@ import { RiAliensFill, RiWallet2Line } from "react-icons/ri";
 import { useWalletClient } from "wagmi";
 
 import { useProject } from "@/project/hooks/useProject";
-import { useProjectsController } from "@/project/hooks/useProjectsController";
+import { useUpsertProject } from "@/project/hooks/useUpsertProject";
 import { Button } from "@/shared/components/Button";
 import { Loader } from "@/shared/components/Loader";
 import { ErrorPage } from "@/shared/pages/ErrorPage";
@@ -33,8 +33,7 @@ type CreateOrEditProjectPageParams = {
  * @returns {JSX.Element} The rendered new project page component.
  */
 export const CreateOrEditProjectPage: React.FC = () => {
-  const { upsertProject } = useProjectsController();
-
+  const upsertProject = useUpsertProject();
   const params = useParams<CreateOrEditProjectPageParams>();
 
   const { data: wallet } = useWalletClient(),

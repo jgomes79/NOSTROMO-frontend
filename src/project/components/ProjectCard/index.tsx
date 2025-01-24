@@ -1,14 +1,16 @@
 import { Link } from "react-router-dom";
 
+import classNames from "clsx";
+
 import { formatPrice } from "@/lib/number";
 import { getRoute } from "@/lib/router";
 import { trimString } from "@/lib/string";
-import { PROJECT_ROUTES } from "@/project/project.constants";
-import { ProjectDetailsTabs } from "@/project/project.types";
 import { Countdown } from "@/shared/components/Countdown";
 import { Typography } from "@/shared/components/Typography";
 
 import styles from "./ProjectCard.module.scss";
+import { PROJECT_ROUTES, PROJECT_STATE_STRING } from "../../project.constants";
+import { ProjectDetailsTabs, ProjectStates } from "../../project.types";
 
 /**
  * Props for the ProjectCard component.
@@ -62,7 +64,7 @@ interface ProjectCardProps {
   /**
    * Project state
    */
-  state: number;
+  state: ProjectStates;
 }
 
 /**
@@ -83,6 +85,12 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
   date,
   state,
 }) => {
+  const getProjectRoute = () => {
+    if (state === ProjectStates.DRAFT) {
+      return getRoute(PROJECT_ROUTES.EDIT_PROJECT, { slug });
+    }
+    return getRoute(PROJECT_ROUTES.PROJECT_DETAILS, { slug, tab: ProjectDetailsTabs.INFORMATION });
+  };
   /**
    * Renders a field with a label and value.
    *
@@ -101,14 +109,31 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
     </div>
   );
 
+  const stateLabels = {
+    [ProjectStates.ALL]: "",
+    [ProjectStates.DRAFT]: "Draft",
+    [ProjectStates.REJECTED]: "Rejected",
+    [ProjectStates.CLOSED]: "Closed",
+    [ProjectStates.FAILED]: "Failed",
+    [ProjectStates.FUNDING_PHASE_1]: "Funding Phase 1",
+    [ProjectStates.FUNDING_PHASE_2]: "Funding Phase 2",
+    [ProjectStates.FUNDING_PHASE_3]: "Funding Phase 3",
+    [ProjectStates.READY_TO_VOTE]: "Ready to Vote",
+    [ProjectStates.REQUEST_MORE_INFO]: "More Info Requested",
+    [ProjectStates.UPCOMING]: "Upcoming",
+  };
+
   return (
-    <Link
-      className={styles.layout}
-      to={getRoute(PROJECT_ROUTES.PROJECT_DETAILS, { slug, tab: ProjectDetailsTabs.INFORMATION })}
-    >
+    <Link className={styles.layout} to={getProjectRoute()}>
       <div className={styles.body}>
         {/* Banner */}
         <img src={bannerUrl} className={styles.banner} width={"100%"} height={160} alt={"Project Banner"} />
+
+        <div className={classNames(styles.state, styles[PROJECT_STATE_STRING[state]])}>
+          <Typography variant={"label"} size={"small"}>
+            {stateLabels[state]}
+          </Typography>
+        </div>
 
         {/* Date */}
         <div className={styles.date}>
@@ -136,7 +161,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
           </div>
 
           {/* Description */}
-          <Typography variant={"body"} className={styles.description} size={"medium"} textAlign={"center"}>
+          <Typography variant={"body"} className={styles.description} size={"medium"} textAlign={"left"}>
             {trimString(description, 90)}
           </Typography>
 

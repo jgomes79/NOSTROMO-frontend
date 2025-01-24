@@ -15,13 +15,14 @@ export interface TypographyProps {
 
   /**
    * Specifies the size of the text.
-   * - 'xlarge': Extra large text.
+   * - 'xxlarge': Extra large text.
+   * - 'xlarge': X-large text.
    * - 'large': Large text.
    * - 'medium': Medium text (default).
    * - 'small': Small text.
    * - 'xsmall': Extra small text.
    */
-  readonly size?: "xlarge" | "large" | "medium" | "small" | "xsmall";
+  readonly size?: "xxlarge" | "xlarge" | "large" | "medium" | "small" | "xsmall";
 
   /**
    * Specifies the text transformation.

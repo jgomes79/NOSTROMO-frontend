@@ -2,10 +2,8 @@ import { useState, useRef, useEffect } from "react";
 
 import classNames from "clsx";
 
-import useResponsive from "@/shared/hooks/useResponsive";
-
 import styles from "./Tabs.module.scss";
-import { Typography } from "../Typography";
+import { Typography, TypographyProps } from "../Typography";
 
 interface Tab<T> {
   id: T;
@@ -19,6 +17,12 @@ interface Tab<T> {
  * @template T - The type of the tab ID.
  */
 interface TabsProps<T> {
+  /**
+   * The color theme of the tabs.
+   * @default green
+   */
+  readonly color?: "green" | "yellow";
+
   /**
    * An array of tab objects.
    */
@@ -47,10 +51,23 @@ interface TabsProps<T> {
    * The class name for the tabs container.
    */
   readonly itemClassName?: string;
+
+  /**
+   * The size of the tabs.
+   * @default "medium"
+   */
+  readonly size?: TypographyProps["size"];
 }
 
-export const Tabs = <T,>({ tabs, activeId, onChange, onRender, itemClassName }: TabsProps<T>) => {
-  const { isMobile } = useResponsive();
+export const Tabs = <T,>({
+  tabs,
+  activeId,
+  size = "medium",
+  color = "green",
+  onChange,
+  onRender,
+  itemClassName,
+}: TabsProps<T>) => {
   const [activeTab, setActiveTab] = useState<T>(activeId);
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
@@ -81,14 +98,14 @@ export const Tabs = <T,>({ tabs, activeId, onChange, onRender, itemClassName }: 
             key={`--tab-${tab.id}`}
             ref={(el) => (tabRefs.current[index] = el)}
             type="button"
-            className={classNames(styles.tab, { [styles.active]: activeTab === tab.id })}
+            className={classNames(styles.tab, styles[color], { [styles.active]: activeTab === tab.id })}
             onClick={() => handleClickTab(tab.id)}
           >
             <Typography
               variant={"heading"}
               className={classNames(styles.text, itemClassName)}
               aria-label={"crt"}
-              size={isMobile ? "small" : "large"}
+              size={size}
             >
               {tab.label}
             </Typography>

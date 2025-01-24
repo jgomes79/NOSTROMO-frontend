@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import classNames from "clsx";
 import { RiSendPlaneLine } from "react-icons/ri";
 
-import { ProjectList } from "@/project/components/ProjectList";
+import { ProjectsListByState } from "@/project/components/ProjectsListByState";
 import { Banner } from "@/shared/components/Banner";
 import { SectionIndicator } from "@/shared/components/SectionIndicator";
 import { useAppTitle } from "@/shared/hooks/useAppTitle";
@@ -17,21 +17,31 @@ import { MainSection } from "../../components/MainSection";
  * HomePage component renders the main homepage layout.
  * It includes sections for the main introduction, how to join, projects, and a banner.
  *
+ * @component
+ * @example
+ * ```tsx
+ * <HomePage />
+ * ```
  * @returns {JSX.Element} The rendered HomePage component.
  */
 export const HomePage: React.FC = () => {
+  /** Array of refs for each section in the homepage */
   const sectionRefs = useRef<(HTMLElement | null)[]>([]);
+  /** State to track the currently visible section */
   const [currentSection, setCurrentSection] = useState(0);
+  /** Navigation hook for routing */
   const navigate = useNavigate();
 
+  /** Set the page title */
   useAppTitle("Enter the Gateway of Blockchain Innovation");
 
   /**
    * Scrolls smoothly to the section referenced by the given ref.
    *
-   * @param sectionRef - A React ref object pointing to the section to scroll to.
+   * @param {React.RefObject<HTMLElement>} sectionRef - A React ref object pointing to the section to scroll to.
+   * @returns {void}
    */
-  const scrollToSection = (sectionRef: React.RefObject<HTMLElement>) => {
+  const scrollToSection = (sectionRef: React.RefObject<HTMLElement>): void => {
     sectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
@@ -39,9 +49,10 @@ export const HomePage: React.FC = () => {
    * Handles the click event on a step in the Stepper component.
    * It scrolls smoothly to the corresponding section.
    *
-   * @param index - The index of the step that was clicked.
+   * @param {number} index - The index of the step that was clicked.
+   * @returns {void}
    */
-  const handleClickStep = (index: number) => {
+  const handleClickStep = (index: number): void => {
     const section = sectionRefs.current[index];
     if (section) {
       scrollToSection({ current: section });
@@ -52,8 +63,10 @@ export const HomePage: React.FC = () => {
     /**
      * Handles the scroll event to determine the current section in view.
      * It updates the current section index based on the section that is in the middle of the viewport.
+     *
+     * @returns {void}
      */
-    const handleScroll = () => {
+    const handleScroll = (): void => {
       let index = 0;
 
       sectionRefs.current.forEach((section, i) => {
@@ -91,7 +104,7 @@ export const HomePage: React.FC = () => {
       {/* Projects Section */}
       <section ref={(el) => (sectionRefs.current[2] = el)} className={styles.section}>
         <div className={styles.container}>
-          <ProjectList />
+          <ProjectsListByState />
         </div>
       </section>
 

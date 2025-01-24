@@ -102,8 +102,6 @@ $transition-hover: all 120ms linear;
   flex-direction: column;
   flex: 1;
   color: #d5d5d5;
-  align-items: center;
-  justify-content: center;
 }
 
 
@@ -151,4 +149,24 @@ $transition-hover: all 120ms linear;
   color: #5d5d5d;
 
   transition: $transition-hover;
+}
+
+.state {
+  position: absolute;
+  left: 12px;
+  top: 12px;
+  z-index: 2;
+
+  background-color: #000000a0;
+  backdrop-filter: blur(4px);
+  border: 2px dashed;
+  padding: 6px 12px;
+
+  &.draft {
+    color: rgba(245, 131, 32, 1);
+  }
+
+  &.fundingphase1, &.fundingphase2, &.fundingphase3  {
+    color: rgba(0, 128, 255, 1);
+  }
 }

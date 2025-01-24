@@ -38,6 +38,14 @@
   justify-content: center;
   gap: 12px;
 
+  &.green.active {
+    color: $green-03;
+  }
+
+  &.yellow.active {
+    color: $orange-03;
+  }
+
   .icon {
     svg {
       width: 24px;
@@ -45,10 +53,6 @@
     }
   }
   
-  &.active {
-    color: #8AF827 !important;
-  }
-
   &:hover {
     color: $white;
   }
@@ -69,5 +73,6 @@
 
 .text {
   @include crtAnimation();
+
 }
 

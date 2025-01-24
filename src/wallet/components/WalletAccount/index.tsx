@@ -7,9 +7,10 @@ import { useWalletClient } from "wagmi";
 import { getRoute } from "@/lib/router";
 import { Button } from "@/shared/components/Button";
 import { USER_ROUTES } from "@/user/user.constants";
-import { shortHex } from "@/wallet/wallet.helpers";
+import { UserSettingsTabs } from "@/user/user.types";
 
 import styles from "./WalletAccount.module.scss";
+import { shortHex } from "../../wallet.helpers";
 
 /**
  * WalletAccount component that displays the connected wallet address or a button to connect the wallet.
@@ -25,7 +26,7 @@ export const WalletAccount: React.FC = () => {
    * Navigates to the user settings page.
    */
   const handleClickAccount = () => {
-    navigate(getRoute(USER_ROUTES.SETTINGS, {}));
+    navigate(getRoute(USER_ROUTES.SETTINGS, { tabId: UserSettingsTabs.TIER }));
   };
 
   return (

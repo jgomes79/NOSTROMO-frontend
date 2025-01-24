@@ -6,6 +6,7 @@ import { RiAliensFill, RiWallet2Line } from "react-icons/ri";
 import { useWalletClient } from "wagmi";
 
 import { getRoute } from "@/lib/router";
+import { ProjectsListByWallet } from "@/project/components/ProjectsListByWallet";
 import { Button } from "@/shared/components/Button";
 import { Separator } from "@/shared/components/Separator";
 import { Tabs } from "@/shared/components/Tabs";
@@ -87,7 +88,7 @@ export const UserSettingsPage: React.FC = () => {
       case UserSettingsTabs.TIER:
         return <div>Tier</div>;
       case UserSettingsTabs.MY_PROJECTS:
-        return <div>My Projects</div>;
+        return <ProjectsListByWallet walletAddress={wallet.data.account.address} limit={9} />;
       case UserSettingsTabs.CLAIM_TOKENS:
         return <div>Claim Tokens</div>;
     }
@@ -99,12 +100,13 @@ export const UserSettingsPage: React.FC = () => {
         <div className={styles.header}>
           <div className={classNames(styles.inline, styles.center)}>
             <RiAliensFill size={42} />
-            <Typography variant={"heading"} size={"large"}>
+            <Typography variant={"heading"} size={"xlarge"}>
               User Settings
             </Typography>
           </div>
           <div className={styles.tabs}>
             <Tabs
+              size={"large"}
               tabs={[
                 {
                   id: UserSettingsTabs.TIER,
@@ -112,7 +114,7 @@ export const UserSettingsPage: React.FC = () => {
                 },
                 {
                   id: UserSettingsTabs.MY_PROJECTS,
-                  label: "My Projects",
+                  label: "Projects",
                 },
                 {
                   id: UserSettingsTabs.CLAIM_TOKENS,
@@ -120,7 +122,6 @@ export const UserSettingsPage: React.FC = () => {
                 },
               ]}
               activeId={params.tabId}
-              itemClassName={styles.tabItem}
               onChange={(tabId) => navigate(getRoute(USER_ROUTES.SETTINGS, { tabId }))}
             />
           </div>

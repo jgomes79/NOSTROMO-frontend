@@ -47,3 +47,40 @@ export const getProjects = (page: number, state: ProjectStates) =>
  */
 export const upsertProject = (id: Project["id"] | undefined, data: FormData): Promise<Project> =>
   requestWithFile<Project>(getEndpoint("projects-service", id ? `/projects/${id}/update` : "/projects/create"), data);
+
+/**
+ * Type representing the response from the getProjectsByWallet API.
+ *
+ * @property {Project[]} rows - An array of projects associated with the wallet.
+ * @property {number} count - The total number of projects for the wallet.
+ */
+export type GetProjectsByWalletResponse = {
+  rows: Project[];
+  count: number;
+};
+
+/**
+ * Fetches projects associated with a specific wallet address.
+ *
+ * @param {Project["owner"]["wallet"]} wallet - The wallet address to fetch projects for.
+ * @param {ProjectStates | "all"} state - The state of projects to fetch ("all" or specific ProjectStates)
+ * @param {number} page - The page number to fetch.
+ * @param {number} limit - The maximum number of projects to return per page.
+ * @returns {Promise<GetProjectsByWalletResponse>} - A promise that resolves to an object containing:
+ *   - rows: Array of projects associated with the wallet
+ *   - count: Total number of projects for the wallet
+ */
+export const getProjectsByWallet = (
+  wallet: Project["owner"]["wallet"],
+  state: ProjectStates | "all",
+  page: number,
+  limit: number,
+) =>
+  request<GetProjectsByWalletResponse>(getEndpoint("projects-service", `/projects/wallet/${wallet}`), {
+    method: "GET",
+    params: {
+      page,
+      state,
+      limit,
+    },
+  });

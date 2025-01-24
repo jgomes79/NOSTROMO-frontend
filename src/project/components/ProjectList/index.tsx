@@ -1,119 +1,86 @@
-import { useEffect, useMemo } from "react";
-
-import { RiArrowDownLine } from "react-icons/ri";
-
-import { Button } from "@/shared/components/Button";
 import { EmptyState } from "@/shared/components/EmptyState";
 import { Skeleton } from "@/shared/components/Skeleton";
-import { Tabs } from "@/shared/components/Tabs";
 
 import styles from "./ProjectList.module.scss";
-import { useProjectsController } from "../../hooks/useProjectsController";
-import { ProjectStates } from "../../project.types";
+import { Project } from "../../project.types";
 import { ProjectCard } from "../ProjectCard";
 
 /**
- * A component that renders a list of projects with tabs for different project states.
- *
- * @returns {JSX.Element} The rendered ProjectList component.
+ * Props interface for the ProjectList component
+ * @interface ProjectListProps
  */
-export const ProjectList: React.FC = () => {
-  const { page, isLoading, projects, total, state, fetchProjects } = useProjectsController();
+interface ProjectListProps {
+  /** Current page number being displayed */
+  readonly page: number;
+  /** Loading state indicator */
+  readonly isLoading: boolean;
+  /** Array of project data to display */
+  readonly projects: Project[];
+  /** Total count of available projects */
+  readonly total: number;
+}
 
-  useEffect(() => {
-    fetchProjects(1, state);
-  }, [state]);
+/**
+ * ProjectList Component
+ *
+ * Renders a grid of project cards with loading states and empty state handling.
+ * Uses a skeleton loader for initial loading and displays an empty state message
+ * when no projects are available.
+ *
+ * @param {ProjectListProps} props - Component props
+ * @param {number} props.page - Current page number
+ * @param {boolean} props.isLoading - Loading state indicator
+ * @param {Project[]} props.projects - Array of projects to display
+ * @returns {JSX.Element} Rendered component
+ */
+export const ProjectList: React.FC<ProjectListProps> = ({ isLoading, page, projects }) => {
+  /**
+   * Renders the empty state component when no projects are available
+   *
+   * @returns {JSX.Element} A centered div containing the EmptyState component
+   * with a title and description for the no projects found state
+   */
+  const renderEmptyState = () => (
+    <div className={styles.centered}>
+      <EmptyState title="No projects found" description="Be the first to start a new project and make a difference!" />
+    </div>
+  );
 
   /**
-   * Array of project states with their respective IDs and labels.
+   * Renders a grid of ProjectCard components based on the projects array
    *
-   * @type {Array<{ id: ProjectStates, label: string }>}
-   */
-  const projectStates = [
-    {
-      id: ProjectStates.FUNDING_PHASE_1,
-      label: "Active",
-    },
-    {
-      id: ProjectStates.UPCOMING,
-      label: "Upcoming",
-    },
-    {
-      id: ProjectStates.CLOSED,
-      label: "Closed",
-    },
-  ];
-
-  /**
-   * Memoized function to render the list of projects.
+   * Maps through the projects array and creates individual ProjectCard components
+   * with project-specific data like banner URL, currency, dates, etc.
    *
-   * @returns {JSX.Element | undefined} - A JSX element containing the list of projects or a loading indicator.
+   * @returns {JSX.Element} A div containing the mapped ProjectCard components
    */
-  const renderProjects = useMemo(() => {
-    if (!isLoading && projects.length === 0) {
-      return (
-        <div className={styles.centered}>
-          <EmptyState
-            title="No projects found"
-            description="Be the first to start a new project and make a difference!"
-          />
-        </div>
-      );
-    }
+  const renderProjectCards = () => (
+    <div className={styles.cards}>
+      {projects.map((project, index) => (
+        <ProjectCard
+          key={`project-${project.slug}-${index}`}
+          bannerUrl={project.bannerUrl}
+          currency={project.currency.name}
+          date={project.startDate}
+          description={project.description}
+          fundraisingGoal={project.amountToRaise}
+          photoUrl={project.photoUrl}
+          slug={project.slug}
+          title={project.name}
+          tokenPrice={project.tokenPrice}
+          state={project.state}
+        />
+      ))}
+    </div>
+  );
 
-    return (
-      <Skeleton
-        count={3}
-        orientation="horizontal"
-        height={480}
-        gap={42}
-        width={"full"}
-        isLoading={isLoading && page === 1}
-        className={styles.inner}
-      >
-        <div className={styles.cards}>
-          {projects.map((project, index) => (
-            <ProjectCard
-              key={index}
-              bannerUrl={project.bannerUrl}
-              currency={project.currency.name}
-              date={project.startDate}
-              description={project.description}
-              fundraisingGoal={project.amountToRaise}
-              photoUrl={project.photoUrl}
-              slug={project.slug}
-              title={project.name}
-              tokenPrice={project.tokenPrice}
-              state={project.state}
-            />
-          ))}
-        </div>
-      </Skeleton>
-    );
-  }, [isLoading, page, projects]);
+  if (!isLoading && projects.length === 0) {
+    return renderEmptyState();
+  }
 
   return (
-    <div className={styles.layout}>
-      <div className={styles.container}>
-        <div className={styles.tabs}>
-          <Tabs<ProjectStates>
-            activeId={state}
-            tabs={projectStates}
-            onRender={renderProjects}
-            onChange={(state) => fetchProjects(1, state)}
-          />
-
-          {total > 4 && (
-            <div className={styles.actions}>
-              <Button
-                caption="Show more"
-                iconRight={<RiArrowDownLine />}
-                onClick={() => fetchProjects(page + 1, state)}
-              />
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
+    <Skeleton gap={42} count={3} height={480} orientation="horizontal" width="full" isLoading={isLoading && page === 0}>
+      {renderProjectCards()}
+    </Skeleton>
   );
 };

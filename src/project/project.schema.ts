@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { CurrencySchema } from "@/currency/currency.schema";
+import { UserSchema } from "@/user/user.schema";
 
 import { ProjectStates } from "./project.types";
 
@@ -88,6 +89,8 @@ export const ProjectSchema = z.object({
     .nonnegative("Vesting days must be zero or greater"),
 
   currency: CurrencySchema,
+
+  owner: UserSchema,
 
   social: z.object({
     instagramUrl: z

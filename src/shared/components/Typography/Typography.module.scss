@@ -1,8 +1,14 @@
 .heading {
-  &.xlarge {
+  &.xxlarge {
     font-size: 52px;
     line-height: 72px;
     font-weight: 900;
+  }
+
+    &.xlarge {
+    font-size: 32px;
+    line-height: 42px;
+    font-weight: 700;
   }
 
   &.large {
@@ -31,7 +37,7 @@
 }
 
 .label {
-  &.xlarge {
+  &.xxlarge {
     font-size: 30px;
     line-height: 42px;
     font-weight: 600;
@@ -57,7 +63,7 @@
 }
 
 .body {
-  &.xlarge {
+  &.xxlarge {
     font-size: 30px;
     line-height: 42px;
   }

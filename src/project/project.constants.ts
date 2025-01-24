@@ -1,3 +1,5 @@
+import { ProjectStates } from "./project.types";
+
 /**
  * Represents the project module name.
  *
@@ -21,4 +23,21 @@ export const PROJECT_ROUTES = {
   PROJECT_DETAILS: "/projects/:slug",
   NEW_PROJECT: "/projects/new",
   EDIT_PROJECT: "/projects/:slug/edit",
+};
+
+/**
+ * Maps project states to their string representation without spaces
+ */
+export const PROJECT_STATE_STRING: { [key in ProjectStates]: string } = {
+  [ProjectStates.ALL]: "all",
+  [ProjectStates.DRAFT]: "draft",
+  [ProjectStates.REQUEST_MORE_INFO]: "requestmoreinfo",
+  [ProjectStates.READY_TO_VOTE]: "readytovote",
+  [ProjectStates.REJECTED]: "rejected",
+  [ProjectStates.UPCOMING]: "upcoming",
+  [ProjectStates.FUNDING_PHASE_1]: "fundingphase1",
+  [ProjectStates.FUNDING_PHASE_2]: "fundingphase2",
+  [ProjectStates.FUNDING_PHASE_3]: "fundingphase3",
+  [ProjectStates.CLOSED]: "closed",
+  [ProjectStates.FAILED]: "failed",
 };

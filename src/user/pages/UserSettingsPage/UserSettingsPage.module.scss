@@ -1,5 +1,9 @@
 .layout {
   @include pageMargin();
+
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
 }
 
 .container {
@@ -25,9 +29,6 @@
   padding: 22px 0;
 }
 
-.tabItem {
-  font-size: 24px !important;
-}
 
 .inline {
   display: flex;

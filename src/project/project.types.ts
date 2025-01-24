@@ -7,6 +7,12 @@ import { ProjectSchema } from "@/project/project.schema";
  */
 export enum ProjectStates {
   /**
+   * Represents all project states combined.
+   * Used for filtering purposes when all states should be included.
+   */
+  ALL = "all",
+
+  /**
    * The project is in draft state.
    */
   DRAFT = 0,
