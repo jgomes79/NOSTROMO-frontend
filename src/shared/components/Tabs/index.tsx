@@ -2,6 +2,8 @@ import { useState, useRef, useEffect } from "react";
 
 import classNames from "clsx";
 
+import useResponsive from "@/shared/hooks/useResponsive";
+
 import styles from "./Tabs.module.scss";
 import { Typography, TypographyProps } from "../Typography";
 
@@ -68,6 +70,8 @@ export const Tabs = <T,>({
   onRender,
   itemClassName,
 }: TabsProps<T>) => {
+  const { isMobile } = useResponsive();
+
   const [activeTab, setActiveTab] = useState<T>(activeId);
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
@@ -105,7 +109,7 @@ export const Tabs = <T,>({
               variant={"heading"}
               className={classNames(styles.text, itemClassName)}
               aria-label={"crt"}
-              size={size}
+              size={isMobile ? "medium" : size}
             >
               {tab.label}
             </Typography>

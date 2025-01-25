@@ -1,9 +1,25 @@
 .layout {
   @include pageMargin();
+  @include space();
+}
 
+.effect {
   display: flex;
   flex-direction: column;
-  gap: 28px;
+  gap: 42px;
+
+  &:after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%,  rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 1) 100%);
+  }
+}
+
+.container, .body {
+  position: relative;
+  z-index: 10;
 }
 
 .container {
@@ -11,6 +27,10 @@
     padding-top: 140px !important;
     @include bottomLighting();
   }
+}
+
+.body {
+  padding: 0 22px;
 }
 
 .header {
@@ -29,7 +49,6 @@
   padding: 22px 0;
 }
 
-
 .inline {
   display: flex;
   flex-direction: row;
@@ -39,3 +58,50 @@
     align-items: center;
   }
 }
+
+.grid {
+  display: grid;
+  gap: 22px;
+  width: 100%;
+  align-items: start;
+
+  @include respond-to(mobile) {
+    gap: 42px;
+  }
+  
+  &.two {
+    grid-template-columns: 0fr 1fr;
+    gap: 42px;
+
+    @include respond-to(mobile) {
+      grid-template-columns: 1fr;
+    }
+
+    &.labels {
+      @include respond-to(tablet-vertical) {
+        grid-template-columns: 1fr;
+      }
+  
+      @include respond-to(mobile) {
+        grid-template-columns: 1fr;
+      }
+    }
+  }
+
+}
+
+.tier {
+  display: flex;
+  justify-content: center;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  @include respond-to(tablet-vertical) {
+    display: inline-flex;
+  }
+}
+

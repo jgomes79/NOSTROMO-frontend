@@ -5,17 +5,20 @@ import classNames from "clsx";
 import { RiAliensFill, RiWallet2Line } from "react-icons/ri";
 import { useWalletClient } from "wagmi";
 
+import { formatPrice } from "@/lib/number";
 import { getRoute } from "@/lib/router";
 import { ProjectsListByWallet } from "@/project/components/ProjectsListByWallet";
 import { Button } from "@/shared/components/Button";
-import { Separator } from "@/shared/components/Separator";
+import { Card } from "@/shared/components/Card";
+import { DataLabel } from "@/shared/components/DataLabel";
 import { Tabs } from "@/shared/components/Tabs";
 import { Typography } from "@/shared/components/Typography";
 import { ErrorPage } from "@/shared/pages/ErrorPage";
 
 import styles from "./UserSettingsPage.module.scss";
-import { USER_ROUTES } from "../../user.constants";
-import { UserSettingsTabs } from "../../user.types";
+import { UserTierImage } from "../../components/UserTierImage";
+import { TIER_NAMES, USER_ROUTES } from "../../user.constants";
+import { UserSettingsTabs, UserTiers } from "../../user.types";
 
 /**
  * Parameters for the UserSettingsPage component
@@ -79,6 +82,7 @@ export const UserSettingsPage: React.FC = () => {
       />
     );
   }
+
   /**
    * Renders the appropriate content based on the selected settings tab
    * @returns {JSX.Element} The rendered tab content component
@@ -86,7 +90,31 @@ export const UserSettingsPage: React.FC = () => {
   const renderTab = () => {
     switch (params.tabId) {
       case UserSettingsTabs.TIER:
-        return <div>Tier</div>;
+        return (
+          <div className={classNames(styles.grid, styles.two)}>
+            <div className={styles.grid}>
+              <div className={styles.tier}>
+                <UserTierImage tier={UserTiers.TIER_0} size={256} />
+              </div>
+              <div className={styles.actions}>
+                <Button variant={"solid"} color={"primary"} caption={"Upgrade Tier"} />
+                <Button variant={"ghost"} color={"primary"} caption={"Unstake Tokens"} />
+              </div>
+            </div>
+            <div className={styles.grid}>
+              <div className={classNames(styles.grid, styles.two, styles.labels)}>
+                <DataLabel label={"Your tier"} value={TIER_NAMES[UserTiers.TIER_0]} />
+                <DataLabel label={"Staked Token"} value={formatPrice(5000000, "QUBIC", 2)} />
+              </div>
+
+              <Card title={"Benefits"}>
+                <Typography variant={"body"} size={"small"}>
+                  Hola
+                </Typography>
+              </Card>
+            </div>
+          </div>
+        );
       case UserSettingsTabs.MY_PROJECTS:
         return <ProjectsListByWallet walletAddress={wallet.data.account.address} limit={9} />;
       case UserSettingsTabs.CLAIM_TOKENS:
@@ -96,39 +124,40 @@ export const UserSettingsPage: React.FC = () => {
 
   return (
     <div className={styles.layout}>
-      <div className={classNames(styles.container, styles.lighten)}>
-        <div className={styles.header}>
-          <div className={classNames(styles.inline, styles.center)}>
-            <RiAliensFill size={42} />
-            <Typography variant={"heading"} size={"xlarge"}>
-              User Settings
-            </Typography>
-          </div>
-          <div className={styles.tabs}>
-            <Tabs
-              size={"large"}
-              tabs={[
-                {
-                  id: UserSettingsTabs.TIER,
-                  label: "Tier",
-                },
-                {
-                  id: UserSettingsTabs.MY_PROJECTS,
-                  label: "Projects",
-                },
-                {
-                  id: UserSettingsTabs.CLAIM_TOKENS,
-                  label: "Claim Tokens",
-                },
-              ]}
-              activeId={params.tabId}
-              onChange={(tabId) => navigate(getRoute(USER_ROUTES.SETTINGS, { tabId }))}
-            />
+      <div className={styles.effect}>
+        <div className={classNames(styles.container, styles.lighten)}>
+          <div className={styles.header}>
+            <div className={classNames(styles.inline, styles.center)}>
+              <RiAliensFill size={42} />
+              <Typography variant={"heading"} size={"xlarge"}>
+                User Settings
+              </Typography>
+            </div>
+            <div className={styles.tabs}>
+              <Tabs
+                size={"large"}
+                tabs={[
+                  {
+                    id: UserSettingsTabs.TIER,
+                    label: "Tier",
+                  },
+                  {
+                    id: UserSettingsTabs.MY_PROJECTS,
+                    label: "Projects",
+                  },
+                  {
+                    id: UserSettingsTabs.CLAIM_TOKENS,
+                    label: "Claim Tokens",
+                  },
+                ]}
+                activeId={params.tabId}
+                onChange={(tabId) => navigate(getRoute(USER_ROUTES.SETTINGS, { tabId }))}
+              />
+            </div>
           </div>
         </div>
-        <Separator />
+        <div className={styles.body}>{renderTab()}</div>
       </div>
-      <div className={styles.container}>{renderTab()}</div>
     </div>
   );
 };

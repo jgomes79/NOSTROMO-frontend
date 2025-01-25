@@ -1,0 +1,92 @@
+.container {
+  border-radius: 8px;
+  padding: 2px;
+
+  aspect-ratio: 1/1;
+
+  svg {
+    width: 100%;
+    height: 100%;
+    
+    color: $white;
+  }
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  padding: 26px;
+
+  svg {
+    @include crtAnimation();
+  }
+}
+
+
+$shadowStyle: 0 10px 54px -12px;
+
+.tier_0 {
+  background: radial-gradient(circle at top, #111c14 0%, #3f5446 100%);
+  box-shadow: $shadowStyle rgba(111, 138, 97, 0.5);
+
+  svg {
+    color: #6f8a61;
+  }
+
+  .image {
+    background: radial-gradient(circle at bottom, rgb(29 35 31) 0%, rgb(8 17 11) 55%, rgb(7 9 8) 100%);
+  }
+}
+
+.tier_1 {
+  background: radial-gradient(circle at top, #12101b 0%, #252032 100%);
+  box-shadow: $shadowStyle rgba(76, 69, 104, 0.5);
+
+  svg {
+    color: #4c4568;
+  }
+
+  .image {
+    background: radial-gradient(circle at bottom, rgb(39 34 53) 0%, rgb(6 5 9) 55%, rgb(9 7 15) 100%);
+  }
+}
+
+.tier_2 {
+  background: radial-gradient(circle at bottom, rgb(115 32 132) 0%, rgb(36 6 41) 100%);
+  box-shadow: $shadowStyle rgba(125, 60, 180, 0.5);
+
+  svg {
+    color: #7d3cb4;
+  }
+
+  .image {
+    background: radial-gradient(circle at bottom, rgb(64 15 74) 0%, rgb(21 2 25) 55%, rgb(7 1 8) 100%);
+  }
+}
+
+.tier_3 {
+  background: radial-gradient(circle at top, #4a1e13 0%, #913c1e 100%);
+  box-shadow: $shadowStyle rgba(201, 93, 52, 0.5);
+
+  svg {
+    color: #c95d34;
+  }
+
+  .image {
+    background: radial-gradient(circle at bottom, rgb(88 35 16) 0%, rgb(53 17 8) 55%, rgb(7 3 1) 100%);
+  }
+}
+
+.tier_4 {
+  background: radial-gradient(circle at top, #300304 0%, #650b09 100%);
+  box-shadow: $shadowStyle rgba(187, 36, 38, 0.5);
+
+  svg {
+    color: #bb2426;
+  }
+
+  .image {
+    background: radial-gradient(circle at bottom, #6a1212 0%, rgb(30 2 2) 55%, rgb(3 0 0) 100%);
+  }
+}
