@@ -200,3 +200,7 @@ $breakpoints: (
     background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgb(92 133 48 / 80%) 50%, rgba(0, 0, 0, 0) 100%);
   }
 }
+
+@mixin greenShine() {
+  text-shadow: 0 0 22px $green-03;
+}

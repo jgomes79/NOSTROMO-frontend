@@ -4,8 +4,14 @@
  * @param params Object containing the dynamic data to replace in the route.
  * @returns The route with parameters replaced by dynamic data.
  */
-export function getRoute(route: string, params: Record<string, string | number>): string {
+export function getRoute(route: string, params?: Record<string, string | number>): string {
+  if (!params) return route;
+
   return Object.keys(params).reduce((updatedRoute, key) => {
-    return updatedRoute.replace(`:${key}`, `${params[key]}`);
+    const value = params[key];
+    if (value === undefined || value === null) {
+      return updatedRoute;
+    }
+    return updatedRoute.replace(`:${key}`, `${value}`);
   }, route);
 }

@@ -1,3 +1,4 @@
+import { useCallback, useState } from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 
 import { WalletButton } from "@rainbow-me/rainbowkit";
@@ -9,17 +10,20 @@ import { formatPrice } from "@/lib/number";
 import { getRoute } from "@/lib/router";
 import { ProjectsListByWallet } from "@/project/components/ProjectsListByWallet";
 import { Button } from "@/shared/components/Button";
-import { Card } from "@/shared/components/Card";
 import { DataLabel } from "@/shared/components/DataLabel";
+import { Fieldset } from "@/shared/components/Fieldset";
 import { Tabs } from "@/shared/components/Tabs";
 import { Typography } from "@/shared/components/Typography";
 import { ErrorPage } from "@/shared/pages/ErrorPage";
-import { useUserInfo } from "@/user/hooks/useUserInfo";
+import { TierSelector } from "@/tier/components/TierSelector";
+import { Tier, Tiers } from "@/tier/tier.types";
+import { useSetUserTier } from "@/user/hooks/useSetUserTier";
 
 import styles from "./UserSettingsPage.module.scss";
-import { UserTierImage } from "../../components/UserTierImage";
-import { TIER_NAMES, USER_ROUTES } from "../../user.constants";
-import { UserSettingsTabs, UserTiers } from "../../user.types";
+import { TierImage } from "../../../tier/components/TierImage";
+import { useUserByWallet } from "../../hooks/useUserByWallet";
+import { USER_ROUTES } from "../../user.constants";
+import { UserSettingsTabs } from "../../user.types";
 
 /**
  * Parameters for the UserSettingsPage component
@@ -40,10 +44,39 @@ type UserSettingsPageParams = {
  * @returns {JSX.Element} The rendered UserSettingsPage component
  */
 export const UserSettingsPage: React.FC = () => {
-  const wallet = useWalletClient();
-  const { data: user } = useUserInfo(wallet.data?.account.address);
   const params = useParams<UserSettingsPageParams>();
   const navigate = useNavigate();
+
+  const { data: wallet } = useWalletClient();
+  const setUserTier = useSetUserTier();
+  const { data: user, refetch: refetchUserbyWalle } = useUserByWallet(wallet?.account.address);
+  const [isTryingUpgrade, setTryingUpgrade] = useState<boolean>(false);
+
+  /**
+   * Handles the click event for upgrading the user's tier
+   * Sets the trying upgrade state to true to indicate an upgrade attempt is in progress
+   * @returns {void}
+   */
+  const handleClickUpgradeTier = useCallback(() => {
+    setTryingUpgrade(true);
+  }, []);
+
+  /**
+   * Handles the tier selection and updates the user's tier
+   * @param {Tier} tier - The tier object containing id and other tier details
+   * @returns {Promise<void>} A promise that resolves when the tier is updated
+   * @throws {Error} If the wallet is not connected or if the mutation fails
+   */
+  const handleClickSetTier = useCallback(
+    async (tier: Tier) => {
+      if (wallet) {
+        await setUserTier.mutateAsync({ wallet: wallet.account.address, tierId: tier.id });
+        refetchUserbyWalle();
+        setTryingUpgrade(false);
+      }
+    },
+    [wallet],
+  );
 
   if (!params.tabId) {
     /**
@@ -57,7 +90,7 @@ export const UserSettingsPage: React.FC = () => {
    * Shows a connect wallet button using MetaMask
    * @returns {JSX.Element} Error page with wallet connection prompt
    */
-  if (!wallet || !wallet.data?.account.address) {
+  if (!wallet || !wallet.account.address) {
     return (
       <ErrorPage
         code={<RiAliensFill className={styles.alien} />}
@@ -92,35 +125,46 @@ export const UserSettingsPage: React.FC = () => {
   const renderTab = () => {
     switch (params.tabId) {
       case UserSettingsTabs.TIER:
-        return user && user.tier && user.tier > UserTiers.TIER_NONE ? (
+        return user && user.tier.id > Tiers.TIER_NONE && !isTryingUpgrade ? (
           <div className={classNames(styles.grid, styles.two)}>
             <div className={styles.grid}>
               <div className={styles.tier}>
-                <UserTierImage tier={user?.tier} size={256} />
+                <TierImage tier={user.tier.id} size={256} />
               </div>
               <div className={styles.actions}>
-                <Button variant={"solid"} color={"primary"} caption={"Upgrade Tier"} />
+                <Button variant={"solid"} color={"primary"} caption={"Upgrade Tier"} onClick={handleClickUpgradeTier} />
                 <Button variant={"ghost"} color={"primary"} caption={"Unstake Tokens"} />
               </div>
             </div>
             <div className={styles.grid}>
               <div className={classNames(styles.grid, styles.two, styles.labels)}>
-                <DataLabel label={"Your tier"} value={user?.tier ? TIER_NAMES[user.tier] : ""} />
+                <DataLabel label={"Your tier"} value={user.tier.name} />
                 <DataLabel label={"Staked Token"} value={formatPrice(5000000, "QUBIC", 2)} />
               </div>
 
-              <Card title={"Benefits"}>
+              <Fieldset title={"Benefits"}>
                 <Typography variant={"body"} size={"small"}>
-                  Hola
+                  {user.tier.benefits}
                 </Typography>
-              </Card>
+              </Fieldset>
             </div>
           </div>
         ) : (
-          <div>No tier</div>
+          <div className={classNames(styles.grid, styles.spacing)}>
+            <Typography variant={"body"} size={"xlarge"} className={styles.title} textAlign={"center"}>
+              Select a tier to start investing in NOSTROMO Projects and unlock features
+            </Typography>
+            <TierSelector
+              focusLoadingId={setUserTier.currentTierSetting}
+              isLoading={setUserTier.isPending}
+              onSelectTier={handleClickSetTier}
+            />
+          </div>
         );
+
       case UserSettingsTabs.MY_PROJECTS:
-        return <ProjectsListByWallet walletAddress={wallet.data.account.address} limit={9} />;
+        return <ProjectsListByWallet walletAddress={wallet.account.address} limit={9} />;
+
       case UserSettingsTabs.CLAIM_TOKENS:
         return <div>Claim Tokens</div>;
     }

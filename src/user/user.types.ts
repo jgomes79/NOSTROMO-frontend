@@ -3,18 +3,6 @@ import { z } from "zod";
 import { UserSchema } from "./user.schema";
 
 /**
- * Enum representing the different user tiers.
- */
-export enum UserTiers {
-  TIER_NONE = 1,
-  TIER_FACEHUGGER = 2,
-  TIER_CHESTBURST = 3,
-  TIER_DOG = 4,
-  TIER_XENOMORPH = 5,
-  TIER_WARRIOR = 6,
-}
-
-/**
  * Enum representing the different user types.
  */
 export enum UserTypes {
@@ -35,6 +23,7 @@ export enum UserSettingsTabs {
   MY_PROJECTS = "my-projects",
   CLAIM_TOKENS = "claim-tokens",
 }
+
 /**
  * Type representing a User, inferred from the UserSchema.
  */

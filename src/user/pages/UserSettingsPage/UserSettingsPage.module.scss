@@ -88,6 +88,10 @@
     }
   }
 
+  &.spacing {
+    padding: 32px 0;
+    gap: 42px;
+  }
 }
 
 .tier {
@@ -105,3 +109,7 @@
   }
 }
 
+.title {
+  color: $green-03;
+  @include greenShine();
+}

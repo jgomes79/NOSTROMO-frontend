@@ -1,10 +1,12 @@
-import { RouteObject } from "react-router-dom";
+import { Navigate, RouteObject } from "react-router-dom";
 
 import { registerModule } from "@/core/modules/modules.helpers";
+import { getRoute } from "@/lib/router";
 import { AppLayout } from "@/shared/layouts/AppLayout";
 
 import { UserSettingsPage } from "./pages/UserSettingsPage";
 import { MODULE_USER, USER_ROUTES } from "./user.constants";
+import { UserSettingsTabs } from "./user.types";
 
 /**
  * Routes configuration for the user module.
@@ -22,6 +24,10 @@ const routes: RouteObject[] = [
     path: USER_ROUTES.MAIN,
     element: <AppLayout />,
     children: [
+      {
+        path: "",
+        element: <Navigate to={getRoute(USER_ROUTES.SETTINGS, { tabId: UserSettingsTabs.TIER })} />,
+      },
       {
         path: USER_ROUTES.SETTINGS,
         element: <UserSettingsPage />,

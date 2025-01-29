@@ -1,0 +1,83 @@
+import React from "react";
+
+import classNames from "clsx";
+
+import { Animatable } from "@/shared/components/Animatable";
+import { Button } from "@/shared/components/Button";
+import { Fieldset } from "@/shared/components/Fieldset";
+import { Skeleton } from "@/shared/components/Skeleton";
+import { Typography } from "@/shared/components/Typography";
+
+import styles from "./TierSelector.module.scss";
+import { useTiers } from "../../hooks/useTiers";
+import { Tier } from "../../tier.types";
+import { TierImage } from "../TierImage";
+
+/**
+ * Props interface for the TierSelector component
+ * @interface TierSelectorProps
+ * @property {boolean} isLoading - Flag indicating whether the component is in a loading state
+ * @property {() => void} onSelectTier - Callback function triggered when a tier is selected
+ */
+interface TierSelectorProps {
+  readonly focusLoadingId: Tier["id"] | null;
+  readonly isLoading: boolean;
+  readonly onSelectTier: (tier: Tier) => void;
+}
+
+/**
+ * TierSelector component displays a list of available tiers with upgrade options
+ * @component
+ * @param {TierSelectorProps} props - Component props
+ * @returns {React.ReactElement} Rendered TierSelector component
+ */
+export const TierSelector: React.FC<TierSelectorProps> = ({ isLoading, focusLoadingId, onSelectTier }) => {
+  const { data, isLoading: isLoadingTiers } = useTiers();
+
+  /**
+   * Renders an individual tier card
+   * @param {Tier} tier - Tier data to render
+   * @returns {React.ReactElement} Rendered tier card
+   */
+  const renderTier = (tier: Tier) => (
+    <Animatable>
+      <div className={classNames(styles.tier, styles[`tier_${tier.id}`])}>
+        <TierImage tier={tier.id} size={128} />
+        <div className={styles.data}>
+          <div className={classNames(styles.data, styles.title)}>
+            <Typography variant={"heading"} size={"medium"}>
+              {tier.name}
+            </Typography>
+            <Typography variant={"body"} size={"medium"} className={styles.description}>
+              {tier.description}
+            </Typography>
+          </div>
+
+          <Fieldset title={"Benefits"} className={styles.fieldset}>
+            <Typography variant={"body"} size={"medium"}>
+              {tier.benefits}
+            </Typography>
+          </Fieldset>
+        </div>
+        <div className={styles.actions}>
+          <Button
+            variant={"solid"}
+            size={"medium"}
+            caption={"Stake $QUBIC"}
+            className={styles.button}
+            isLoading={isLoading && focusLoadingId === tier.id}
+            onClick={() => onSelectTier(tier)}
+          />
+        </div>
+      </div>
+    </Animatable>
+  );
+
+  return (
+    <Skeleton count={5} orientation={"vertical"} gap={22} height={128} width={"full"} isLoading={isLoadingTiers}>
+      <div className={styles.layout}>
+        {data?.map((tier, index) => <React.Fragment key={index}>{index >= 1 && renderTier(tier)}</React.Fragment>)}
+      </div>
+    </Skeleton>
+  );
+};

@@ -1,11 +1,13 @@
 import { useNavigate } from "react-router-dom";
 
 import { WalletButton } from "@rainbow-me/rainbowkit";
-import { RiAliensFill, RiWallet2Line } from "react-icons/ri";
-import { useWalletClient } from "wagmi";
+import { RiAliensFill, RiLogoutBoxLine, RiWallet2Line } from "react-icons/ri";
+import { useWalletClient, useDisconnect } from "wagmi";
 
+import { HOME_ROUTES } from "@/home/home.constants";
 import { getRoute } from "@/lib/router";
 import { Button } from "@/shared/components/Button";
+import { IconButton } from "@/shared/components/IconButton";
 import { USER_ROUTES } from "@/user/user.constants";
 import { UserSettingsTabs } from "@/user/user.types";
 
@@ -19,6 +21,7 @@ import { shortHex } from "../../wallet.helpers";
  */
 export const WalletAccount: React.FC = () => {
   const { data } = useWalletClient();
+  const { disconnect } = useDisconnect();
   const navigate = useNavigate();
 
   /**
@@ -29,19 +32,36 @@ export const WalletAccount: React.FC = () => {
     navigate(getRoute(USER_ROUTES.SETTINGS, { tabId: UserSettingsTabs.TIER }));
   };
 
+  /**
+   * Handles the click event for the disconnect button.
+   * Disconnects the wallet and navigates to the home page.
+   */
+  const handleClickDisconnect = () => {
+    disconnect();
+    navigate(getRoute(HOME_ROUTES.HOME));
+  };
+
   return (
     <div className={styles.layout}>
       <WalletButton.Custom wallet="metamask">
         {({ connected, connect }) => (
           <>
             {connected && data ? (
-              <Button
-                size={"small"}
-                variant={"ghost"}
-                iconRight={<RiAliensFill />}
-                caption={shortHex(data.account.address, 5)}
-                onClick={handleClickAccount}
-              />
+              <div className={styles.actions}>
+                <Button
+                  size={"small"}
+                  variant={"ghost"}
+                  iconRight={<RiAliensFill />}
+                  caption={shortHex(data.account.address, 5)}
+                  onClick={handleClickAccount}
+                />
+                <IconButton
+                  size={"small"}
+                  variant={"ghost"}
+                  icon={<RiLogoutBoxLine />}
+                  onClick={handleClickDisconnect}
+                />
+              </div>
             ) : (
               <Button
                 variant={"solid"}

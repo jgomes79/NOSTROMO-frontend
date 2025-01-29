@@ -1,0 +1,161 @@
+.layout, .data {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.tier {
+  display: grid;
+
+  grid-template-columns: 0fr 1fr 0fr;
+  gap: 32px;
+  background-color: #121312;
+  border-radius: 8px;
+  border: 1px solid #212421;
+  padding: 20px;
+
+  transition: border-color 120ms linear;
+  user-select: none;
+  overflow: hidden;
+
+  .fieldset {
+    visibility: hidden;
+    opacity: 0;
+    transition: all 500ms linear;
+    height: 0px;
+  }
+
+  &:hover {
+    .fieldset {
+      visibility: visible;
+      opacity: 1;
+      height: auto;
+    }
+  }
+
+  &.tier_2 {
+    background: radial-gradient(circle at right, rgb(29, 35, 31) 0%, rgb(8, 17, 11) 55%, rgb(7, 9, 8) 100%);
+    
+    &, .fieldset {
+      border-color: #456f52;
+    }
+
+    .button {
+      background: #304b38 !important;
+    }
+
+    .description, .fieldset legend {
+      color: #73c08c;
+    }
+  }
+
+  &.tier_3 {
+    background: radial-gradient(circle at right, rgb(39 34 53) 0%, rgb(6 5 9) 55%, rgb(9 7 15) 100%);
+
+    &, .fieldset {
+      border-color: #4e3d5d;
+    }
+
+    .button {
+      background: #373049 !important;
+    }
+
+    .description, .fieldset legend {
+      color: #cab6ff;
+    }
+  }
+
+  &.tier_4 {
+    background: radial-gradient(circle at right, rgb(49 12 57) 0%, rgb(5 1 6) 100%);
+
+    &, .fieldset {
+      border-color: #50165c;
+    }
+
+    .button {
+      background: #3e0c48 !important
+    }
+
+    .description, .fieldset legend {
+      color: #dd9aff;
+    }
+  }
+
+  &.tier_5 {
+    background: radial-gradient(circle at right, rgb(47 18 7) 0%, rgb(37, 12, 5) 55%, rgb(9, 3, 0) 100%);
+
+    &, .fieldset {
+      border-color: #7c3017;
+    }
+
+    .button {
+      background: #451a08 !important
+    }
+
+    .description, .fieldset legend {
+      color: #e87651;
+    }
+  }
+
+  &.tier_6 {
+    background: radial-gradient(circle at right, #2a0101 0%, rgb(30, 2, 2) 55%, rgb(3, 0, 0) 100%);
+    border-color: #571416;
+
+    &:hover, .fieldset {
+      border-color: #6e1b1d;
+    }
+
+    .button {
+      background: #571416 !important
+    }
+
+    .description, .fieldset legend {
+      color: #ff6161;
+    }
+  }
+}
+
+.data {
+  gap: 18px;
+  padding: 12px 0;
+
+  &.title {
+    gap: 8px;
+  }
+}
+
+.actions {
+  display: flex;
+  flex-direction: row;
+}
+
+.button {
+  outline-color: transparent !important;
+  color: $white !important;
+  
+  &.circle {
+    background: transparent !important;
+    border-radius: 0 6px 6px 0;
+    border-left: 1px solid rgba(255, 255, 255, 0.04)
+  }
+}
+
+.fieldset {
+  background: transparent;
+  border-radius: 2px;
+  padding: 0;
+
+  legend {
+    font-size: 14px !important;
+    line-height: 18px !important;
+    margin: 8px;
+    padding: 0 12px;
+    text-transform: uppercase !important;
+    letter-spacing: 1px;
+  }
+
+  [data-label="inner"] {
+    padding: 20px;
+    padding-top: 10px;
+  }
+}

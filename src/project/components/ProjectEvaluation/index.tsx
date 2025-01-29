@@ -4,7 +4,7 @@ import { Button } from "@/shared/components/Button";
 import { Card } from "@/shared/components/Card";
 import { Loader } from "@/shared/components/Loader";
 import { Typography } from "@/shared/components/Typography";
-import { useUserInfo } from "@/user/hooks/useUserInfo";
+import { useUserByWallet } from "@/user/hooks/useUserByWallet";
 
 import styles from "./ProjectEvaluation.module.scss";
 
@@ -15,7 +15,7 @@ import styles from "./ProjectEvaluation.module.scss";
  */
 export const ProjectEvaluation: React.FC = () => {
   const { data } = useWalletClient();
-  const { data: user } = useUserInfo(data?.account.address);
+  const { data: user } = useUserByWallet(data?.account.address);
 
   const isAdmin = user?.type === "admin";
   const mode = isAdmin ? "admin" : "user";
