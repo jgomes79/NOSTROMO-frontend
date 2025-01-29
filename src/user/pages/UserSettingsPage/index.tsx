@@ -14,6 +14,7 @@ import { DataLabel } from "@/shared/components/DataLabel";
 import { Tabs } from "@/shared/components/Tabs";
 import { Typography } from "@/shared/components/Typography";
 import { ErrorPage } from "@/shared/pages/ErrorPage";
+import { useUserInfo } from "@/user/hooks/useUserInfo";
 
 import styles from "./UserSettingsPage.module.scss";
 import { UserTierImage } from "../../components/UserTierImage";
@@ -40,6 +41,7 @@ type UserSettingsPageParams = {
  */
 export const UserSettingsPage: React.FC = () => {
   const wallet = useWalletClient();
+  const { data: user } = useUserInfo(wallet.data?.account.address);
   const params = useParams<UserSettingsPageParams>();
   const navigate = useNavigate();
 
@@ -90,11 +92,11 @@ export const UserSettingsPage: React.FC = () => {
   const renderTab = () => {
     switch (params.tabId) {
       case UserSettingsTabs.TIER:
-        return (
+        return user && user.tier && user.tier > UserTiers.TIER_NONE ? (
           <div className={classNames(styles.grid, styles.two)}>
             <div className={styles.grid}>
               <div className={styles.tier}>
-                <UserTierImage tier={UserTiers.TIER_0} size={256} />
+                <UserTierImage tier={user?.tier} size={256} />
               </div>
               <div className={styles.actions}>
                 <Button variant={"solid"} color={"primary"} caption={"Upgrade Tier"} />
@@ -103,7 +105,7 @@ export const UserSettingsPage: React.FC = () => {
             </div>
             <div className={styles.grid}>
               <div className={classNames(styles.grid, styles.two, styles.labels)}>
-                <DataLabel label={"Your tier"} value={TIER_NAMES[UserTiers.TIER_0]} />
+                <DataLabel label={"Your tier"} value={user?.tier ? TIER_NAMES[user.tier] : ""} />
                 <DataLabel label={"Staked Token"} value={formatPrice(5000000, "QUBIC", 2)} />
               </div>
 
@@ -114,6 +116,8 @@ export const UserSettingsPage: React.FC = () => {
               </Card>
             </div>
           </div>
+        ) : (
+          <div>No tier</div>
         );
       case UserSettingsTabs.MY_PROJECTS:
         return <ProjectsListByWallet walletAddress={wallet.data.account.address} limit={9} />;

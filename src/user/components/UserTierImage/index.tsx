@@ -15,7 +15,7 @@ import XenomorphImage from "../../assets/images/xenomorph.svg";
  * @property {UserTiers} tier - The user's tier level that determines which image to display
  */
 interface UserTierImageProps {
-  tier: UserTiers;
+  tier?: UserTiers;
   size?: number;
 }
 
@@ -27,12 +27,15 @@ interface UserTierImageProps {
  * @returns {JSX.Element} A div containing the appropriate tier image
  */
 export const UserTierImage: React.FC<UserTierImageProps> = ({ tier, size = 62 }) => {
+  if (!tier) return null;
+
   const images = {
-    [UserTiers.TIER_0]: <FacehuggerImage />,
-    [UserTiers.TIER_1]: <ChestburstImage />,
-    [UserTiers.TIER_2]: <DogImage />,
-    [UserTiers.TIER_3]: <WarriorImage />,
-    [UserTiers.TIER_4]: <XenomorphImage />,
+    [UserTiers.TIER_NONE]: null,
+    [UserTiers.TIER_FACEHUGGER]: <FacehuggerImage />,
+    [UserTiers.TIER_CHESTBURST]: <ChestburstImage />,
+    [UserTiers.TIER_DOG]: <DogImage />,
+    [UserTiers.TIER_XENOMORPH]: <WarriorImage />,
+    [UserTiers.TIER_WARRIOR]: <XenomorphImage />,
   };
 
   return (
