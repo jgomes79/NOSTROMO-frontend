@@ -33,30 +33,8 @@ import { getDefaultProjectFormValues } from "./ProjectForm.helpers";
 import styles from "./ProjectForm.module.scss";
 import { OptionalFormSchema, ProjectFormSchema } from "./ProjectForm.schema";
 import { ProjectFormValues, ProjectFormProps } from "./ProjectForm.types";
-
-/**
- * Enum representing the different tabs in the project form.
- */
-enum ProjectFormTabs {
-  BASIC_INFORMATION = "basic-information",
-  SOCIAL_NETWORKS = "social-networks",
-  DOCUMENTATION = "documentation",
-  TOKEN_INFORMATION = "token-information",
-  RAISING_FUNDS = "raising-funds",
-  VESTING_OPTIONS = "vesting-options",
-}
-
-/**
- * Labels for the project form tabs.
- */
-const ProjectTabLabels = {
-  [ProjectFormTabs.BASIC_INFORMATION]: "Basic information",
-  [ProjectFormTabs.SOCIAL_NETWORKS]: "Social Networks",
-  [ProjectFormTabs.DOCUMENTATION]: "Documentation",
-  [ProjectFormTabs.RAISING_FUNDS]: "Raising Funds",
-  [ProjectFormTabs.TOKEN_INFORMATION]: "Token Information",
-  [ProjectFormTabs.VESTING_OPTIONS]: "Vesting Options",
-};
+import { ProjectTabLabels } from "../../../project/project.constants";
+import { ProjectFormTabs } from "../../../project/project.types";
 
 /**
  * ProjectForm component.
@@ -662,7 +640,12 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
     <form onSubmit={handleSubmit(onSubmitHandler)} className={styles.form}>
       {/* Tabs */}
       <div className={styles.tabs}>
-        <Tabs activeId={activeTab} itemClassName={styles.tab} tabs={currentTabs} onChange={setActiveTab} />
+        <Tabs<ProjectFormTabs>
+          activeId={activeTab}
+          itemClassName={styles.tab}
+          tabs={currentTabs}
+          onChange={setActiveTab}
+        />
       </div>
 
       {/* Page Container */}

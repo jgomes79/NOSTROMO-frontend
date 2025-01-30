@@ -6,6 +6,7 @@ import { formatPrice } from "@/lib/number";
 import { getRoute } from "@/lib/router";
 import { trimString } from "@/lib/string";
 import { PROJECT_ROUTES } from "@/project/project.constants";
+import { ProjectFormTabs } from "@/project/project.types";
 import { Button } from "@/shared/components/Button";
 import { Countdown } from "@/shared/components/Countdown";
 import { Links } from "@/shared/components/Links";
@@ -119,7 +120,10 @@ export const ProjectOverview: React.FC<ProjectOverviewProps> = ({
 
   return (
     <div className={styles.layout}>
-      <a href={getRoute(PROJECT_ROUTES.PROJECT_DETAILS, { slug })} className={styles.banner}>
+      <a
+        href={getRoute(PROJECT_ROUTES.PROJECT_DETAILS, { slug, tabId: ProjectFormTabs.RAISING_FUNDS })}
+        className={styles.banner}
+      >
         <img src={bannerUrl} alt={name} />
 
         {isMobile && renderHeader()}

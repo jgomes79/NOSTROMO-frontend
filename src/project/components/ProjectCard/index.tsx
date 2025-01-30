@@ -10,7 +10,7 @@ import { Typography } from "@/shared/components/Typography";
 
 import styles from "./ProjectCard.module.scss";
 import { PROJECT_ROUTES, PROJECT_STATE_STRING } from "../../project.constants";
-import { ProjectDetailsTabs, ProjectStates } from "../../project.types";
+import { ProjectFormTabs, ProjectStates } from "../../project.types";
 
 /**
  * Props for the ProjectCard component.
@@ -85,12 +85,20 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
   date,
   state,
 }) => {
+  /**
+   * Determines the appropriate route for the project based on its state.
+   *
+   * @returns {string} The route path for the project:
+   *                   - Edit project route if the project is in DRAFT state
+   *                   - Project details route for all other states
+   */
   const getProjectRoute = () => {
     if (state === ProjectStates.DRAFT) {
       return getRoute(PROJECT_ROUTES.EDIT_PROJECT, { slug });
     }
-    return getRoute(PROJECT_ROUTES.PROJECT_DETAILS, { slug, tab: ProjectDetailsTabs.INFORMATION });
+    return getRoute(PROJECT_ROUTES.PROJECT_DETAILS, { slug, tabId: ProjectFormTabs.RAISING_FUNDS });
   };
+
   /**
    * Renders a field with a label and value.
    *
@@ -110,18 +118,18 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
   );
 
   const stateLabels = {
-    [ProjectStates.ALL]: "",
-    [ProjectStates.DRAFT]: "Draft",
-    [ProjectStates.SENT_TO_REVIEW]: "Sent to Review",
-    [ProjectStates.REJECTED]: "Rejected",
-    [ProjectStates.CLOSED]: "Closed",
-    [ProjectStates.FAILED]: "Failed",
-    [ProjectStates.FUNDING_PHASE_1]: "Funding Phase 1",
-    [ProjectStates.FUNDING_PHASE_2]: "Funding Phase 2",
-    [ProjectStates.FUNDING_PHASE_3]: "Funding Phase 3",
-    [ProjectStates.READY_TO_VOTE]: "Ready to Vote",
-    [ProjectStates.REQUEST_MORE_INFO]: "More Info Requested",
-    [ProjectStates.UPCOMING]: "Upcoming",
+    [ProjectStates.ALL]: { title: "", footer: "" },
+    [ProjectStates.DRAFT]: { title: "Draft", footer: "" },
+    [ProjectStates.SENT_TO_REVIEW]: { title: "Sent to Review", footer: "" },
+    [ProjectStates.REJECTED]: { title: "Rejected", footer: "" },
+    [ProjectStates.CLOSED]: { title: "Closed", footer: "" },
+    [ProjectStates.FAILED]: { title: "Failed", footer: "" },
+    [ProjectStates.FUNDING_PHASE_1]: { title: "Funding Phase 1", footer: "" },
+    [ProjectStates.FUNDING_PHASE_2]: { title: "Funding Phase 2", footer: "" },
+    [ProjectStates.FUNDING_PHASE_3]: { title: "Funding Phase 3", footer: "" },
+    [ProjectStates.READY_TO_VOTE]: { title: "Ready to Vote", footer: "" },
+    [ProjectStates.REQUEST_MORE_INFO]: { title: "More Info Requested", footer: "" },
+    [ProjectStates.UPCOMING]: { title: "Upcoming", footer: "" },
   };
 
   return (
@@ -132,7 +140,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
 
         <div className={classNames(styles.state, styles[PROJECT_STATE_STRING[state]])}>
           <Typography variant={"label"} size={"small"}>
-            {stateLabels[state]}
+            {stateLabels[state].title}
           </Typography>
         </div>
 
@@ -174,17 +182,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
         </div>
         <div className={styles.footer}>
           <Typography variant={"body"} size={"xsmall"} textTransform={"uppercase"}>
-            {state === 0 || state === 1
-              ? "Edit draft"
-              : state === 2
-                ? "Review and vote"
-                : state === 4
-                  ? "Register to invest"
-                  : state === 5
-                    ? "Invest"
-                    : state === 8
-                      ? "Claim tokens"
-                      : ""}
+            {stateLabels[state].footer}
           </Typography>
         </div>
       </div>

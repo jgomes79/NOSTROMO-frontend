@@ -1,4 +1,4 @@
-import { ProjectStates } from "./project.types";
+import { ProjectFormTabs, ProjectStates } from "./project.types";
 
 /**
  * Represents the project module name.
@@ -20,7 +20,7 @@ export const MODULE_PROJECT = "project";
  */
 export const PROJECT_ROUTES = {
   MAIN: "/projects",
-  PROJECT_DETAILS: "/projects/:slug",
+  PROJECT_DETAILS: "/projects/:slug/:tabId?",
   NEW_PROJECT: "/projects/new",
   EDIT_PROJECT: "/projects/:slug/edit",
 };
@@ -41,4 +41,16 @@ export const PROJECT_STATE_STRING: { [key in ProjectStates]: string } = {
   [ProjectStates.FUNDING_PHASE_3]: "fundingphase3",
   [ProjectStates.CLOSED]: "closed",
   [ProjectStates.FAILED]: "failed",
+};
+
+/**
+ * Labels for the project form tabs.
+ */
+export const ProjectTabLabels = {
+  [ProjectFormTabs.BASIC_INFORMATION]: "Basic information",
+  [ProjectFormTabs.SOCIAL_NETWORKS]: "Social Networks",
+  [ProjectFormTabs.DOCUMENTATION]: "Documentation",
+  [ProjectFormTabs.RAISING_FUNDS]: "Raising Funds",
+  [ProjectFormTabs.TOKEN_INFORMATION]: "Token Information",
+  [ProjectFormTabs.VESTING_OPTIONS]: "Vesting Options",
 };

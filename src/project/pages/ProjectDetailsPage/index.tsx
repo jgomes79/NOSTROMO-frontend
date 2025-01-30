@@ -1,36 +1,17 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 
-import classNames from "clsx";
-import {
-  RiAtLine,
-  RiCoinsLine,
-  RiDiscordFill,
-  RiExternalLinkLine,
-  RiGlobalLine,
-  RiInstagramLine,
-  RiMediumFill,
-  RiStockLine,
-  RiTelegramFill,
-  RiTwitterXFill,
-} from "react-icons/ri";
-
-import { formatNumber, formatPrice } from "@/lib/number";
+import { getRoute } from "@/lib/router";
 import { Button } from "@/shared/components/Button";
-import { Card } from "@/shared/components/Card";
-import { Countdown } from "@/shared/components/Countdown";
-import { DataLabel } from "@/shared/components/DataLabel";
-import { Links } from "@/shared/components/Links";
 import { Loader } from "@/shared/components/Loader";
-import { Separator } from "@/shared/components/Separator";
-import { Typography } from "@/shared/components/Typography";
+import { Tabs } from "@/shared/components/Tabs";
 import { ErrorPage } from "@/shared/pages/ErrorPage";
 
 import styles from "./ProjectDetailsPage.module.scss";
-import { ProjectEvaluation } from "../../components/ProjectEvaluation";
-import { ProjectRegister } from "../../components/ProjectRegister";
+import { ProjectHeader } from "../../components/ProjectHeader";
 import { useProject } from "../../hooks/useProject";
-import { ProjectStates } from "../../project.types";
+import { PROJECT_ROUTES, ProjectTabLabels } from "../../project.constants";
+import { ProjectFormTabs } from "../../project.types";
 
 /**
  * Type representing the parameters for the ProjectDetails component.
@@ -40,32 +21,69 @@ import { ProjectStates } from "../../project.types";
  */
 type ProjectDetailsPageParams = {
   slug: string;
+  tabId?: ProjectFormTabs;
 };
 
+/**
+ * ProjectDetailsPage component displays detailed information about a specific project.
+ *
+ * This component fetches and displays project data based on the URL slug parameter.
+ * It handles loading states, error cases, and renders the project information
+ * with a tabbed interface for different sections of content.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered ProjectDetailsPage component
+ */
 export const ProjectDetailsPage: React.FC = () => {
-  const { slug } = useParams<ProjectDetailsPageParams>();
+  const { slug, tabId } = useParams<ProjectDetailsPageParams>(),
+    project = useProject(slug);
 
-  const project = useProject(slug);
+  const navigate = useNavigate();
 
   /**
-   * Renders the sections of the project details page based on the project state.
-   *
-   * @returns {React.ReactNode | null} The rendered sections or null if no data is available.
+   * Array of tabs to be excluded from the project details view.
+   * @type {ProjectFormTabs[]}
    */
-  const renderSections = (): React.ReactNode | null => {
-    const { data } = project;
+  const excludedTabs = [
+    ProjectFormTabs.BASIC_INFORMATION,
+    ProjectFormTabs.DOCUMENTATION,
+    ProjectFormTabs.SOCIAL_NETWORKS,
+    ProjectFormTabs.TOKEN_INFORMATION,
+  ];
 
-    if (!data) return null;
+  /**
+   * Array of tab objects for display in the project details interface.
+   * Each tab object contains an id and label.
+   *
+   * @type {Array<{id: ProjectFormTabs, label: string}>}
+   * @remarks
+   * - Filters out excluded tabs defined in `excludedTabs`
+   * - Maps remaining tabs to objects with id and label properties
+   * - Labels are retrieved from ProjectTabLabels mapping
+   */
+  const currentTabs = Object.values(ProjectFormTabs)
+    .filter((tab) => !excludedTabs.includes(tab))
+    .map((tab) => ({
+      id: tab,
+      label: ProjectTabLabels[tab],
+    }));
 
-    switch (data.state) {
-      case ProjectStates.DRAFT:
-        return <ProjectEvaluation />;
-
-      case ProjectStates.UPCOMING:
-        return <ProjectRegister />;
-
+  /**
+   * Renders the content for a specific project tab based on the tab ID.
+   *
+   * @param {ProjectFormTabs} tabId - The ID of the tab to render
+   * @returns {JSX.Element | null} The rendered tab content component or null if no matching tab is found
+   *
+   * @example
+   * ```tsx
+   * renderTab(ProjectFormTabs.TOKEN_INFORMATION)
+   * ```
+   */
+  const renderTab = () => {
+    switch (tabId) {
       default:
-        return null;
+      case ProjectFormTabs.TOKEN_INFORMATION:
+        return <div>Hola</div>;
     }
   };
 
@@ -83,7 +101,7 @@ export const ProjectDetailsPage: React.FC = () => {
    *
    * @returns {JSX.Element} The error page component.
    */
-  if ((!project.isLoading && !project.data) || !project.data) {
+  if (!slug || (!project.isLoading && !project.data) || !project.data) {
     return (
       <ErrorPage
         code={"404"}
@@ -94,123 +112,28 @@ export const ProjectDetailsPage: React.FC = () => {
     );
   }
 
+  /**
+   * Redirects to the default project details tab (RAISING_FUNDS) if no tab is specified.
+   * This ensures that users always see a valid tab when viewing project details.
+   *
+   * @returns {JSX.Element} Navigate component redirecting to the default project tab
+   */
+  if (!tabId) {
+    return <Navigate to={getRoute(PROJECT_ROUTES.PROJECT_DETAILS, { slug, tabId: ProjectFormTabs.RAISING_FUNDS })} />;
+  }
+
   return (
     <div className={styles.layout}>
-      <div className={styles.banner}>
-        <img src={project.data.bannerUrl} width={"100%"} height={500} alt={`${project.data.name} banner`} />
+      <ProjectHeader {...project.data} />
 
-        <div className={styles.bar}>
-          <div className={styles.content}>
-            {project.data.startDate && (
-              <div className={styles.time}>
-                <Typography as={"h2"}>REGISTRATION ENDS IN</Typography>
-                <Countdown date={project.data.startDate}>
-                  {(timeLeft) => (
-                    <Typography variant={"heading"} size={"small"}>
-                      {timeLeft.days}D - {timeLeft.hours}H - {timeLeft.minutes}M - {timeLeft.seconds}S
-                    </Typography>
-                  )}
-                </Countdown>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-      <div className={styles.stars}>
-        <div className={classNames(styles.content, styles.extended)}>
-          {/* Project Description */}
-          <div className={styles.inline}>
-            <div className={styles.avatar}>
-              <img src={project.data.photoUrl} width={48} height={48} alt={`${project.data.name} avatar`} />
-            </div>
-            <div className={styles.field}>
-              <div>
-                <div className={classNames(styles.inline, styles.title)}>
-                  <Typography as={"h1"} variant={"heading"} size={"large"}>
-                    {project.data.name}
-                  </Typography>
-                  <div className={styles.links}>
-                    <Links
-                      className={styles.links}
-                      data={Object.entries(project.data.social || {})
-                        .filter(([, value]) => value)
-                        .map(([key, value]) => {
-                          const icons = {
-                            xUrl: <RiTwitterXFill />,
-                            instagramUrl: <RiInstagramLine />,
-                            telegramUrl: <RiTelegramFill />,
-                            discordUrl: <RiDiscordFill />,
-                            mediumUrl: <RiMediumFill />,
-                          };
-                          return { icon: icons[key as keyof typeof icons], path: value };
-                        })}
-                    />
-                  </div>
-                </div>
-                <div className={styles.description}>
-                  <Typography as={"p"} variant={"body"} size={"medium"}>
-                    <span dangerouslySetInnerHTML={{ __html: project.data.description }} />
-                  </Typography>
-                </div>
-              </div>
-
-              <div className={styles.actions}>
-                <Button
-                  variant={"solid"}
-                  color={"secondary"}
-                  caption={"Whitepaper"}
-                  size={"small"}
-                  iconLeft={<RiExternalLinkLine />}
-                />
-                <Button
-                  variant={"solid"}
-                  color={"secondary"}
-                  caption={"Tokenomics"}
-                  size={"small"}
-                  iconLeft={<RiExternalLinkLine />}
-                />
-                <Button
-                  variant={"solid"}
-                  color={"secondary"}
-                  caption={"Litepaper"}
-                  size={"small"}
-                  iconLeft={<RiExternalLinkLine />}
-                />
-              </div>
-
-              <Separator />
-
-              <div className={styles.grid}>
-                <Card className={styles.card}>
-                  <DataLabel icon={<RiGlobalLine />} label="Network" value={"QUBIC"} />
-                </Card>
-
-                <Card className={styles.card}>
-                  <DataLabel icon={<RiAtLine />} label="Token Name" value={project.data.tokenName} />
-                </Card>
-
-                <Card className={styles.card}>
-                  <DataLabel
-                    icon={<RiStockLine />}
-                    label="Token Price"
-                    value={formatPrice(project.data.tokenPrice, project.data.currency.name, 0)}
-                  />
-                </Card>
-
-                <Card className={styles.card}>
-                  <DataLabel
-                    icon={<RiCoinsLine />}
-                    label="Token Supply"
-                    value={formatNumber(project.data.tokensSupply ?? 0, 0)}
-                  />
-                </Card>
-              </div>
-
-              <Separator />
-            </div>
-          </div>
-          <div className={styles.sections}>{renderSections()}</div>
-        </div>
+      <div className={styles.container}>
+        <Tabs<ProjectFormTabs>
+          size={"large"}
+          tabs={currentTabs}
+          activeId={tabId}
+          onChange={(tabId) => navigate(getRoute(PROJECT_ROUTES.PROJECT_DETAILS, { slug, tabId }))}
+          onRender={renderTab()}
+        />
       </div>
     </div>
   );

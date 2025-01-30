@@ -4,7 +4,8 @@ import { useProjectsByWallet } from "@/project/hooks/useProjectsByWallet";
 import { ProjectStates } from "@/project/project.types";
 import { Button } from "@/shared/components/Button";
 import { Tabs } from "@/shared/components/Tabs";
-import { User } from "@/user/user.types";
+import { useUserByWallet } from "@/user/hooks/useUserByWallet";
+import { User, UserTypes } from "@/user/user.types";
 
 import styles from "./ProjectsListByWallet.module.scss";
 import { ProjectList } from "../ProjectList";
@@ -30,9 +31,24 @@ interface ProjectsListByWalletProps {
  * @returns {JSX.Element} A tabbed interface showing filtered projects with pagination
  */
 export const ProjectsListByWallet: React.FC<ProjectsListByWalletProps> = ({ walletAddress, limit = 4 }) => {
-  const { page, isLoading, projects, total, state, fetchProjectsByWallet } = useProjectsByWallet(walletAddress, {
+  const { data: user } = useUserByWallet(walletAddress);
+  const {
+    page,
+    isLoading: isLoadingProjects,
+    projects,
+    total,
+    state,
+    fetchProjectsByWallet,
+  } = useProjectsByWallet(walletAddress, {
     limit,
   });
+
+  const adminOptions = [
+    {
+      id: ProjectStates.SENT_TO_REVIEW,
+      label: "Pending to Review",
+    },
+  ];
 
   /**
    * Array of project states with their respective IDs and labels.
@@ -52,6 +68,7 @@ export const ProjectsListByWallet: React.FC<ProjectsListByWalletProps> = ({ wall
       id: ProjectStates.UPCOMING,
       label: "Registered",
     },
+    ...(user?.type === UserTypes.ADMIN ? adminOptions : []),
   ];
 
   return (
@@ -61,7 +78,7 @@ export const ProjectsListByWallet: React.FC<ProjectsListByWalletProps> = ({ wall
         activeId={state}
         size={"medium"}
         tabs={projectStates}
-        onRender={<ProjectList page={page} isLoading={isLoading} projects={projects} total={total} />}
+        onRender={<ProjectList page={page} isLoading={isLoadingProjects} projects={projects} total={total} />}
         onChange={(state) => fetchProjectsByWallet(0, state)}
       />
 
