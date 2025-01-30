@@ -58,7 +58,14 @@ export const MainSection: React.FC<MainSectionProps> = ({ onClickShowProjects })
             className={styles.title}
           >
             QUBICANS, WELCOME ABOARD.
-            <br />
+          </Typography>
+          <Typography
+            variant={"body"}
+            size={"medium"}
+            textTransform={"uppercase"}
+            textAlign={"center"}
+            className={styles.subtitle}
+          >
             Join our crew and be ready to launch!
           </Typography>
         </div>
