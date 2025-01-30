@@ -18,49 +18,54 @@ export enum ProjectStates {
   DRAFT = 0,
 
   /**
+   * Sent to review
+   */
+  SENT_TO_REVIEW = 1,
+
+  /**
    * The project requires more information.
    */
-  REQUEST_MORE_INFO = 1,
+  REQUEST_MORE_INFO = 2,
 
   /**
    * The project is ready to be voted on.
    */
-  READY_TO_VOTE = 2,
+  READY_TO_VOTE = 3,
 
   /**
    * The project has been rejected.
    */
-  REJECTED = 3,
+  REJECTED = 4,
 
   /**
    * The project is upcoming.
    */
-  UPCOMING = 4,
+  UPCOMING = 5,
 
   /**
    * The project is in the first phase of funding.
    */
-  FUNDING_PHASE_1 = 5,
+  FUNDING_PHASE_1 = 6,
 
   /**
    * The project is in the second phase of funding.
    */
-  FUNDING_PHASE_2 = 6,
+  FUNDING_PHASE_2 = 7,
 
   /**
    * The project is in the third phase of funding.
    */
-  FUNDING_PHASE_3 = 7,
+  FUNDING_PHASE_3 = 8,
 
   /**
    * The project is closed.
    */
-  CLOSED = 8,
+  CLOSED = 9,
 
   /**
    * The project has failed.
    */
-  FAILED = 9,
+  FAILED = 10,
 }
 
 /**

@@ -31,6 +31,7 @@ export const PROJECT_ROUTES = {
 export const PROJECT_STATE_STRING: { [key in ProjectStates]: string } = {
   [ProjectStates.ALL]: "all",
   [ProjectStates.DRAFT]: "draft",
+  [ProjectStates.SENT_TO_REVIEW]: "senttoreview",
   [ProjectStates.REQUEST_MORE_INFO]: "requestmoreinfo",
   [ProjectStates.READY_TO_VOTE]: "readytovote",
   [ProjectStates.REJECTED]: "rejected",

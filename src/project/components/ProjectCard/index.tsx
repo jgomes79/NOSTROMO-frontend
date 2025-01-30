@@ -112,6 +112,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
   const stateLabels = {
     [ProjectStates.ALL]: "",
     [ProjectStates.DRAFT]: "Draft",
+    [ProjectStates.SENT_TO_REVIEW]: "Sent to Review",
     [ProjectStates.REJECTED]: "Rejected",
     [ProjectStates.CLOSED]: "Closed",
     [ProjectStates.FAILED]: "Failed",
