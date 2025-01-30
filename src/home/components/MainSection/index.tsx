@@ -59,7 +59,7 @@ export const MainSection: React.FC<MainSectionProps> = ({ onClickShowProjects })
           >
             QUBICANS, WELCOME ABOARD.
             <br />
-            Enter the Gateway of Blockchain Innovation
+            Join our crew and be ready to launch!
           </Typography>
         </div>
 
