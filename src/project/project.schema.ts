@@ -80,7 +80,7 @@ export const ProjectSchema = z.object({
     }
   }),
 
-  unlockTokensTGE: z.number({ invalid_type_error: "Unlock tokens TGE must be a number" }).nullable(),
+  unlockTokensTGE: z.number({ invalid_type_error: "Unlock tokens TGE must be a number" }),
 
   cliff: z.number({ invalid_type_error: "Cliff must be a number" }).nonnegative("Cliff must be zero or greater"),
 

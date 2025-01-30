@@ -16,6 +16,7 @@ import {
 
 import { useCurrencies } from "@/currency/hooks/useCurrencies";
 import { formatPrice } from "@/lib/number";
+import { ThresholdCalculator } from "@/project/components/ThresholdCalculator";
 import { Animatable } from "@/shared/components/Animatable";
 import { Button } from "@/shared/components/Button";
 import { DateInput } from "@/shared/components/DateInput";
@@ -334,33 +335,8 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
                         disabled={!amountToRaise}
                         renderValue={(value) => <Typography size={"small"}>{value}%</Typography>}
                       />
-                      {threshold && threshold > 0 && (
-                        <div className={classNames(styles.grid, styles.two, styles.amountToRaise)}>
-                          <TextInput
-                            label="Minimum Amount"
-                            type="string"
-                            placeholder="Minimum Amount"
-                            symbol={currency?.name ?? ""}
-                            value={
-                              amountToRaise && amountToRaise > 0
-                                ? formatPrice(amountToRaise - (amountToRaise * threshold) / 100)
-                                : 0
-                            }
-                            disabled
-                          />
-                          <TextInput
-                            label="Maximum Amount"
-                            type="string"
-                            placeholder="Maximum Amount"
-                            symbol={currency?.name ?? ""}
-                            value={
-                              amountToRaise && amountToRaise > 0
-                                ? formatPrice(amountToRaise + (amountToRaise * threshold) / 100)
-                                : 0
-                            }
-                            disabled
-                          />
-                        </div>
+                      {currency && amountToRaise && (
+                        <ThresholdCalculator threshold={threshold} currency={currency} amountToRaise={amountToRaise} />
                       )}
                     </div>
                   )}

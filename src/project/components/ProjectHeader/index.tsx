@@ -7,7 +7,6 @@ import {
   RiMediumFill,
   RiExternalLinkLine,
   RiGlobalLine,
-  RiAtLine,
   RiStockLine,
   RiCoinsLine,
 } from "react-icons/ri";
@@ -21,6 +20,7 @@ import { DataLabel } from "@/shared/components/DataLabel";
 import { Links } from "@/shared/components/Links";
 import { Separator } from "@/shared/components/Separator";
 import { Typography } from "@/shared/components/Typography";
+import useResponsive from "@/shared/hooks/useResponsive";
 
 import styles from "./ProjectHeader.module.scss";
 
@@ -39,24 +39,16 @@ type ProjectHeaderProps = Pick<
   | "currency"
   | "tokenName"
   | "tokensSupply"
+  | "whitepaperUrl"
+  | "litepaperUrl"
+  | "tokenomicsUrl"
+  | "tokenImageUrl"
 >;
 
 /**
  * ProjectHeader component displays the header section of a project page
  *
  * @component
- * @param {ProjectHeaderProps} props - The component props
- * @param {string} props.name - The name of the project
- * @param {string} props.description - HTML description of the project
- * @param {string} props.photoUrl - URL of the project's avatar image
- * @param {string} props.bannerUrl - URL of the project's banner image
- * @param {Date} props.startDate - The registration end date
- * @param {Object} props.social - Social media links for the project
- * @param {number} props.tokenPrice - Price of the project's token
- * @param {Object} props.currency - Currency information for token price
- * @param {number} props.tokensSupply - Total supply of tokens
- * @param {string} props.tokenName - Name of the project's token
- *
  * @returns {JSX.Element} The rendered ProjectHeader component
  */
 export const ProjectHeader: React.FC<ProjectHeaderProps> = ({
@@ -70,11 +62,17 @@ export const ProjectHeader: React.FC<ProjectHeaderProps> = ({
   currency,
   tokensSupply,
   tokenName,
+  tokenImageUrl,
+  litepaperUrl,
+  tokenomicsUrl,
+  whitepaperUrl,
 }) => {
+  const { isMobile } = useResponsive();
+
   return (
     <>
       <div className={styles.banner}>
-        <img src={bannerUrl} width="100%" height={500} alt={`${name} banner`} />
+        <img src={bannerUrl} width="100%" height={isMobile ? 250 : 500} alt={`${name} banner`} />
 
         <div className={styles.bar}>
           <div className={styles.content}>
@@ -98,7 +96,7 @@ export const ProjectHeader: React.FC<ProjectHeaderProps> = ({
         <div className={classNames(styles.content, styles.extended)}>
           <div className={styles.inline}>
             <div className={styles.avatar}>
-              <img src={photoUrl} width={48} height={48} alt={`${name} avatar`} />
+              <img src={photoUrl} width={62} height={62} alt={`${name} avatar`} />
             </div>
 
             <div className={styles.field}>
@@ -129,60 +127,62 @@ export const ProjectHeader: React.FC<ProjectHeaderProps> = ({
                 </div>
 
                 <div className={styles.description}>
-                  <Typography as="p" variant="body" size="medium">
+                  <Typography as="p" variant="body" size="medium" textAlign={isMobile ? "center" : "left"}>
                     <span dangerouslySetInnerHTML={{ __html: description }} />
                   </Typography>
                 </div>
               </div>
 
               <div className={styles.actions}>
-                <Button
-                  variant="solid"
-                  color="secondary"
-                  caption="Whitepaper"
-                  size="small"
-                  iconLeft={<RiExternalLinkLine />}
-                />
-                <Button
-                  variant="solid"
-                  color="secondary"
-                  caption="Tokenomics"
-                  size="small"
-                  iconLeft={<RiExternalLinkLine />}
-                />
-                <Button
-                  variant="solid"
-                  color="secondary"
-                  caption="Litepaper"
-                  size="small"
-                  iconLeft={<RiExternalLinkLine />}
-                />
-              </div>
-
-              <Separator />
-
-              <div className={styles.grid}>
-                <Card className={styles.card}>
-                  <DataLabel icon={<RiGlobalLine />} label="Network" value="QUBIC" />
-                </Card>
-                <Card className={styles.card}>
-                  <DataLabel icon={<RiAtLine />} label="Token Name" value={tokenName} />
-                </Card>
-                <Card className={styles.card}>
-                  <DataLabel
-                    icon={<RiStockLine />}
-                    label="Token Price"
-                    value={formatPrice(tokenPrice, currency.name, 0)}
+                <a href={whitepaperUrl} target={"_blank"}>
+                  <Button
+                    variant="solid"
+                    color="secondary"
+                    caption="Whitepaper"
+                    size="small"
+                    iconLeft={<RiExternalLinkLine />}
                   />
-                </Card>
-                <Card className={styles.card}>
-                  <DataLabel icon={<RiCoinsLine />} label="Token Supply" value={formatNumber(tokensSupply ?? 0, 0)} />
-                </Card>
+                </a>
+                <a href={tokenomicsUrl} target={"_blank"}>
+                  <Button
+                    variant="solid"
+                    color="secondary"
+                    caption="Tokenomics"
+                    size="small"
+                    iconLeft={<RiExternalLinkLine />}
+                  />
+                </a>
+                <a href={litepaperUrl} target={"_blank"}>
+                  <Button
+                    variant="solid"
+                    color="secondary"
+                    caption="Litepaper"
+                    size="small"
+                    iconLeft={<RiExternalLinkLine />}
+                  />
+                </a>
               </div>
-
-              <Separator />
             </div>
           </div>
+          <div className={styles.grid}>
+            <Card className={styles.card}>
+              <DataLabel icon={<RiGlobalLine />} label="Network" value="QUBIC" />
+            </Card>
+            <Card className={styles.card}>
+              <DataLabel
+                icon={<img width={48} height={48} className={styles.tokenImage} src={tokenImageUrl} />}
+                label="Token Name"
+                value={tokenName}
+              />
+            </Card>
+            <Card className={styles.card}>
+              <DataLabel icon={<RiStockLine />} label="Token Price" value={formatPrice(tokenPrice, currency.name, 0)} />
+            </Card>
+            <Card className={styles.card}>
+              <DataLabel icon={<RiCoinsLine />} label="Token Supply" value={formatNumber(tokensSupply ?? 0, 0)} />
+            </Card>
+          </div>
+          <Separator />
         </div>
       </div>
     </>

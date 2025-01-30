@@ -1,3 +1,5 @@
+import classNames from "clsx";
+
 import styles from "./DataLabel.module.scss";
 import { Typography } from "../Typography";
 
@@ -29,7 +31,7 @@ interface DataLabelProps {
  */
 export const DataLabel: React.FC<DataLabelProps> = ({ label, value, icon }) => {
   return (
-    <div className={styles.layout}>
+    <div className={classNames(styles.layout, { [styles.two]: icon })}>
       {icon && <div className={styles.icon}>{icon}</div>}
       <div className={styles.content}>
         <Typography as={"span"} variant="label" size={"small"} textTransform="uppercase" className={styles.label}>

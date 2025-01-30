@@ -1,0 +1,25 @@
+.grid {
+  display: grid;
+  gap: 22px;
+  place-content: start;
+  
+  &.two {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  @include respond-to(mobile) {
+    grid-template-columns: 1fr !important;
+  }
+
+  @include respond-to(tablet-vertical) {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+
+.amountToRaise {
+  background-color: #151613;
+  padding: 18px;
+  border-radius: 8px;
+  border: 1px solid #303529;
+}

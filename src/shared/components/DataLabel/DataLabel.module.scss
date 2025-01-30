@@ -1,8 +1,11 @@
 .layout {
   display: grid;
-  grid-template-columns: 0fr 0fr;
-  place-items: center;
+  grid-template-columns: 1fr;
   gap: 18px;
+
+  &.two {
+    grid-template-columns: 0fr 1fr;
+  }
 }
 
 .icon {
@@ -23,6 +26,10 @@
 
   span {
     white-space: nowrap;
+    
+    @include respond-to(mobile) {
+      white-space: inherit;
+    }
   }
 }
 

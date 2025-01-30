@@ -1,8 +1,15 @@
 import React from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 
+import classNames from "clsx";
+import { format } from "date-fns/format";
+
+import { formatPrice } from "@/lib/number";
 import { getRoute } from "@/lib/router";
+import { ThresholdCalculator } from "@/project/components/ThresholdCalculator";
 import { Button } from "@/shared/components/Button";
+import { Card } from "@/shared/components/Card";
+import { DataLabel } from "@/shared/components/DataLabel";
 import { Loader } from "@/shared/components/Loader";
 import { Tabs } from "@/shared/components/Tabs";
 import { ErrorPage } from "@/shared/pages/ErrorPage";
@@ -36,7 +43,7 @@ type ProjectDetailsPageParams = {
  */
 export const ProjectDetailsPage: React.FC = () => {
   const { slug, tabId } = useParams<ProjectDetailsPageParams>(),
-    project = useProject(slug);
+    { data, ...project } = useProject(slug);
 
   const navigate = useNavigate();
 
@@ -80,10 +87,45 @@ export const ProjectDetailsPage: React.FC = () => {
    * ```
    */
   const renderTab = () => {
+    if (!data) return null;
+
     switch (tabId) {
+      case ProjectFormTabs.VESTING_OPTIONS:
+        return (
+          <Card className={classNames(styles.grid, styles.labels)}>
+            <DataLabel
+              label={"Token Listing"}
+              value={format(new Date(data.TGEDate), "EEEE, MMMM do, yyyy 'at' h:mm a")}
+            />
+            <DataLabel label={"Tokens Unlocked at TGE"} value={formatPrice(data.unlockTokensTGE, data.tokenName)} />
+            <DataLabel label={"Cliff Period"} value={`${data.cliff} days`} />
+            <DataLabel label={"Vesting Duration"} value={`${data.vestingDays} days`} />
+          </Card>
+        );
+
       default:
-      case ProjectFormTabs.TOKEN_INFORMATION:
-        return <div>Hola</div>;
+      case ProjectFormTabs.RAISING_FUNDS:
+        return (
+          <Card className={classNames(styles.grid, styles.labels)}>
+            <DataLabel label={"Currency"} value={data.currency.name} />
+            <DataLabel label={"Token For Sale"} value={formatPrice(data.tokensForSale, data.currency.name)} />
+            <DataLabel
+              label={"ICO Start date"}
+              value={format(new Date(data.startDate), "EEEE, MMMM do, yyyy 'at' h:mm a")}
+            />
+            <div className={styles.grid}>
+              <div className={classNames(styles.grid, styles.two)}>
+                <DataLabel label={"Amount to Raise"} value={formatPrice(data.amountToRaise, data.currency.name)} />
+                <DataLabel label={"Threshold"} value={`${data.threshold}%`} />
+              </div>
+              <ThresholdCalculator
+                currency={data.currency}
+                amountToRaise={data.amountToRaise}
+                threshold={data.threshold}
+              />
+            </div>
+          </Card>
+        );
     }
   };
 
@@ -92,7 +134,7 @@ export const ProjectDetailsPage: React.FC = () => {
    *
    * @returns {JSX.Element} The loader component.
    */
-  if (project.isLoading && !project.data) {
+  if (project.isLoading && !data) {
     return <Loader variant={"full"} size={42} />;
   }
 
@@ -101,7 +143,7 @@ export const ProjectDetailsPage: React.FC = () => {
    *
    * @returns {JSX.Element} The error page component.
    */
-  if (!slug || (!project.isLoading && !project.data) || !project.data) {
+  if (!slug || (!project.isLoading && !data) || !data) {
     return (
       <ErrorPage
         code={"404"}
@@ -124,7 +166,7 @@ export const ProjectDetailsPage: React.FC = () => {
 
   return (
     <div className={styles.layout}>
-      <ProjectHeader {...project.data} />
+      <ProjectHeader {...data} />
 
       <div className={styles.container}>
         <Tabs<ProjectFormTabs>
