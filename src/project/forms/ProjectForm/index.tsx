@@ -31,7 +31,8 @@ import { Typography } from "@/shared/components/Typography";
 
 import { getDefaultProjectFormValues } from "./ProjectForm.helpers";
 import styles from "./ProjectForm.module.scss";
-import { ProjectFormValues, ProjectFormSchema, ProjectFormProps } from "./ProjectForm.types";
+import { OptionalFormSchema, ProjectFormSchema } from "./ProjectForm.schema";
+import { ProjectFormValues, ProjectFormProps } from "./ProjectForm.types";
 
 /**
  * Enum representing the different tabs in the project form.
@@ -75,10 +76,11 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
     setValue,
     handleSubmit,
     watch,
-    formState: { errors, dirtyFields },
+    getValues,
+    formState: { isDirty, errors, dirtyFields },
   } = useForm<ProjectFormValues>({
     defaultValues: defaultValues ?? getDefaultProjectFormValues(),
-    resolver: zodResolver(ProjectFormSchema),
+    resolver: zodResolver(OptionalFormSchema),
     reValidateMode: "onChange",
     mode: "all",
   });
@@ -88,6 +90,19 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
     tokenName = watch("tokenName"),
     tokenImage = watch("tokenImageUrl"),
     currencyId = watch("currency.id");
+
+  /**
+   * Memoized value that determines if the form is ready to be published.
+   * A form is considered ready for publishing when:
+   * 1. All required fields pass schema validation
+   * 2. The form is not in a dirty state (no unsaved changes)
+   *
+   * @returns {boolean} True if the form is valid and not dirty, false otherwise
+   */
+  const isPublishing = useMemo(
+    () => ProjectFormSchema.safeParse(getValues()).success && !isDirty,
+    [isDirty, getValues],
+  );
 
   /**
    * An object that checks the completion status of each tab in the project form.
@@ -156,7 +171,7 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
    *
    * @param data - The data from the form.
    */
-  const onSubmitHandler: SubmitHandler<ProjectFormValues> = (data: ProjectFormValues) => onSubmit(data);
+  const onSubmitHandler: SubmitHandler<ProjectFormValues> = (data: ProjectFormValues) => onSubmit(isPublishing, data);
 
   /**
    * Memoized value for the selected currency based on the currencyId.
@@ -611,6 +626,32 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
     }
   };
 
+  /**
+   * Renders the submit button for the form based on form state.
+   *
+   * @returns {JSX.Element | null} A Button component with appropriate styling and text,
+   * or null if the form is not dirty and invalid
+   *
+   * - Returns a "Publish Project" primary button if form is valid but not dirty
+   * - Returns a "Save Changes" secondary button if form is dirty
+   * - Returns null if form is not dirty and invalid
+   */
+  const renderSubmitButton = () => {
+    if (isPublishing) {
+      return (
+        <Button type={"submit"} isLoading={isLoading} variant={"solid"} color={"primary"} caption={"Publish Project"} />
+      );
+    }
+
+    if (!isDirty) {
+      return null;
+    }
+
+    return (
+      <Button type={"submit"} isLoading={isLoading} variant={"solid"} color={"secondary"} caption={"Save Changes"} />
+    );
+  };
+
   useEffect(() => {
     if (!isCurrenciesLoading && currencies && currencies.length > 0) {
       setValue("currency", currencies[0]);
@@ -630,9 +671,7 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
       </Fieldset>
 
       {/* Actions */}
-      <div className={styles.actions}>
-        <Button type={"submit"} isLoading={isLoading} variant={"solid"} color={"secondary"} caption={"Save Changes"} />
-      </div>
+      <div className={styles.actions}>{renderSubmitButton()}</div>
     </form>
   );
 };

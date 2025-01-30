@@ -84,3 +84,14 @@ export const getProjectsByWallet = (
       limit,
     },
   });
+
+/**
+ * Publishes a project by its ID.
+ *
+ * @param {Project["id"]} projectId - The unique identifier of the project to publish.
+ * @returns {Promise<void>} - A promise that resolves when the project is successfully published.
+ */
+export const publishProject = (projectId: Project["id"]) =>
+  request<void>(getEndpoint("projects-service", `/projects/${projectId}/publish`), {
+    method: "POST",
+  });

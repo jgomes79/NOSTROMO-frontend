@@ -56,7 +56,7 @@ export const TierSelector: React.FC<TierSelectorProps> = ({ isLoading, focusLoad
 
           <Fieldset title={"Benefits"} className={styles.fieldset}>
             <Typography variant={"body"} size={"medium"}>
-              {tier.benefits}
+              <p dangerouslySetInnerHTML={{ __html: tier.benefits }} />
             </Typography>
           </Fieldset>
         </div>

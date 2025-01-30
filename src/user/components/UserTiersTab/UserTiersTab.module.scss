@@ -1,0 +1,63 @@
+.grid {
+  display: grid;
+  gap: 22px;
+  width: 100%;
+  align-items: start;
+
+  @include respond-to(mobile) {
+    gap: 42px;
+  }
+
+  &.center {
+    align-items: center;
+    justify-content: center;
+  }
+  
+  &.two {
+    grid-template-columns: 0fr 1fr;
+    gap: 42px;
+
+    @include respond-to(mobile) {
+      grid-template-columns: 1fr;
+    }
+
+    &.labels {
+      @include respond-to(tablet-vertical) {
+        grid-template-columns: 1fr;
+      }
+  
+      @include respond-to(mobile) {
+        grid-template-columns: 1fr;
+      }
+    }
+  }
+
+  &.spacing {
+    padding: 32px 0;
+    gap: 42px;
+  }
+}
+
+.tier {
+  display: flex;
+  justify-content: center;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  @include respond-to(tablet-vertical) {
+    display: inline-flex;
+  }
+}
+
+.title {
+  color: $green-03;
+  @include greenShine();
+}
+
+.loader {
+  padding: 82px 0;
+}

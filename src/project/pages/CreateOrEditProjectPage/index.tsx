@@ -6,6 +6,7 @@ import { RiAliensFill, RiWallet2Line } from "react-icons/ri";
 import { useWalletClient } from "wagmi";
 
 import { useProject } from "@/project/hooks/useProject";
+import { usePublishProject } from "@/project/hooks/usePublishProject";
 import { useUpsertProject } from "@/project/hooks/useUpsertProject";
 import { Button } from "@/shared/components/Button";
 import { Loader } from "@/shared/components/Loader";
@@ -33,23 +34,42 @@ type CreateOrEditProjectPageParams = {
  * @returns {JSX.Element} The rendered new project page component.
  */
 export const CreateOrEditProjectPage: React.FC = () => {
-  const upsertProject = useUpsertProject();
+  const upsertProject = useUpsertProject(),
+    publishProject = usePublishProject();
+
   const params = useParams<CreateOrEditProjectPageParams>();
 
-  const { data: wallet } = useWalletClient(),
+  const { data: wallet, isPending: isLoadingWallet } = useWalletClient(),
     project = useProject(params.slug);
 
   /**
-   * Handles the submit button click event and triggers the new project mutation with the provided form values.
+   * Handles the form submission for creating, updating, or publishing a project.
    *
-   * @param {ProjectFormValues} values - The form values from the project form.
+   * @param {boolean} isPublishing - Flag indicating if the project should be published
+   * @param {ProjectFormValues} values - The form values from the project form
+   * @returns {Promise<void>} A promise that resolves when the mutation is complete
    */
   const handleClickSubmit = useCallback(
-    (values: ProjectFormValues) => {
-      upsertProject.mutateAsync(values);
+    (isPublishing: boolean, values: ProjectFormValues) => {
+      if (isPublishing && project.data) {
+        publishProject.mutate({
+          projectId: project.data.id,
+        });
+      } else {
+        upsertProject.mutateAsync(values);
+      }
     },
-    [upsertProject],
+    [upsertProject, project],
   );
+
+  /**
+   * Renders a loader if the project data is still loading.
+   *
+   * @returns {JSX.Element} The loader component.
+   */
+  if (project.isLoading || isLoadingWallet) {
+    return <Loader variant={"full"} size={52} />;
+  }
 
   /**
    * Renders an error page if the wallet is not connected or the account is unavailable.
@@ -82,15 +102,6 @@ export const CreateOrEditProjectPage: React.FC = () => {
         ]}
       />
     );
-  }
-
-  /**
-   * Renders a loader if the project data is still loading.
-   *
-   * @returns {JSX.Element} The loader component.
-   */
-  if (project.isLoading) {
-    return <Loader variant={"full"} size={52} />;
   }
 
   /**
