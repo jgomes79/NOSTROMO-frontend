@@ -18,6 +18,7 @@ import { ErrorPage } from "@/shared/pages/ErrorPage";
 import { TierSelector } from "@/tier/components/TierSelector";
 import { Tier, Tiers } from "@/tier/tier.types";
 import { useSetUserTier } from "@/user/hooks/useSetUserTier";
+import { useUnstakeTokens } from "@/user/hooks/useUnstakeTokens";
 
 import styles from "./UserSettingsPage.module.scss";
 import { TierImage } from "../../../tier/components/TierImage";
@@ -49,7 +50,8 @@ export const UserSettingsPage: React.FC = () => {
 
   const { data: wallet } = useWalletClient();
   const setUserTier = useSetUserTier();
-  const { data: user, refetch: refetchUserbyWalle } = useUserByWallet(wallet?.account.address);
+  const unstakeTokens = useUnstakeTokens();
+  const { data: user, refetch: refetchUserbyWallet } = useUserByWallet(wallet?.account.address);
   const [isTryingUpgrade, setTryingUpgrade] = useState<boolean>(false);
 
   /**
@@ -61,6 +63,14 @@ export const UserSettingsPage: React.FC = () => {
     setTryingUpgrade(true);
   }, []);
 
+  const handleClickUnstakeTokens = useCallback(async () => {
+    if (wallet) {
+      await unstakeTokens.mutateAsync({ wallet: wallet.account.address });
+      refetchUserbyWallet();
+      setTryingUpgrade(false);
+    }
+  }, [wallet]);
+
   /**
    * Handles the tier selection and updates the user's tier
    * @param {Tier} tier - The tier object containing id and other tier details
@@ -71,7 +81,7 @@ export const UserSettingsPage: React.FC = () => {
     async (tier: Tier) => {
       if (wallet) {
         await setUserTier.mutateAsync({ wallet: wallet.account.address, tierId: tier.id });
-        refetchUserbyWalle();
+        refetchUserbyWallet();
         setTryingUpgrade(false);
       }
     },
@@ -133,13 +143,18 @@ export const UserSettingsPage: React.FC = () => {
               </div>
               <div className={styles.actions}>
                 <Button variant={"solid"} color={"primary"} caption={"Upgrade Tier"} onClick={handleClickUpgradeTier} />
-                <Button variant={"ghost"} color={"primary"} caption={"Unstake Tokens"} />
+                <Button
+                  variant={"ghost"}
+                  color={"primary"}
+                  caption={"Unstake Tokens"}
+                  onClick={handleClickUnstakeTokens}
+                />
               </div>
             </div>
             <div className={styles.grid}>
               <div className={classNames(styles.grid, styles.two, styles.labels)}>
                 <DataLabel label={"Your tier"} value={user.tier.name} />
-                <DataLabel label={"Staked Token"} value={formatPrice(5000000, "QUBIC", 2)} />
+                <DataLabel label={"Staked Token"} value={formatPrice(user.tier.stakeAmount, "QUBIC", 2)} />
               </div>
 
               <Fieldset title={"Benefits"}>

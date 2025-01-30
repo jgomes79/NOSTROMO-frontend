@@ -36,3 +36,8 @@ export const signInWallet = (wallet: User["wallet"]): Promise<User> =>
   request<User>(getEndpoint("users-service", `/user/${wallet}`), {
     method: "POST",
   });
+
+export const unstakeTokens = (wallet: User["wallet"]): Promise<Tier> =>
+  request<Tier>(getEndpoint("users-service", `/user/${wallet}/unstake`), {
+    method: "PUT",
+  });
