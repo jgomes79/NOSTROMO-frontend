@@ -2,6 +2,7 @@ import React from "react";
 
 import classNames from "clsx";
 
+import { formatPrice } from "@/lib/number";
 import { Animatable } from "@/shared/components/Animatable";
 import { Button } from "@/shared/components/Button";
 import { Fieldset } from "@/shared/components/Fieldset";
@@ -63,7 +64,7 @@ export const TierSelector: React.FC<TierSelectorProps> = ({ isLoading, focusLoad
           <Button
             variant={"solid"}
             size={"medium"}
-            caption={"Stake $QUBIC"}
+            caption={`Stake ${formatPrice(tier.stakeAmount)} $QUBIC`}
             className={styles.button}
             isLoading={isLoading && focusLoadingId === tier.id}
             onClick={() => onSelectTier(tier)}

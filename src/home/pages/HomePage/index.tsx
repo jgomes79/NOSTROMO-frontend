@@ -33,7 +33,7 @@ export const HomePage: React.FC = () => {
   const navigate = useNavigate();
 
   /** Set the page title */
-  useAppTitle("Enter the Gateway of Blockchain Innovation");
+  useAppTitle("QUBICANS, WELCOME ABOARD");
 
   /**
    * Scrolls smoothly to the section referenced by the given ref.
