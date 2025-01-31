@@ -16,6 +16,8 @@ import {
 
 import { useCurrencies } from "@/currency/hooks/useCurrencies";
 import { formatPrice } from "@/lib/number";
+import { isSameObject } from "@/lib/object";
+import { generateSlugOf } from "@/lib/string";
 import { ThresholdCalculator } from "@/project/components/ThresholdCalculator";
 import { Animatable } from "@/shared/components/Animatable";
 import { Button } from "@/shared/components/Button";
@@ -46,16 +48,16 @@ import { ProjectFormTabs } from "../../../project/project.types";
  */
 export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoading, onSubmit }) => {
   const { data: currencies, isLoading: isCurrenciesLoading } = useCurrencies();
-
   const [activeTab, setActiveTab] = useState<ProjectFormTabs>(ProjectFormTabs.BASIC_INFORMATION);
 
   const {
+    watch,
+    reset,
     control,
     register,
     setValue,
-    handleSubmit,
-    watch,
     getValues,
+    handleSubmit,
     formState: { isDirty, errors, dirtyFields },
   } = useForm<ProjectFormValues>({
     defaultValues: defaultValues ?? getDefaultProjectFormValues(),
@@ -64,7 +66,8 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
     mode: "all",
   });
 
-  const amountToRaise = watch("amountToRaise"),
+  const name = watch("name"),
+    amountToRaise = watch("amountToRaise"),
     threshold = watch("threshold"),
     tokenName = watch("tokenName"),
     tokenImage = watch("tokenImageUrl"),
@@ -84,57 +87,6 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
   );
 
   /**
-   * An object that checks the completion status of each tab in the project form.
-   * Each key corresponds to a tab, and the value is a boolean indicating whether
-   * all required fields in that tab are filled and error-free.
-   */
-  const tabCompletionChecks: Record<ProjectFormTabs, boolean> = {
-    [ProjectFormTabs.BASIC_INFORMATION]: (() => {
-      const fields = ["bannerUrl", "photoUrl", "name", "slug", "description"] as const;
-      return fields.every(
-        (field) => !errors[field as keyof ProjectFormValues] && dirtyFields[field as keyof ProjectFormValues],
-      );
-    })(),
-
-    [ProjectFormTabs.SOCIAL_NETWORKS]: (() => {
-      const socialFields = ["discordUrl", "instagramUrl", "mediumUrl", "xUrl", "telegramUrl"] as const;
-      return socialFields.every(
-        (field) =>
-          !errors.social?.[field as keyof ProjectFormValues["social"]] &&
-          dirtyFields.social?.[field as keyof ProjectFormValues["social"]],
-      );
-    })(),
-
-    [ProjectFormTabs.DOCUMENTATION]: (() => {
-      const docFields = ["whitepaperUrl", "tokenomicsUrl", "litepaperUrl"] as const;
-      return docFields.every(
-        (field) => !errors[field as keyof ProjectFormValues] && dirtyFields[field as keyof ProjectFormValues],
-      );
-    })(),
-
-    [ProjectFormTabs.TOKEN_INFORMATION]: (() => {
-      const tokenFields = ["tokenImageUrl", "tokenName", "tokensSupply", "tokenDecimals"] as const;
-      return tokenFields.every(
-        (field) => !errors[field as keyof ProjectFormValues] && dirtyFields[field as keyof ProjectFormValues],
-      );
-    })(),
-
-    [ProjectFormTabs.RAISING_FUNDS]: (() => {
-      const fundFields = ["amountToRaise", "threshold", "tokensForSale", "startDate"] as const;
-      return fundFields.every(
-        (field) => !errors[field as keyof ProjectFormValues] && dirtyFields[field as keyof ProjectFormValues],
-      );
-    })(),
-
-    [ProjectFormTabs.VESTING_OPTIONS]: (() => {
-      const vestingFields = ["TGEDate", "cliff", "vestingDays"] as const;
-      return vestingFields.every(
-        (field) => !errors[field as keyof ProjectFormValues] && dirtyFields[field as keyof ProjectFormValues],
-      );
-    })(),
-  };
-
-  /**
    * An array of objects representing the current tabs in the project form.
    * Each object contains the tab's id, label, and an optional icon indicating
    * the completion status of the tab.
@@ -142,7 +94,6 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
   const currentTabs = Object.values(ProjectFormTabs).map((tab) => ({
     id: tab,
     label: ProjectTabLabels[tab],
-    iconLeft: tabCompletionChecks[tab] && <RiCheckLine />,
   }));
 
   /**
@@ -606,11 +557,34 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
     );
   };
 
+  /**
+   * Sets the default currency value when currencies are loaded.
+   *
+   * @param {boolean} isCurrenciesLoading - Indicates if the currencies are still loading.
+   * @param {Array} currencies - The list of available currencies.
+   */
   useEffect(() => {
     if (!isCurrenciesLoading && currencies && currencies.length > 0) {
       setValue("currency", currencies[0]);
     }
   }, [isCurrenciesLoading, currencies]);
+
+  /**
+   * Generates and sets the slug value based on the project name.
+   *
+   * @param {string} name - The name of the project.
+   */
+  useEffect(() => {
+    if (name) {
+      setValue("slug", generateSlugOf(name));
+    }
+  }, [name]);
+
+  useEffect(() => {
+    if (defaultValues && !isSameObject(defaultValues, getValues())) {
+      reset(defaultValues);
+    }
+  }, [defaultValues]);
 
   return (
     <form onSubmit={handleSubmit(onSubmitHandler)} className={styles.form}>

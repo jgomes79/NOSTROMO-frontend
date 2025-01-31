@@ -11,3 +11,15 @@ export const trimString = (str: string, length: number): string => {
   }
   return str.substring(0, length) + "...";
 };
+
+/**
+ * Generates a URL-friendly slug from a given string.
+ * @param input - The string to generate a slug from.
+ * @returns A URL-friendly slug.
+ */
+export const generateSlugOf = (input: string): string => {
+  return input
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+};

@@ -4,33 +4,22 @@ import { publishProject } from "../project.service";
 import { Project } from "../project.types";
 
 /**
- * Parameters for publishing a project
- */
-interface PublishProjectParams {
-  /** The unique identifier of the project to be published */
-  projectId: Project["id"];
-}
-
-/**
  * Custom hook to publish an existing project.
  *
- * @returns A mutation object that handles the project publishing process
+ * @returns {object} A mutation object that handles the project publishing process.
  * @example
  * ```typescript
  * const { mutate, isLoading } = usePublishProject();
  *
  * const handlePublish = () => {
- *   mutate({ projectId: "123" });
+ *   mutate("123");
  * };
  * ```
  */
 export const usePublishProject = () => {
   return useMutation({
-    mutationFn: async ({ projectId }: PublishProjectParams) => {
+    mutationFn: async (projectId: Project["id"]) => {
       return publishProject(projectId);
-    },
-    onSuccess: (data) => {
-      console.log({ data });
     },
   });
 };

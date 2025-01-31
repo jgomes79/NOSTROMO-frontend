@@ -103,7 +103,7 @@ export const HomePage: React.FC = () => {
 
       {/* Projects Section */}
       <section ref={(el) => (sectionRefs.current[2] = el)} className={styles.section}>
-        <div className={styles.container}>
+        <div className={classNames(styles.container, styles.withHeight)}>
           <ProjectsListByState />
         </div>
       </section>

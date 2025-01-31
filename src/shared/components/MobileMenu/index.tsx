@@ -2,8 +2,11 @@ import React, { useEffect } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 
 import { RiCloseFill } from "react-icons/ri";
+import { useWalletClient } from "wagmi";
 
+import { getRoute } from "@/lib/router";
 import { navigationMenu } from "@/shared/shared.constants";
+import { USER_ROUTES } from "@/user/user.constants";
 
 import styles from "./MobileMenu.module.scss";
 import logo from "../../assets/images/logotype.png";
@@ -27,7 +30,27 @@ interface MobileMenuProps {
  */
 export const MobileMenu: React.FC<MobileMenuProps> = ({ onClose }) => {
   const location = useLocation();
+  const { data } = useWalletClient();
   const initialLocation = React.useRef(location);
+
+  /**
+   * Combines the base navigation menu with conditional user settings route
+   * @remarks
+   * This array concatenates the base navigation menu items with an additional
+   * "User Settings" route if a wallet account address exists
+   * @returns An array of navigation items containing title and path properties
+   */
+  const navigationItems = [
+    ...navigationMenu,
+    ...(data?.account?.address
+      ? [
+          {
+            title: "User Settings",
+            path: getRoute(USER_ROUTES.MAIN),
+          },
+        ]
+      : []),
+  ];
 
   /**
    * Effect hook that checks for changes in the URL using react-router-dom's useLocation hook.
@@ -51,7 +74,7 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({ onClose }) => {
       </div>
       <div className={styles.container}>
         <nav className={styles.navigator}>
-          {navigationMenu.map(({ title, path }) => (
+          {navigationItems.map(({ title, path }) => (
             <NavLink key={path} to={path} className={({ isActive }) => (isActive ? styles.isActive : undefined)}>
               {title}
             </NavLink>

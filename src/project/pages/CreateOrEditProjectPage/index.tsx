@@ -39,27 +39,26 @@ export const CreateOrEditProjectPage: React.FC = () => {
 
   const params = useParams<CreateOrEditProjectPageParams>();
 
-  const { data: wallet, isPending: isLoadingWallet } = useWalletClient(),
+  const { data: wallet, isLoading: isLoadingWallet } = useWalletClient(),
     project = useProject(params.slug);
 
   /**
    * Handles the form submission for creating, updating, or publishing a project.
    *
-   * @param {boolean} isPublishing - Flag indicating if the project should be published
-   * @param {ProjectFormValues} values - The form values from the project form
-   * @returns {Promise<void>} A promise that resolves when the mutation is complete
+   * @param {boolean} isPublishing - Indicates if the project should be published.
+   * @param {ProjectFormValues} values - The form values from the project form.
+   * @returns {Promise<void>} A promise that resolves when the mutation is complete.
    */
   const handleClickSubmit = useCallback(
-    (isPublishing: boolean, values: ProjectFormValues) => {
+    async (isPublishing: boolean, values: ProjectFormValues) => {
       if (isPublishing && project.data) {
-        publishProject.mutate({
-          projectId: project.data.id,
-        });
+        await publishProject.mutateAsync(project.data.id);
       } else {
-        upsertProject.mutateAsync(values);
+        await upsertProject.mutateAsync(values);
       }
+      project.refetch();
     },
-    [upsertProject, project],
+    [upsertProject, project, publishProject],
   );
 
   /**
@@ -127,7 +126,7 @@ export const CreateOrEditProjectPage: React.FC = () => {
       </div>
       <div className={styles.form}>
         <ProjectForm
-          isLoading={upsertProject.isPending}
+          isLoading={upsertProject.isPending || publishProject.isPending || project.isRefetching}
           defaultValues={project.data || undefined}
           onSubmit={handleClickSubmit}
         />

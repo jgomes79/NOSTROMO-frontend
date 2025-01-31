@@ -83,11 +83,6 @@ export const Tabs = <T,>({
   const handleClickTab = (tabId: Tab<T>["id"]) => {
     setActiveTab(tabId);
     onChange?.(tabId);
-
-    const activeTabIndex = tabs.findIndex((tab) => tab.id === tabId);
-    if (tabRefs.current[activeTabIndex]) {
-      tabRefs.current[activeTabIndex]?.scrollIntoView({ behavior: "smooth", inline: "center" });
-    }
   };
 
   useEffect(() => {
