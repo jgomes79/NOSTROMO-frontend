@@ -119,17 +119,17 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
 
   const stateLabels = {
     [ProjectStates.ALL]: { title: "", banner: "", footer: "" },
-    [ProjectStates.DRAFT]: { title: "Draft", banner: "", footer: "" },
-    [ProjectStates.SENT_TO_REVIEW]: { title: "Sent to Review", banner: "", footer: "" },
-    [ProjectStates.REJECTED]: { title: "Rejected", banner: "", footer: "" },
-    [ProjectStates.CLOSED]: { title: "Closed", banner: "Claim tokens in", footer: "" },
+    [ProjectStates.DRAFT]: { title: "Draft", banner: "", footer: "Edit" },
+    [ProjectStates.SENT_TO_REVIEW]: { title: "Sent to Review", banner: "", footer: "Review" },
+    [ProjectStates.REJECTED]: { title: "Rejected", banner: "", footer: "Project Rejected" },
+    [ProjectStates.CLOSED]: { title: "Closed", banner: "Claim tokens in", footer: "Project Closed" },
     [ProjectStates.FAILED]: { title: "Failed", banner: "", footer: "" },
-    [ProjectStates.FUNDING_PHASE_1]: { title: "Funding Phase 1", banner: "Phase 1 ends in", footer: "" },
-    [ProjectStates.FUNDING_PHASE_2]: { title: "Funding Phase 2", banner: "Phase 2 ends in", footer: "" },
-    [ProjectStates.FUNDING_PHASE_3]: { title: "Funding Phase 3", banner: "Phase 3 ends in", footer: "" },
-    [ProjectStates.READY_TO_VOTE]: { title: "Ready to Vote", banner: "Voting ends in", footer: "" },
-    [ProjectStates.REQUEST_MORE_INFO]: { title: "More Info Requested", banner: "", footer: "" },
-    [ProjectStates.UPCOMING]: { title: "Upcoming", banner: "Registration ends in", footer: "" },
+    [ProjectStates.FUNDING_PHASE_1]: { title: "Funding Phase 1", banner: "Phase 1 ends in", footer: "Invest" },
+    [ProjectStates.FUNDING_PHASE_2]: { title: "Funding Phase 2", banner: "Phase 2 ends in", footer: "Invest" },
+    [ProjectStates.FUNDING_PHASE_3]: { title: "Funding Phase 3", banner: "Phase 3 ends in", footer: "Invest" },
+    [ProjectStates.READY_TO_VOTE]: { title: "Ready to Vote", banner: "Voting ends in", footer: "Vote" },
+    [ProjectStates.REQUEST_MORE_INFO]: { title: "More Info Requested", banner: "", footer: "Edit" },
+    [ProjectStates.UPCOMING]: { title: "Upcoming", banner: "Registration ends in", footer: "Register" },
   };
 
   return (
