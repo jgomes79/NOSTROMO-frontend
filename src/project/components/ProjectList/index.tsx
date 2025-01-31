@@ -1,9 +1,9 @@
-import { useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+//import { useCallback } from "react";
+//import { useNavigate } from "react-router-dom";
 
-import { getRoute } from "@/lib/router";
-import { PROJECT_ROUTES } from "@/project/project.constants";
-import { Button } from "@/shared/components/Button";
+//import { getRoute } from "@/lib/router";
+//import { PROJECT_ROUTES } from "@/project/project.constants";
+//import { Button } from "@/shared/components/Button";
 import { EmptyState } from "@/shared/components/EmptyState";
 import { Skeleton } from "@/shared/components/Skeleton";
 
@@ -40,7 +40,7 @@ interface ProjectListProps {
  * @returns {JSX.Element} Rendered component
  */
 export const ProjectList: React.FC<ProjectListProps> = ({ isLoading, page, projects }) => {
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
 
   /**
    * Handles the navigation to the new project creation page
@@ -49,9 +49,11 @@ export const ProjectList: React.FC<ProjectListProps> = ({ isLoading, page, proje
    *
    * @returns {void}
    */
+  /*
   const handleClickNewProject = useCallback(() => {
     navigate(getRoute(PROJECT_ROUTES.NEW_PROJECT));
   }, []);
+  */
 
   /**
    * Renders the empty state component when no projects are available
@@ -63,8 +65,8 @@ export const ProjectList: React.FC<ProjectListProps> = ({ isLoading, page, proje
     <div className={styles.centered}>
       <EmptyState
         title="No projects found"
-        description="Be the first to start a new project and make a difference!"
-        action={<Button caption={"New Project"} onClick={handleClickNewProject} />}
+        description=""
+        action={"" /*<Button caption={"New Project"} onClick={handleClickNewProject} />*/}
       />
     </div>
   );

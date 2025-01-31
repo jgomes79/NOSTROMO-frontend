@@ -1,4 +1,4 @@
-import { RiDiscordFill, RiMediumFill, RiTelegramFill, RiTwitterXFill } from "react-icons/ri";
+import { RiDiscordFill, /*RiMediumFill, RiTelegramFill,*/ RiTwitterXFill } from "react-icons/ri";
 
 import { LAUNCHPAD_ROUTES } from "@/launchpad/launchpad.constants";
 
@@ -25,9 +25,10 @@ export const navigationMenu = [
  */
 export const socialNetworks = [
   {
-    path: "https://discord.com",
+    path: "https://discord.com/channels/1296427133488336927/1305960771414655036",
     icon: <RiDiscordFill />,
   },
+  /*
   {
     path: "https://telegram.com",
     icon: <RiTelegramFill />,
@@ -36,8 +37,9 @@ export const socialNetworks = [
     path: "https://medium.com",
     icon: <RiMediumFill />,
   },
+  */
   {
-    path: "https://x.com",
+    path: "https://x.com/NostromoPad",
     icon: <RiTwitterXFill />,
   },
 ];

@@ -12,7 +12,7 @@ import {
 } from "react-icons/ri";
 
 import { formatPrice, formatNumber } from "@/lib/number";
-import { Project } from "@/project/project.types";
+import { Project, ProjectStates } from "@/project/project.types";
 import { Button } from "@/shared/components/Button";
 import { Card } from "@/shared/components/Card";
 import { Countdown } from "@/shared/components/Countdown";
@@ -31,6 +31,7 @@ type ProjectHeaderProps = Pick<
   Project,
   | "name"
   | "description"
+  | "state"
   | "bannerUrl"
   | "photoUrl"
   | "startDate"
@@ -54,6 +55,7 @@ type ProjectHeaderProps = Pick<
 export const ProjectHeader: React.FC<ProjectHeaderProps> = ({
   name,
   description,
+  state,
   photoUrl,
   bannerUrl,
   startDate,
@@ -69,6 +71,21 @@ export const ProjectHeader: React.FC<ProjectHeaderProps> = ({
 }) => {
   const { isMobile } = useResponsive();
 
+  const stateLabels = {
+    [ProjectStates.ALL]: { title: "", banner: "", footer: "" },
+    [ProjectStates.DRAFT]: { title: "Draft", banner: "", footer: "" },
+    [ProjectStates.SENT_TO_REVIEW]: { title: "Sent to Review", banner: "", footer: "" },
+    [ProjectStates.REJECTED]: { title: "Rejected", banner: "", footer: "" },
+    [ProjectStates.CLOSED]: { title: "Closed", banner: "Claim tokens in", footer: "" },
+    [ProjectStates.FAILED]: { title: "Failed", banner: "", footer: "" },
+    [ProjectStates.FUNDING_PHASE_1]: { title: "Funding Phase 1", banner: "Phase 1 ends in", footer: "" },
+    [ProjectStates.FUNDING_PHASE_2]: { title: "Funding Phase 2", banner: "Phase 2 ends in", footer: "" },
+    [ProjectStates.FUNDING_PHASE_3]: { title: "Funding Phase 3", banner: "Phase 3 ends in", footer: "" },
+    [ProjectStates.READY_TO_VOTE]: { title: "Ready to Vote", banner: "Voting ends in", footer: "" },
+    [ProjectStates.REQUEST_MORE_INFO]: { title: "More Info Requested", banner: "", footer: "" },
+    [ProjectStates.UPCOMING]: { title: "Upcoming", banner: "Registration ends in", footer: "" },
+  };
+
   return (
     <>
       <div className={styles.banner}>
@@ -76,9 +93,9 @@ export const ProjectHeader: React.FC<ProjectHeaderProps> = ({
 
         <div className={styles.bar}>
           <div className={styles.content}>
-            {startDate && (
+            {startDate && stateLabels[state].banner !== "" && (
               <div className={styles.time}>
-                <Typography as="h2">REGISTRATION ENDS IN</Typography>
+                <Typography as="h2">{stateLabels[state].banner.toUpperCase()}</Typography>
                 <Countdown date={startDate}>
                   {(timeLeft) => (
                     <Typography variant="heading" size="small">

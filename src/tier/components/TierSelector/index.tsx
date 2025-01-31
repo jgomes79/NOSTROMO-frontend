@@ -64,7 +64,7 @@ export const TierSelector: React.FC<TierSelectorProps> = ({ isLoading, focusLoad
           <Button
             variant={"solid"}
             size={"medium"}
-            caption={`Stake ${formatPrice(tier.stakeAmount)} $QUBIC`}
+            caption={`Stake ${formatPrice(tier.stakeAmount, "QUBIC", 0)} $QUBIC`}
             className={styles.button}
             isLoading={isLoading && focusLoadingId === tier.id}
             onClick={() => onSelectTier(tier)}

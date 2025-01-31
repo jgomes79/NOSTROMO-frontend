@@ -118,18 +118,18 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
   );
 
   const stateLabels = {
-    [ProjectStates.ALL]: { title: "", footer: "" },
-    [ProjectStates.DRAFT]: { title: "Draft", footer: "" },
-    [ProjectStates.SENT_TO_REVIEW]: { title: "Sent to Review", footer: "" },
-    [ProjectStates.REJECTED]: { title: "Rejected", footer: "" },
-    [ProjectStates.CLOSED]: { title: "Closed", footer: "" },
-    [ProjectStates.FAILED]: { title: "Failed", footer: "" },
-    [ProjectStates.FUNDING_PHASE_1]: { title: "Funding Phase 1", footer: "" },
-    [ProjectStates.FUNDING_PHASE_2]: { title: "Funding Phase 2", footer: "" },
-    [ProjectStates.FUNDING_PHASE_3]: { title: "Funding Phase 3", footer: "" },
-    [ProjectStates.READY_TO_VOTE]: { title: "Ready to Vote", footer: "" },
-    [ProjectStates.REQUEST_MORE_INFO]: { title: "More Info Requested", footer: "" },
-    [ProjectStates.UPCOMING]: { title: "Upcoming", footer: "" },
+    [ProjectStates.ALL]: { title: "", banner: "", footer: "" },
+    [ProjectStates.DRAFT]: { title: "Draft", banner: "", footer: "" },
+    [ProjectStates.SENT_TO_REVIEW]: { title: "Sent to Review", banner: "", footer: "" },
+    [ProjectStates.REJECTED]: { title: "Rejected", banner: "", footer: "" },
+    [ProjectStates.CLOSED]: { title: "Closed", banner: "Claim tokens in", footer: "" },
+    [ProjectStates.FAILED]: { title: "Failed", banner: "", footer: "" },
+    [ProjectStates.FUNDING_PHASE_1]: { title: "Funding Phase 1", banner: "Phase 1 ends in", footer: "" },
+    [ProjectStates.FUNDING_PHASE_2]: { title: "Funding Phase 2", banner: "Phase 2 ends in", footer: "" },
+    [ProjectStates.FUNDING_PHASE_3]: { title: "Funding Phase 3", banner: "Phase 3 ends in", footer: "" },
+    [ProjectStates.READY_TO_VOTE]: { title: "Ready to Vote", banner: "Voting ends in", footer: "" },
+    [ProjectStates.REQUEST_MORE_INFO]: { title: "More Info Requested", banner: "", footer: "" },
+    [ProjectStates.UPCOMING]: { title: "Upcoming", banner: "Registration ends in", footer: "" },
   };
 
   return (
@@ -145,20 +145,22 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
         </div>
 
         {/* Date */}
-        <div className={styles.date}>
-          <Typography variant={"body"} textTransform={"uppercase"} size={"xsmall"}>
-            Registration ends in
-          </Typography>
-          <Typography variant={"body"} size={"xsmall"}>
-            <Countdown date={date}>
-              {(timeLeft) => (
-                <>
-                  {timeLeft.days}D {timeLeft.hours}H {timeLeft.minutes}M {timeLeft.seconds}S
-                </>
-              )}
-            </Countdown>
-          </Typography>
-        </div>
+        {stateLabels[state].banner !== "" && (
+          <div className={styles.date}>
+            <Typography variant={"body"} textTransform={"uppercase"} size={"xsmall"}>
+              {stateLabels[state].banner}
+            </Typography>
+            <Typography variant={"body"} size={"xsmall"}>
+              <Countdown date={date}>
+                {(timeLeft) => (
+                  <>
+                    {timeLeft.days}D {timeLeft.hours}H {timeLeft.minutes}M {timeLeft.seconds}S
+                  </>
+                )}
+              </Countdown>
+            </Typography>
+          </div>
+        )}
 
         <div className={styles.container}>
           {/* Header */}

@@ -116,7 +116,7 @@ export const UserTiersTab: React.FC<UserTiersTabProps> = ({ walletAddress }) => 
       <div className={styles.grid}>
         <div className={classNames(styles.grid, styles.two, styles.labels)}>
           <DataLabel label={"Your tier"} value={user.tier.name} />
-          <DataLabel label={"Staked Token"} value={formatPrice(user.tier.stakeAmount, "QUBIC", 2)} />
+          <DataLabel label={"Staked $QUBIC"} value={formatPrice(user.tier.stakeAmount, "QUBIC", 0)} />
         </div>
 
         <Fieldset title={"Benefits"}>
