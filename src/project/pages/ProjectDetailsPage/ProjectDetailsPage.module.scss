@@ -6,6 +6,7 @@
 
 .container {
   @include pageMargin();
+  gap: 82px;
 }
 
 .grid {

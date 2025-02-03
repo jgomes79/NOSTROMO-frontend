@@ -4,6 +4,7 @@ import { Navigate, useNavigate, useParams } from "react-router-dom";
 import classNames from "clsx";
 import { format } from "date-fns/format";
 
+import { ProjectEvaluation } from "@/admin/components/ProjectEvaluation";
 import { formatPrice } from "@/lib/number";
 import { getRoute } from "@/lib/router";
 import { ThresholdCalculator } from "@/project/components/ThresholdCalculator";
@@ -18,7 +19,7 @@ import styles from "./ProjectDetailsPage.module.scss";
 import { ProjectHeader } from "../../components/ProjectHeader";
 import { useProject } from "../../hooks/useProject";
 import { PROJECT_ROUTES, ProjectTabLabels } from "../../project.constants";
-import { ProjectFormTabs } from "../../project.types";
+import { ProjectFormTabs, ProjectStates } from "../../project.types";
 
 /**
  * Type representing the parameters for the ProjectDetails component.
@@ -74,6 +75,26 @@ export const ProjectDetailsPage: React.FC = () => {
       id: tab,
       label: ProjectTabLabels[tab],
     }));
+
+  /**
+   * Renders an action card based on the current state of the project.
+   *
+   * @returns {JSX.Element | null} The rendered action card component or null if no matching state is found
+   *
+   * @remarks
+   * - Returns a ProjectEvaluation component if the project state is SENT_TO_REVIEW
+   * - Returns null for any other project state
+   */
+  const renderActionCard = (): JSX.Element | null => {
+    if (!data) return null;
+
+    switch (data.state) {
+      case ProjectStates.SENT_TO_REVIEW:
+        return <ProjectEvaluation />;
+      default:
+        return null;
+    }
+  };
 
   /**
    * Renders the content for a specific project tab based on the tab ID.
@@ -169,6 +190,8 @@ export const ProjectDetailsPage: React.FC = () => {
       <ProjectHeader {...data} />
 
       <div className={styles.container}>
+        {renderActionCard()}
+
         <Tabs<ProjectFormTabs>
           size={"large"}
           tabs={currentTabs}

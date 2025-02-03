@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { useQuery } from "@tanstack/react-query";
 
@@ -21,6 +21,7 @@ type UseProjectsByWalletProps = {
   total: number;
   projects: Project[];
   isLoading: boolean;
+  isFetching: boolean;
   fetchProjectsByWallet: (page: number, state: ProjectStates) => void;
 };
 
@@ -68,8 +69,17 @@ export const useProjectsByWallet = (
     state: ProjectStates.ALL,
   });
 
+  const [response, setResponse] = useState<UseProjectByWalletResult>({
+    count: 0,
+    projects: [],
+  });
+
   const projects = useQuery<UseProjectByWalletResult>({
     queryKey: ["projects", walletAddress, page, state, params.limit],
+    initialData: {
+      count: 0,
+      projects: [],
+    },
     queryFn: async (): Promise<UseProjectByWalletResult> => {
       if (!walletAddress)
         return {
@@ -102,12 +112,27 @@ export const useProjectsByWallet = (
     [projects],
   );
 
+  useEffect(() => {
+    if (page === 0) {
+      setResponse({
+        count: projects.data?.count || 0,
+        projects: projects.data?.projects || [],
+      });
+    } else {
+      setResponse((prevResponse) => ({
+        ...prevResponse,
+        projects: [...prevResponse.projects, ...(projects.data?.projects || [])],
+      }));
+    }
+  }, [page, projects.data?.projects]);
+
   return {
     page,
     state,
-    total: projects.data?.count || 0,
-    projects: projects.data?.projects || [],
+    total: response.count,
+    projects: response.projects,
     isLoading: projects.isLoading,
+    isFetching: projects.isFetching,
     fetchProjectsByWallet,
   };
 };

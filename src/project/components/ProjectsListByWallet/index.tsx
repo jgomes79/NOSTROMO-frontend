@@ -35,6 +35,7 @@ export const ProjectsListByWallet: React.FC<ProjectsListByWalletProps> = ({ wall
   const {
     page,
     isLoading: isLoadingProjects,
+    isFetching: isFetchingProjects,
     projects,
     total,
     state,
@@ -82,11 +83,13 @@ export const ProjectsListByWallet: React.FC<ProjectsListByWalletProps> = ({ wall
         onChange={(state) => fetchProjectsByWallet(0, state)}
       />
 
-      {total > limit && (
+      {!isLoadingProjects && (
         <div className={styles.actions}>
           <Button
             caption="Show more"
             iconRight={<RiArrowDownLine />}
+            disabled={projects.length >= total}
+            isLoading={isFetchingProjects}
             onClick={() => fetchProjectsByWallet(page + 1, state)}
           />
         </div>
