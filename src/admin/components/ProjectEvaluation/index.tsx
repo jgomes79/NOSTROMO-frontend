@@ -37,6 +37,18 @@ export const ProjectEvaluation: React.FC = () => {
     },
   };
 
+  const handleAccept = () => {
+    console.log("Accept");
+  };
+
+  const handleRequestMoreInformation = () => {
+    console.log("Request More Information");
+  };
+
+  const handleReject = () => {
+    console.log("Reject");
+  };
+
   return (
     <Card>
       <div className={styles.layout}>
@@ -52,9 +64,9 @@ export const ProjectEvaluation: React.FC = () => {
 
         {isAdmin && (
           <div className={styles.actions}>
-            <Button caption="Accept" color={"secondary"} />
-            <Button caption="Request More Information" color={"yellow"} />
-            <Button caption="Reject" color={"red"} />
+            <Button caption="Accept" color={"secondary"} onClick={handleAccept} />
+            <Button caption="Request More Information" color={"yellow"} onClick={handleRequestMoreInformation} />
+            <Button caption="Reject" color={"red"} onClick={handleReject} />
           </div>
         )}
       </div>
