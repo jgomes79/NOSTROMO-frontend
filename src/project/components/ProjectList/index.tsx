@@ -34,6 +34,8 @@ interface ProjectListProps {
  * @returns {JSX.Element} Rendered component
  */
 export const ProjectList: React.FC<ProjectListProps> = ({ isLoading, page, projects }) => {
+  console.log({ isLoading });
+
   /**
    * Renders the empty state component when no projects are available
    *

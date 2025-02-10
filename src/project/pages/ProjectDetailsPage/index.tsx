@@ -7,7 +7,7 @@ import { format } from "date-fns/format";
 import { ProjectEvaluation } from "@/admin/components/ProjectEvaluation";
 import { formatPrice } from "@/lib/number";
 import { getRoute } from "@/lib/router";
-import { ThresholdCalculator } from "@/project/components/ThresholdCalculator";
+import { ProjectVoting } from "@/project/components/ProjectVoting";
 import { Button } from "@/shared/components/Button";
 import { Card } from "@/shared/components/Card";
 import { DataLabel } from "@/shared/components/DataLabel";
@@ -17,6 +17,7 @@ import { ErrorPage } from "@/shared/pages/ErrorPage";
 
 import styles from "./ProjectDetailsPage.module.scss";
 import { ProjectHeader } from "../../components/ProjectHeader";
+import { ThresholdCalculator } from "../../components/ThresholdCalculator";
 import { useProject } from "../../hooks/useProject";
 import { PROJECT_ROUTES, ProjectTabLabels } from "../../project.constants";
 import { ProjectFormTabs, ProjectStates } from "../../project.types";
@@ -94,8 +95,12 @@ export const ProjectDetailsPage: React.FC = () => {
     if (!data) return null;
 
     switch (data.state) {
+      case ProjectStates.READY_TO_VOTE:
+        return <ProjectVoting date={data.startDate} votes={[5000, 5533]} />;
+
       case ProjectStates.SENT_TO_REVIEW:
         return <ProjectEvaluation />;
+
       default:
         return null;
     }

@@ -131,8 +131,8 @@ export const useProjectsByWallet = (
     state,
     total: response.count,
     projects: response.projects,
-    isLoading: projects.isLoading,
-    isFetching: projects.isFetching,
+    isLoading: projects.isLoading || projects.isFetching,
+    isFetching: projects.isRefetching,
     fetchProjectsByWallet,
   };
 };

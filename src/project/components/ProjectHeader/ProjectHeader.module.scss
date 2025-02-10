@@ -1,5 +1,18 @@
 $avatar-size: 128px;
 
+.layout {
+  position: relative;
+
+  &:after {
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 100%);
+    content: "";
+    inset: 0;
+    position: absolute;
+    z-index: 2;
+    height: 100vh;
+  }
+}
+
 .banner {
   position: relative;
   z-index: 4;
@@ -25,6 +38,7 @@ $avatar-size: 128px;
   @include pageMargin();
   position: relative;
   z-index: 4;
+  
 
   &.extended {
     padding: 62px 22px;

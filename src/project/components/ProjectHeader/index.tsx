@@ -87,7 +87,8 @@ export const ProjectHeader: React.FC<ProjectHeaderProps> = ({
   };
 
   return (
-    <>
+    <div className={styles.layout}>
+      <div className={styles.stars} />
       <div className={styles.banner}>
         <img src={bannerUrl} width="100%" height={isMobile ? 250 : 500} alt={`${name} banner`} />
 
@@ -109,99 +110,97 @@ export const ProjectHeader: React.FC<ProjectHeaderProps> = ({
         </div>
       </div>
 
-      <div className={styles.stars}>
-        <div className={classNames(styles.content, styles.extended)}>
-          <div className={styles.inline}>
-            <div className={styles.avatar}>
-              <img src={photoUrl} width={62} height={62} alt={`${name} avatar`} />
-            </div>
+      <div className={classNames(styles.content, styles.extended)}>
+        <div className={styles.inline}>
+          <div className={styles.avatar}>
+            <img src={photoUrl} width={62} height={62} alt={`${name} avatar`} />
+          </div>
 
-            <div className={styles.field}>
-              <div>
-                <div className={classNames(styles.inline, styles.title)}>
-                  <Typography as="h1" variant="heading" size="large">
-                    {name}
-                  </Typography>
-                  {Object.keys(social).length > 0 && (
-                    <div className={styles.links}>
-                      <Links
-                        className={styles.links}
-                        data={Object.entries(social)
-                          .filter(([, value]) => value)
-                          .map(([key, value]) => {
-                            const icons = {
-                              xUrl: <RiTwitterXFill />,
-                              instagramUrl: <RiInstagramLine />,
-                              telegramUrl: <RiTelegramFill />,
-                              discordUrl: <RiDiscordFill />,
-                              mediumUrl: <RiMediumFill />,
-                            };
-                            return { icon: icons[key as keyof typeof icons], path: value };
-                          })}
-                      />
-                    </div>
-                  )}
-                </div>
-
-                <div className={styles.description}>
-                  <Typography as="p" variant="body" size="medium" textAlign={isMobile ? "center" : "left"}>
-                    <span dangerouslySetInnerHTML={{ __html: description }} />
-                  </Typography>
-                </div>
+          <div className={styles.field}>
+            <div>
+              <div className={classNames(styles.inline, styles.title)}>
+                <Typography as="h1" variant="heading" size="large">
+                  {name}
+                </Typography>
+                {Object.keys(social).length > 0 && (
+                  <div className={styles.links}>
+                    <Links
+                      className={styles.links}
+                      data={Object.entries(social)
+                        .filter(([, value]) => value)
+                        .map(([key, value]) => {
+                          const icons = {
+                            xUrl: <RiTwitterXFill />,
+                            instagramUrl: <RiInstagramLine />,
+                            telegramUrl: <RiTelegramFill />,
+                            discordUrl: <RiDiscordFill />,
+                            mediumUrl: <RiMediumFill />,
+                          };
+                          return { icon: icons[key as keyof typeof icons], path: value };
+                        })}
+                    />
+                  </div>
+                )}
               </div>
 
-              <div className={styles.actions}>
-                <a href={whitepaperUrl} target={"_blank"}>
-                  <Button
-                    variant="solid"
-                    color="secondary"
-                    caption="Whitepaper"
-                    size="small"
-                    iconLeft={<RiExternalLinkLine />}
-                  />
-                </a>
-                <a href={tokenomicsUrl} target={"_blank"}>
-                  <Button
-                    variant="solid"
-                    color="secondary"
-                    caption="Tokenomics"
-                    size="small"
-                    iconLeft={<RiExternalLinkLine />}
-                  />
-                </a>
-                <a href={litepaperUrl} target={"_blank"}>
-                  <Button
-                    variant="solid"
-                    color="secondary"
-                    caption="Litepaper"
-                    size="small"
-                    iconLeft={<RiExternalLinkLine />}
-                  />
-                </a>
+              <div className={styles.description}>
+                <Typography as="p" variant="body" size="medium" textAlign={isMobile ? "center" : "left"}>
+                  <span dangerouslySetInnerHTML={{ __html: description }} />
+                </Typography>
               </div>
             </div>
+
+            <div className={styles.actions}>
+              <a href={whitepaperUrl} target={"_blank"}>
+                <Button
+                  variant="solid"
+                  color="secondary"
+                  caption="Whitepaper"
+                  size="small"
+                  iconLeft={<RiExternalLinkLine />}
+                />
+              </a>
+              <a href={tokenomicsUrl} target={"_blank"}>
+                <Button
+                  variant="solid"
+                  color="secondary"
+                  caption="Tokenomics"
+                  size="small"
+                  iconLeft={<RiExternalLinkLine />}
+                />
+              </a>
+              <a href={litepaperUrl} target={"_blank"}>
+                <Button
+                  variant="solid"
+                  color="secondary"
+                  caption="Litepaper"
+                  size="small"
+                  iconLeft={<RiExternalLinkLine />}
+                />
+              </a>
+            </div>
           </div>
-          <div className={styles.grid}>
-            <Card className={styles.card}>
-              <DataLabel icon={<RiGlobalLine />} label="Network" value="QUBIC" />
-            </Card>
-            <Card className={styles.card}>
-              <DataLabel
-                icon={<img width={48} height={48} className={styles.tokenImage} src={tokenImageUrl} />}
-                label="Token Name"
-                value={tokenName}
-              />
-            </Card>
-            <Card className={styles.card}>
-              <DataLabel icon={<RiStockLine />} label="Token Price" value={formatPrice(tokenPrice, currency.name, 0)} />
-            </Card>
-            <Card className={styles.card}>
-              <DataLabel icon={<RiCoinsLine />} label="Token Supply" value={formatNumber(tokensSupply ?? 0, 0)} />
-            </Card>
-          </div>
-          <Separator />
         </div>
+        <div className={styles.grid}>
+          <Card className={styles.card}>
+            <DataLabel icon={<RiGlobalLine />} label="Network" value="QUBIC" />
+          </Card>
+          <Card className={styles.card}>
+            <DataLabel
+              icon={<img width={48} height={48} className={styles.tokenImage} src={tokenImageUrl} />}
+              label="Token Name"
+              value={tokenName}
+            />
+          </Card>
+          <Card className={styles.card}>
+            <DataLabel icon={<RiStockLine />} label="Token Price" value={formatPrice(tokenPrice, currency.name, 0)} />
+          </Card>
+          <Card className={styles.card}>
+            <DataLabel icon={<RiCoinsLine />} label="Token Supply" value={formatNumber(tokensSupply ?? 0, 0)} />
+          </Card>
+        </div>
+        <Separator />
       </div>
-    </>
+    </div>
   );
 };
