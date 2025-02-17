@@ -14,9 +14,9 @@ interface LoaderProps {
   readonly variant?: "default" | "full";
 
   /**
-   * The color of the loader, either "orange" or "gray".
+   * The color of the loader, either "green" or "gray" or "inherit".
    */
-  readonly color?: "green" | "gray";
+  readonly color?: "green" | "gray" | "inherit";
 
   /**
    * The size of the loader in pixels.

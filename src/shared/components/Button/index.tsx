@@ -57,7 +57,7 @@ export const Button: React.FC<Readonly<ButtonProps>> = ({
 
     {isLoading && (
       <div className={styles.loader}>
-        <Loader size={22} />
+        <Loader size={22} color={"inherit"} />
       </div>
     )}
   </button>

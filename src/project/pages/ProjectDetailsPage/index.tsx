@@ -17,6 +17,7 @@ import { ErrorPage } from "@/shared/pages/ErrorPage";
 
 import styles from "./ProjectDetailsPage.module.scss";
 import { ProjectHeader } from "../../components/ProjectHeader";
+import { ProjectRegister } from "../../components/ProjectRegister";
 import { ThresholdCalculator } from "../../components/ThresholdCalculator";
 import { useProject } from "../../hooks/useProject";
 import { PROJECT_ROUTES, ProjectTabLabels } from "../../project.constants";
@@ -95,8 +96,48 @@ export const ProjectDetailsPage: React.FC = () => {
     if (!data) return null;
 
     switch (data.state) {
+      case ProjectStates.FUNDING_PHASE_1:
+        return (
+          <ProjectRegister
+            registration={{
+              limitDate: data.startDate,
+              count: 5000,
+            }}
+            user={{
+              tier: {
+                id: 6,
+                name: "Tier 1",
+              },
+              investment: {
+                value: 1000,
+                max: {
+                  value: 1000,
+                  currency: {
+                    name: "USD",
+                  },
+                },
+              },
+              isRegistered: false,
+            }}
+            onClick={() => {}}
+            isLoading={false}
+          />
+        );
+
       case ProjectStates.READY_TO_VOTE:
-        return <ProjectVoting date={data.startDate} votes={[5000, 5533]} />;
+        return (
+          <ProjectVoting
+            votation={{
+              limitDate: data.startDate,
+              count: [5000, 5533],
+            }}
+            user={{
+              vote: undefined,
+            }}
+            onClick={() => {}}
+            isLoading={undefined}
+          />
+        );
 
       case ProjectStates.SENT_TO_REVIEW:
         return <ProjectEvaluation />;

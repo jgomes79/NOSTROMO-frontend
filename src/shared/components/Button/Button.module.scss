@@ -70,7 +70,7 @@
     color: #bbdaa2;
 
     .loader {
-      stroke: #8af827;
+      color: #8af827;
     }
 
     &:not([disabled]):hover {
@@ -88,7 +88,7 @@
     color: #ffbe1f;
     
     .loader {
-      stroke: #ffbe1f;
+      color: #ffbe1f;
     }
 
     &:not([disabled]):hover {
@@ -107,7 +107,7 @@
     color: #ff5555;
 
     .loader {
-      stroke: #ff5555;
+      color: rgb(240, 63, 63);
     }
 
     &:not([disabled]):hover {

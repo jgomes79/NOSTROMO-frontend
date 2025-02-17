@@ -1,3 +1,88 @@
-.layout {
+.section {
+  display: flex;
+  flex-direction: row;
+  gap: 22px;
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
 
+  div[data-label="inner"] {
+    width: 100%;
+  }
+
+  @include respond-to(mobile) {
+    flex-direction: column;
+  }
+
+  @include respond-to(tablet-vertical) {
+    flex-direction: column;
+  }
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 22px;
+}
+
+.actions {
+  display: flex;
+  flex-direction: row;
+  gap: 18px;
+  flex: 1;
+  width: 100%;
+  max-width: 500px;
+
+  button {
+    flex: 1;
+  }
+}
+
+.line {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  h2 {
+    color: $green-03;
+  }
+
+  p {
+    color: $green-04;
+  }
+}
+
+
+.welcome {
+  color: $green-03;
+
+  display: grid;
+  grid-template-columns: 0fr 1fr;
+}
+
+.inline {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 28px;
+
+  @include respond-to(tablet-vertical) {
+    grid-template-columns: 1fr;
+  }
+
+  @include respond-to(mobile) {
+    grid-template-columns: 1fr;
+  }
+
+  &.data {
+    grid-template-columns: 0fr 0fr;
+
+    @include respond-to(tablet-vertical) {
+      grid-template-columns: 1fr;
+    }
+
+    @include respond-to(mobile) {
+      grid-template-columns: 1fr;
+    }
+  }
 }

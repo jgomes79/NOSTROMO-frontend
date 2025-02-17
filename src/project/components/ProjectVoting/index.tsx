@@ -8,6 +8,7 @@ import { Countdown } from "@/shared/components/Countdown";
 import { DataLabel } from "@/shared/components/DataLabel";
 import { Fieldset } from "@/shared/components/Fieldset";
 import { GraphBar } from "@/shared/components/GraphBar";
+import { Separator } from "@/shared/components/Separator";
 import { Typography } from "@/shared/components/Typography";
 
 import styles from "./ProjectVoting.module.scss";
@@ -17,18 +18,24 @@ type Vote = "yes" | "no";
 /**
  * Props for the ProjectVoting component.
  *
- * @property {number[]} [votes] - An optional array of votes, where the first element represents "yes" votes and the second represents "no" votes.
- * @property {"yes" | "no"} [myVote] - An optional property indicating the user's vote.
+ * @property {Object} votation - The voting details for the project.
+ * @property {Date} votation.limitDate - The date by which the voting must be completed.
+ * @property {number[]} votation.count - An array of votes, where the first element represents "yes" votes and the second represents "no" votes.
+ * @property {Object} user - The user details related to voting.
+ * @property {"yes" | "no"} [user.vote] - An optional property indicating the user's vote.
  * @property {Vote} [isLoading] - An optional property indicating the loading state of the user's vote.
  * @property {(vote: Vote) => void} [onClick] - An optional callback function that is called when a vote is clicked.
- * @property {Date} date - The date by which the voting must be completed.
  */
 interface ProjectVotingProps {
-  votes?: number[];
-  myVote?: Vote;
+  votation: {
+    limitDate: Date;
+    count: number[];
+  };
+  user: {
+    vote?: Vote;
+  };
   isLoading?: Vote;
   onClick?: (vote: Vote) => void;
-  date: Date;
 }
 
 /**
@@ -37,7 +44,12 @@ interface ProjectVotingProps {
  * @param {ProjectVotingProps} props - The props for the component.
  * @returns {JSX.Element} The JSX code for the ProjectVoting component.
  */
-export const ProjectVoting: React.FC<ProjectVotingProps> = ({ votes = [0, 0], date, myVote, onClick, isLoading }) => {
+export const ProjectVoting: React.FC<ProjectVotingProps> = ({ votation, user, isLoading, onClick }) => {
+  /**
+   * A record that maps the user's vote to corresponding titles and descriptions.
+   *
+   * @type {Record<Vote, { title: string; color?: string; description: string }>}
+   */
   const literals: Record<Vote, { title: string; color?: string; description: string }> = {
     yes: {
       title: "You have voted in favor of this project",
@@ -49,12 +61,22 @@ export const ProjectVoting: React.FC<ProjectVotingProps> = ({ votes = [0, 0], da
     },
   };
 
+  /**
+   * The default vote message displayed when the user has not voted yet.
+   *
+   * @type {{ title: string; description: string }}
+   */
   const defaultVote = {
     title: "This project is in the voting process",
-    description: `You have until ${format(date, "MMMM do, yyyy 'at' h:mm a")} to vote on this project`,
+    description: `You have until ${format(votation.limitDate, "MMMM do, yyyy 'at' h:mm a")} to vote on this project`,
   };
 
-  const currentVote = myVote ? literals[myVote] : defaultVote;
+  /**
+   * The current vote message based on the user's vote or the default message.
+   *
+   * @type {{ title: string; description: string }}
+   */
+  const currentVote = user.vote ? literals[user.vote] : defaultVote;
 
   return (
     <Fieldset title={"Voting Phase"} className={styles.section}>
@@ -68,13 +90,14 @@ export const ProjectVoting: React.FC<ProjectVotingProps> = ({ votes = [0, 0], da
             {currentVote.description}
           </Typography>
         </div>
-        {!myVote && (
+        {!user.vote && (
           <div className={styles.actions}>
             <Button
               caption="Yes"
               color={"secondary"}
               onClick={() => onClick?.("yes")}
               isLoading={isLoading === "yes"}
+              disabled={!!isLoading}
               iconLeft={<RiEmotionHappyFill size={24} />}
             />
             <Button
@@ -82,21 +105,23 @@ export const ProjectVoting: React.FC<ProjectVotingProps> = ({ votes = [0, 0], da
               color={"red"}
               onClick={() => onClick?.("no")}
               isLoading={isLoading === "no"}
+              disabled={!!isLoading}
               iconLeft={<RiEmotionNormalFill size={24} />}
             />
           </div>
         )}
       </div>
+      <Separator />
 
       <div className={classNames(styles.inline, styles.data)}>
         <DataLabel
           label={"Total Votes"}
           value={formatNumber(
-            votes.reduce((acc, vote) => acc + vote, 0),
+            votation.count.reduce((acc, vote) => acc + vote, 0),
             0,
           )}
         />
-        <Countdown date={date}>
+        <Countdown date={votation.limitDate}>
           {(timeLeft) => (
             <DataLabel
               label={"Time left"}
@@ -107,7 +132,7 @@ export const ProjectVoting: React.FC<ProjectVotingProps> = ({ votes = [0, 0], da
       </div>
 
       <div className={styles.inline}>
-        <GraphBar colors={["green", "red"]} data={votes} />
+        <GraphBar colors={["green", "red"]} data={votation.count} />
       </div>
     </Fieldset>
   );
