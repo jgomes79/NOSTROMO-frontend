@@ -8,7 +8,7 @@
   z-index: 6;
   
   @include respond-to(mobile) {
-    gap: 12px;
+    gap: 22px;
     align-items: center;
   }
 
@@ -42,6 +42,7 @@
   align-items: center;
   justify-content: center;
   gap: 12px;
+
 
   &.green.active {
     color: $green-03;

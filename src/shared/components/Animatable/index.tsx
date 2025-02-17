@@ -7,17 +7,15 @@ import { motion } from "framer-motion";
  */
 interface AnimatableProps {
   /**
-   * The children elements to be rendered inside the component.
+   * The children of the component.
    */
   readonly children: React.ReactNode;
-
   /**
-   * Optional additional class names to apply to the component.
+   * The class name of the component.
    */
   readonly className?: string;
-
   /**
-   * The duration of the animation in seconds.
+   * The duration of the animation.
    */
   readonly duration?: number;
 }

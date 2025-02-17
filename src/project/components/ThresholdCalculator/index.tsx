@@ -11,12 +11,18 @@ import { Project } from "../../project.types";
  * Props interface for the ThresholdCalculator component
  */
 interface ThresholdCalculatorProps {
-  /** The threshold percentage from the Project type */
-  threshold: Project["threshold"];
-  /** The currency object containing currency information */
-  currency: Currency;
-  /** The target amount to raise from the Project type */
-  amountToRaise: Project["amountToRaise"];
+  /**
+   * The threshold percentage for the project
+   */
+  readonly threshold: Project["threshold"];
+  /**
+   * The currency object for display
+   */
+  readonly currency: Currency;
+  /**
+   * The amount to raise for the project
+   */
+  readonly amountToRaise: Project["amountToRaise"];
 }
 
 /**

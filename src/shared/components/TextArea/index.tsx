@@ -11,6 +11,7 @@ import { TagLabel } from "../TagLabel";
  *
  * @extends {React.HTMLProps<HTMLTextAreaElement>}
  * @property {string} label - The label for the textarea.
+ * @property {string} [error] - Optional error message to display.
  */
 interface TextAreaProps extends React.HTMLProps<HTMLTextAreaElement> {
   readonly label: string;

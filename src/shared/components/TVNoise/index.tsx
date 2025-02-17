@@ -4,20 +4,14 @@ import styles from "./TVNoise.module.scss";
 
 /**
  * Props for the TVNoise component.
+ *
+ * @property {React.ReactNode} children - The child elements to be displayed within the TVNoise component.
+ * @property {string} [className] - Optional className for additional styling.
+ * @property {string} [opacity] - The opacity of the noise effect.
  */
 interface TVNoiseProps {
-  /**
-   * The child elements to be displayed within the TVNoise component.
-   */
   readonly children: React.ReactNode;
-  /**
-   * Optional className for additional styling.
-   */
   readonly className?: string;
-
-  /**
-   * The opacity of the noise effect.
-   */
   readonly opacity?: string;
 }
 
@@ -26,8 +20,6 @@ interface TVNoiseProps {
  * and displays any children elements on top of it.
  *
  * @param {TVNoiseProps} props - The props for the TVNoise component.
- * @param {React.ReactNode} props.children - The child elements to be displayed within the TVNoise component.
- * @param {string} [props.className] - Optional className for additional styling.
  * @returns {JSX.Element} The rendered TVNoise component.
  */
 export const TVNoise: React.FC<TVNoiseProps> = ({ children, className, opacity = "0.2" }) => {

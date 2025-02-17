@@ -13,31 +13,26 @@ interface BannerProps {
    * The title of the banner.
    */
   readonly title: string;
-
   /**
    * The description of the banner.
    */
   readonly description: string;
-
   /**
-   * The image URL for the banner.
+   * The URL of the image to display in the banner.
    */
   readonly imageUrl: string;
-
   /**
-   * The button properties for the banner.
+   * The button to display in the banner.
    */
   readonly button: {
     /**
      * The caption of the button.
      */
     caption: string;
-
     /**
-     * The icon to be displayed on the button.
+     * The icon of the button.
      */
     icon: React.ReactNode;
-
     /**
      * The onClick handler for the button.
      */

@@ -5,8 +5,6 @@ import { RiDiscordFill, RiMediumFill, RiTelegramFill, RiTwitterXFill, RiWallet2L
 import { formatPrice } from "@/lib/number";
 import { getRoute } from "@/lib/router";
 import { trimString } from "@/lib/string";
-import { PROJECT_ROUTES } from "@/project/project.constants";
-import { ProjectFormTabs } from "@/project/project.types";
 import { Button } from "@/shared/components/Button";
 import { Countdown } from "@/shared/components/Countdown";
 import { Links } from "@/shared/components/Links";
@@ -14,6 +12,8 @@ import { Typography } from "@/shared/components/Typography";
 import useResponsive from "@/shared/hooks/useResponsive";
 
 import styles from "./ProjectOverview.module.scss";
+import { PROJECT_ROUTES } from "../../project.constants";
+import { ProjectFormTabs } from "../../project.types";
 
 /**
  * Props for the ProjectOverview component.
@@ -25,12 +25,12 @@ interface ProjectOverviewProps {
   readonly name: string;
 
   /**
-   * The slug of the project.
+   * The unique identifier for the project.
    */
   readonly slug: string;
 
   /**
-   * The description of the project.
+   * A brief description of the project.
    */
   readonly description: string;
 
@@ -40,27 +40,27 @@ interface ProjectOverviewProps {
   readonly photoUrl: string;
 
   /**
-   * The URL of the project's banner.
+   * The URL of the project's banner image.
    */
   readonly bannerUrl: string;
 
   /**
-   * The fundraising goal of the project.
+   * The fundraising goal for the project.
    */
   readonly fundraisingGoal: number;
 
   /**
-   * The price of the project's token.
+   * The price of the token associated with the project.
    */
   readonly tokenPrice: number;
 
   /**
-   * The currency of the project's token price.
+   * The currency in which the fundraising goal is set.
    */
   readonly currency: string;
 
   /**
-   * The start date of the project.
+   * The date when the project is scheduled to start or has started.
    */
   readonly date: Date;
 }

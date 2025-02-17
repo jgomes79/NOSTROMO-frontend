@@ -6,15 +6,42 @@ import styles from "./Button.module.scss";
 import { Loader } from "../Loader";
 import { Typography } from "../Typography";
 
+/**
+ * Props for the Button component.
+ */
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  type?: React.ButtonHTMLAttributes<HTMLButtonElement>["type"];
-  caption: string;
-  isLoading?: boolean;
-  iconLeft?: React.ReactNode;
-  iconRight?: React.ReactNode;
-  variant?: "solid" | "outline" | "ghost";
-  size?: "small" | "medium" | "large";
-  color?: "primary" | "secondary" | "yellow" | "red";
+  /**
+   * Indicates if the button is in a loading state.
+   */
+  readonly isLoading?: boolean;
+  /**
+   * An optional icon to display on the left side of the button.
+   */
+  readonly iconLeft?: React.ReactNode;
+  /**
+   * An optional icon to display on the right side of the button.
+   */
+  readonly iconRight?: React.ReactNode;
+  /**
+   * The caption of the button.
+   */
+  readonly caption: string;
+  /**
+   * The color variant of the button.
+   */
+  readonly color?: "primary" | "secondary" | "yellow" | "red";
+  /**
+   * The size variant of the button.
+   */
+  readonly size?: "small" | "medium" | "large";
+  /**
+   * The styling variant of the button.
+   */
+  readonly variant?: "solid" | "outline" | "ghost";
+  /**
+   * The type of the button.
+   */
+  readonly type?: React.ButtonHTMLAttributes<HTMLButtonElement>["type"];
 }
 
 /**

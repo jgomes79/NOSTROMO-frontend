@@ -122,7 +122,7 @@ export const ProjectHeader: React.FC<ProjectHeaderProps> = ({
                 <Typography as="h1" variant="heading" size="large">
                   {name}
                 </Typography>
-                {Object.keys(social).length > 0 && (
+                {Object.keys(social).length > 0 && Object.values(social).some((value) => value === undefined) && (
                   <div className={styles.links}>
                     <Links
                       className={styles.links}

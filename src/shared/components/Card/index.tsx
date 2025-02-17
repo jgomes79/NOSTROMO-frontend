@@ -5,23 +5,18 @@ import { Typography } from "../Typography";
 
 /**
  * Props for the Card component.
- *
- * @property {string} [title] - The optional title of the card.
- * @property {React.ReactNode} children - The content to be displayed inside the card.
  */
 interface CardProps {
   /**
-   * The optional title of the card.
+   * The title of the card.
    */
   readonly title?: string;
-
   /**
-   * The content to be displayed inside the card.
+   * The children of the card.
    */
   readonly children: React.ReactNode;
-
   /**
-   * The className to be applied to the card.
+   * The class name of the card.
    */
   readonly className?: string;
 }

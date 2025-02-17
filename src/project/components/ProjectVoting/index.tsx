@@ -17,25 +17,38 @@ type Vote = "yes" | "no";
 
 /**
  * Props for the ProjectVoting component.
- *
- * @property {Object} votation - The voting details for the project.
- * @property {Date} votation.limitDate - The date by which the voting must be completed.
- * @property {number[]} votation.count - An array of votes, where the first element represents "yes" votes and the second represents "no" votes.
- * @property {Object} user - The user details related to voting.
- * @property {"yes" | "no"} [user.vote] - An optional property indicating the user's vote.
- * @property {Vote} [isLoading] - An optional property indicating the loading state of the user's vote.
- * @property {(vote: Vote) => void} [onClick] - An optional callback function that is called when a vote is clicked.
  */
 interface ProjectVotingProps {
-  votation: {
-    limitDate: Date;
-    count: number[];
+  /**
+   * The voting details for the project.
+   */
+  readonly votation: {
+    /**
+     * The date by which the voting must be completed.
+     */
+    readonly limitDate: Date;
+    /**
+     * An array of votes, where the first element represents "yes" votes and the second represents "no" votes.
+     */
+    readonly count: number[];
   };
-  user: {
-    vote?: Vote;
+  /**
+   * The user details related to voting.
+   */
+  readonly user: {
+    /**
+     * The user's vote.
+     */
+    readonly vote?: Vote;
   };
-  isLoading?: Vote;
-  onClick?: (vote: Vote) => void;
+  /**
+   * The loading state of the user's vote.
+   */
+  readonly isLoading?: Vote;
+  /**
+   * The callback function that is called when a vote is clicked.
+   */
+  readonly onClick?: (vote: Vote) => void;
 }
 
 /**

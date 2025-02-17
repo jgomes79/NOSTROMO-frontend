@@ -12,13 +12,16 @@ import { ProjectList } from "../ProjectList";
 
 /**
  * Interface defining the props for the ProjectsListByWallet component
- *
- * @interface ProjectsListByWalletProps
- * @property {User["wallet"]} walletAddress - The Ethereum wallet address used to filter projects
- * @property {number} [limit=4] - Optional maximum number of projects to display per page
  */
 interface ProjectsListByWalletProps {
+  /**
+   * The Ethereum wallet address used to filter projects
+   */
   readonly walletAddress: User["wallet"];
+
+  /**
+   * Optional maximum number of projects to display per page
+   */
   readonly limit?: number;
 }
 

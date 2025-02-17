@@ -14,11 +14,9 @@ import { IconButton } from "../IconButton";
 
 /**
  * Props for the MobileMenu component.
+ * @property {() => void} onClose - Function to be called when the mobile menu should be closed.
  */
 interface MobileMenuProps {
-  /**
-   * Function to be called when the mobile menu should be closed.
-   */
   readonly onClose: () => void;
 }
 

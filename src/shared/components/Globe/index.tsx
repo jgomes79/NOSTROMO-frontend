@@ -2,6 +2,12 @@ import React from "react";
 
 import styles from "./Globe.module.scss";
 
+/**
+ * Globe component that renders a graphical representation of a globe
+ * with country outlines and a stylized globe design.
+ *
+ * @returns {JSX.Element} The rendered Globe component.
+ */
 export const Globe: React.FC = () => {
   return (
     <div className={styles.main}>

@@ -6,23 +6,14 @@ import styles from "./Slider.module.scss";
 
 /**
  * Props for the Slider component.
+ *
+ * @property {React.ReactNode[]} components - An array of React nodes to be displayed in the slider.
+ * @property {(index: number) => void} onMove - A callback function to be called with the current index whenever the slider moves.
+ * @property {number} [delay] - The delay in milliseconds between each auto-advance.
  */
 interface SliderProps {
-  /**
-   * An array of React nodes to be displayed in the slider.
-   */
   readonly components: React.ReactNode[];
-
-  /**
-   * A callback function to be called with the current index whenever the slider moves.
-   *
-   * @param index - The current index of the slider.
-   */
   readonly onMove: (index: number) => void;
-
-  /**
-   * The delay in milliseconds between each auto-advance.
-   */
   readonly delay?: number;
 }
 

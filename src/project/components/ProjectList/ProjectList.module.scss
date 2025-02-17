@@ -5,6 +5,7 @@
 
   @include respond-to(mobile) {
     grid-template-columns: 1fr;
+    gap: 22px;
   }
 
   @include respond-to(tablet-vertical) {

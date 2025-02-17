@@ -9,14 +9,16 @@ type BarColor = "green" | "red";
 
 /**
  * Props for the GraphBar component.
- *
- * @property {BarVariant} [variant] - The orientation of the bar, either horizontal or vertical. Defaults to horizontal.
- * @property {BarColor[]} colors - An array of colors corresponding to each bar.
- * @property {number[]} data - An array of numerical values representing the height or length of each bar.
  */
 interface GraphBarProps {
-  colors: BarColor[];
-  data: number[];
+  /**
+   * The colors of the graph bar.
+   */
+  readonly colors: BarColor[];
+  /**
+   * The data of the graph bar.
+   */
+  readonly data: number[];
 }
 
 /**

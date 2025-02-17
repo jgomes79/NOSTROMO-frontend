@@ -8,15 +8,19 @@ import { ProjectCard } from "../ProjectCard";
 /**
  * Props interface for the ProjectList component
  * @interface ProjectListProps
+ * @property {number} page - The current page number.
+ * @property {boolean} isLoading - Indicates if the component is in a loading state.
+ * @property {Project[]} projects - An array of projects to display.
+ * @property {number} total - The total number of projects available.
  */
 interface ProjectListProps {
-  /** Current page number being displayed */
+  /** The current page number. */
   readonly page: number;
-  /** Loading state indicator */
+  /** Indicates if the component is in a loading state. */
   readonly isLoading: boolean;
-  /** Array of project data to display */
+  /** An array of projects to display. */
   readonly projects: Project[];
-  /** Total count of available projects */
+  /** The total number of projects available. */
   readonly total: number;
 }
 

@@ -71,6 +71,13 @@ $avatar-size: 128px;
   gap: 12px;
   margin-left: auto;
   color: $green-03;
+
+  @include respond-to(mobile) {
+    flex-direction: column;
+    margin-left: 0;
+    align-items: flex-start;
+    gap: 0;
+  }
 }
 
 .avatar {
@@ -107,11 +114,19 @@ $avatar-size: 128px;
   &.title {
     grid-template-columns: 1fr 0fr;
     align-items: center;
+
+    @include respond-to(mobile) {
+      grid-template-columns: 1fr;
+    }
   }
 }
 
 .description {
   color: $green-04;
+
+  @include respond-to(mobile) {
+    padding: 22px 0;
+  }
 }
 
 .actions {
@@ -119,6 +134,15 @@ $avatar-size: 128px;
   flex-direction: row;
   gap: 18px;
   align-items: center;
+
+  @include respond-to(mobile) {
+    flex-direction: column;
+    gap: 8px;
+
+    a, button {
+      width: 100%;
+    }
+  }
 }
 
 .field {
@@ -132,6 +156,10 @@ $avatar-size: 128px;
   flex-direction: row;
   gap: 12px;
   align-items: center;
+
+  @include respond-to(mobile) {
+    flex-direction: column;
+  }
 
   a {
     color: $green-03;

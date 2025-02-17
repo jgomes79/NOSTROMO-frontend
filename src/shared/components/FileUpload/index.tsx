@@ -18,64 +18,57 @@ interface FileUploadProps {
    * The name of the file upload.
    */
   readonly name: string;
-
   /**
-   * The icon to display in the upload area.
+   * The icon of the file upload.
    */
   readonly icon: React.ReactNode;
-
   /**
-   * The title text to display in the upload area.
+   * The title of the file upload.
    */
   readonly title: string;
-
   /**
-   * The description text to display in the upload area.
+   * The description of the file upload.
    */
   readonly description?: string;
-
   /**
-   * The labels to display in the upload area.
+   * The attachment labels of the file upload.
    */
   readonly attachmentLabels?: {
+    /**
+     * The icon of the attachment labels.
+     */
     icon: React.ReactNode;
+    /**
+     * The title of the attachment labels.
+     */
     title: string;
+    /**
+     * The description of the attachment labels.
+     */
     description?: string;
   };
-
   /**
-   * The error message to display.
+   * The error of the file upload.
    */
   readonly error?: string;
-
   /**
-   * The current value of the uploaded file.
+   * The value of the file upload.
    */
   readonly value: Value;
-
   /**
-   * The type of files to accept.
+   * The accepted formats of the file upload.
    */
   readonly accept: "images" | "documents";
-
   /**
-   * Additional class names for styling.
+   * The class name of the file upload.
    */
   readonly className?: string;
-
   /**
-   * A callback function triggered when a file is dropped.
-   *
-   * @param {Value} file - The file that was dropped.
+   * The onChange handler of the file upload.
    */
   readonly onChange: (file: Value) => void;
-
   /**
-   * A function to render the uploaded file.
-   *
-   * @param {Value} file - The file that was uploaded.
-   * @param {function} getUrl - A function to get the URL of a file.
-   * @returns {React.ReactNode} The rendered file.
+   * The onRender handler of the file upload.
    */
   readonly onRender?: (file: Value, getUrl: (file: Value) => string) => React.ReactNode;
 }
@@ -192,6 +185,7 @@ export const FileUpload = React.forwardRef<HTMLDivElement, FileUploadProps>(
         </div>
       </>
     );
+
     /**
      * Renders the input component based on the current value and provided props.
      *

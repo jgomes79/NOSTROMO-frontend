@@ -50,26 +50,24 @@ export const ProjectEvaluation: React.FC = () => {
   };
 
   return (
-    <Card>
-      <div className={styles.layout}>
-        <Loader size={52} />
-        <div className={styles.field}>
-          <Typography as={"h2"} variant={"heading"} size={"medium"} textAlign={"center"}>
-            {literals[mode].title}
-          </Typography>
-          <Typography as={"h2"} variant={"body"} size={"medium"} textAlign={"center"} className={styles.description}>
-            {literals[mode].description}
-          </Typography>
-        </div>
-
-        {isAdmin && (
-          <div className={styles.actions}>
-            <Button caption="Accept" color={"secondary"} onClick={handleAccept} />
-            <Button caption="Request More Information" color={"yellow"} onClick={handleRequestMoreInformation} />
-            <Button caption="Reject" color={"red"} onClick={handleReject} />
-          </div>
-        )}
+    <Card className={styles.layout}>
+      <Loader size={52} />
+      <div className={styles.field}>
+        <Typography as={"h2"} variant={"heading"} size={"medium"} textAlign={"center"}>
+          {literals[mode].title}
+        </Typography>
+        <Typography as={"h2"} variant={"body"} size={"medium"} textAlign={"center"} className={styles.description}>
+          {literals[mode].description}
+        </Typography>
       </div>
+
+      {isAdmin && (
+        <div className={styles.actions}>
+          <Button caption="Accept" color={"secondary"} onClick={handleAccept} />
+          <Button caption="Request info" color={"yellow"} onClick={handleRequestMoreInformation} />
+          <Button caption="Reject" color={"red"} onClick={handleReject} />
+        </div>
+      )}
     </Card>
   );
 };

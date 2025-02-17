@@ -3,20 +3,22 @@ import classNames from "clsx";
 import styles from "./Fieldset.module.scss";
 import { Typography } from "../Typography";
 
+/**
+ * Props for the Fieldset component.
+ */
 interface FieldsetProps {
   /**
    * The title of the fieldset.
    */
-  title: string;
+  readonly title: string;
   /**
-   * The content to be rendered inside the fieldset.
+   * The children of the fieldset.
    */
-  children: React.ReactNode;
-
+  readonly children: React.ReactNode;
   /**
-   * Additional CSS classes for the fieldset.
+   * The class name of the fieldset.
    */
-  className?: string;
+  readonly className?: string;
 }
 
 /**

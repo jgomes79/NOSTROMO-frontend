@@ -13,10 +13,6 @@
   @include respond-to(mobile) {
     flex-direction: column;
   }
-
-  @include respond-to(tablet-vertical) {
-    flex-direction: column;
-  }
 }
 
 .field {
@@ -53,36 +49,19 @@
   }
 }
 
-
 .welcome {
   color: $green-03;
-
   display: grid;
   grid-template-columns: 0fr 1fr;
+
+  @include respond-to(mobile) {
+    grid-template-columns: 1fr;
+    place-items: center;
+  }
 }
 
 .inline {
   display: grid;
   grid-template-columns: 1fr;
   gap: 28px;
-
-  @include respond-to(tablet-vertical) {
-    grid-template-columns: 1fr;
-  }
-
-  @include respond-to(mobile) {
-    grid-template-columns: 1fr;
-  }
-
-  &.data {
-    grid-template-columns: 0fr 0fr;
-
-    @include respond-to(tablet-vertical) {
-      grid-template-columns: 1fr;
-    }
-
-    @include respond-to(mobile) {
-      grid-template-columns: 1fr;
-    }
-  }
 }

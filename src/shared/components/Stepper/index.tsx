@@ -6,28 +6,23 @@ import { Typography } from "../Typography";
 
 /**
  * Represents a step in the stepper component.
+ *
+ * @property {React.ReactNode} icon - The icon to be displayed for the step.
+ * @property {string} title - The title of the step.
+ * @property {string} description - The description of the step.
  */
 type Step = {
-  /**
-   * The icon to be displayed for the step.
-   */
   readonly icon: React.ReactNode;
-
-  /**
-   * The title of the step.
-   */
   readonly title: string;
-
-  /**
-   * The description of the step.
-   */
   readonly description: string;
 };
 
+/**
+ * Props for the Stepper component.
+ *
+ * @property {Step[]} steps - The list of steps.
+ */
 interface StepperProps {
-  /**
-   * The list of steps.
-   */
   readonly steps: Step[];
 }
 

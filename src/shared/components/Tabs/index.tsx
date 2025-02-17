@@ -6,59 +6,32 @@ import useResponsive from "@/shared/hooks/useResponsive";
 
 import styles from "./Tabs.module.scss";
 import { Typography, TypographyProps } from "../Typography";
+/**
+ * Props for the Tabs component.
+ *
+ * @template T - The type of the tab ID.
+ * @property {("green" | "yellow")} [color] - The color theme of the tabs. Default is "green".
+ * @property {Tab<T>[]} tabs - An array of tab objects.
+ * @property {T} activeId - The ID of the active tab.
+ * @property {(tabId: T) => void} [onChange] - Optional callback function that is called when a tab is changed.
+ * @property {React.ReactNode} [onRender] - The content to render for the active tab.
+ * @property {string} [itemClassName] - The class name for the tabs container.
+ * @property {TypographyProps["size"]} [size] - The size of the tabs. Default is "medium".
+ */
+interface TabsProps<T> {
+  readonly color?: "green" | "yellow";
+  readonly tabs: Tab<T>[];
+  readonly activeId: T;
+  readonly onChange?: (tabId: T) => void;
+  readonly onRender?: React.ReactNode;
+  readonly itemClassName?: string;
+  readonly size?: TypographyProps["size"];
+}
 
 interface Tab<T> {
   id: T;
   label: string;
   iconLeft?: React.ReactNode;
-}
-
-/**
- * Props for the Tabs component.
- *
- * @template T - The type of the tab ID.
- */
-interface TabsProps<T> {
-  /**
-   * The color theme of the tabs.
-   * @default green
-   */
-  readonly color?: "green" | "yellow";
-
-  /**
-   * An array of tab objects.
-   */
-  readonly tabs: Tab<T>[];
-
-  /**
-   * The ID of the active tab.
-   */
-  readonly activeId: T;
-
-  /**
-   * Optional callback function that is called when a tab is changed.
-   *
-   * @param {T} tabId - The ID of the selected tab.
-   */
-  readonly onChange?: (tabId: T) => void;
-
-  /**
-   * The content to render for the active tab.
-   *
-   * @type {React.ReactNode}
-   */
-  readonly onRender?: React.ReactNode;
-
-  /**
-   * The class name for the tabs container.
-   */
-  readonly itemClassName?: string;
-
-  /**
-   * The size of the tabs.
-   * @default "medium"
-   */
-  readonly size?: TypographyProps["size"];
 }
 
 export const Tabs = <T,>({

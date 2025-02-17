@@ -6,34 +6,25 @@ import styles from "./Loader.module.scss";
 
 /**
  * Props for the Loader component.
+ *
+ * @param {Object} props - The properties for the Loader component.
+ * @param {"default" | "full"} [props.variant="default"] - The visual style variant of the loader.
+ * @param {"green" | "gray" | "inherit"} [props.color="green"] - The color of the loader.
+ * @param {number} [props.size=42] - The size of the loader in pixels.
+ * @param {string} [props.className] - Additional class names to apply to the loader.
  */
 interface LoaderProps {
-  /**
-   * The visual style variant of the loader, either "default" or "full".
-   */
   readonly variant?: "default" | "full";
-
-  /**
-   * The color of the loader, either "green" or "gray" or "inherit".
-   */
   readonly color?: "green" | "gray" | "inherit";
-
-  /**
-   * The size of the loader in pixels.
-   */
   readonly size?: number;
-
-  /**
-   * Additional class names to apply to the loader.
-   */
   readonly className?: string;
 }
 
 /**
  * Loader component that displays a loading animation.
  *
- * @param props - The properties passed to the Loader component.
- * @returns The Loader component with specified variant and size.
+ * @param {LoaderProps} props - The properties passed to the Loader component.
+ * @returns {JSX.Element} The Loader component with specified variant and size.
  */
 export const Loader: React.FC<LoaderProps> = ({ color = "green", variant = "default", size = 42, className }) => (
   <div className={classNames(styles[variant], styles[color], className)}>

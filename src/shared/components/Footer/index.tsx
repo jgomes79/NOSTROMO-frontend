@@ -9,6 +9,12 @@ import { Links } from "../../components/Links";
 import { Typography } from "../../components/Typography";
 import { Separator } from "../Separator";
 
+/**
+ * Footer component that displays the company branding, navigation links,
+ * and social media links.
+ *
+ * @returns {JSX.Element} The rendered Footer component.
+ */
 export const Footer: React.FC = () => {
   return (
     <>

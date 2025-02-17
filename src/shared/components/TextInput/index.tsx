@@ -9,36 +9,20 @@ import { Typography } from "../Typography";
 
 /**
  * Props for the TextInput component.
+ *
+ * @property {string} label - The label for the text input.
+ * @property {React.ReactNode} [icon] - The optional icon to display inside the text input.
+ * @property {string} [symbol] - The optional symbol to display inside the text input.
+ * @property {string} [description] - The optional description for the text input.
+ * @property {string} [error] - The optional error message for the text input.
+ * @property {boolean} [upperCase] - Whether to convert the input value to uppercase.
  */
 interface TextInputProps extends React.HTMLProps<HTMLInputElement> {
-  /**
-   * The label for the text input.
-   */
   readonly label: string;
-
-  /**
-   * The optional icon to display inside the text input.
-   */
   readonly icon?: React.ReactNode;
-
-  /**
-   * The optional symbol to display inside the text input.
-   */
   readonly symbol?: string;
-
-  /**
-   * The optional description for the text input.
-   */
   readonly description?: string;
-
-  /**
-   * The optional error message for the text input.
-   */
   readonly error?: string;
-
-  /**
-   * Whether to convert the input value to uppercase.
-   */
   readonly upperCase?: boolean;
 }
 

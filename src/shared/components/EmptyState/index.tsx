@@ -10,21 +10,30 @@ import { Typography } from "../Typography";
  */
 interface EmptyStateProps {
   /**
-   * The title to display in the empty state.
+   * The title of the empty state.
    */
   readonly title: string;
 
   /**
-   * The description to display in the empty state.
+   * The description of the empty state.
    */
   readonly description: string;
 
   /**
-   * Optional action element to display in the empty state.
+   * The action of the empty state.
    */
   readonly action?: React.ReactNode;
 }
 
+/**
+ * EmptyState component that displays a message when there is no data available.
+ *
+ * @param {EmptyStateProps} props - The props for the EmptyState component.
+ * @param {string} props.title - The title to be displayed in the empty state.
+ * @param {string} props.description - The description to provide more context about the empty state.
+ * @param {React.ReactNode} [props.action] - Optional action element, such as a button, to be displayed.
+ * @returns {JSX.Element} The rendered EmptyState component.
+ */
 export const EmptyState: React.FC<EmptyStateProps> = ({ title, description, action }) => {
   return (
     <div className={styles.layout}>

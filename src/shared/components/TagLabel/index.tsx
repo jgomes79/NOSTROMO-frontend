@@ -7,30 +7,21 @@ import { Typography } from "../Typography";
 
 /**
  * Props for the TagLabel component.
+ *
+ * @property {React.ReactNode} [icon] - Optional icon to be displayed alongside the label.
+ * @property {string} text - Text to be displayed as the label.
+ * @property {"yellow" | "green" | "red"} [color] - Color of the label. Can be "yellow", "green", or "red". Defaults to "green".
  */
 interface TagLabelProps {
-  /**
-   * Optional icon to be displayed alongside the label.
-   */
   readonly icon?: React.ReactNode;
-
-  /**
-   * Text to be displayed as the label.
-   */
   readonly text: string;
-
-  /**
-   * Color of the label. Can be "yellow", "green", or "red".
-   */
   readonly color?: "yellow" | "green" | "red";
 }
 
 /**
  * TagLabel component.
  *
- * @param icon - Optional icon to be displayed alongside the label.
- * @param text - Text to be displayed as the label.
- * @param color - Color of the label. Defaults to "green".
+ * @param {TagLabelProps} props - The properties for the TagLabel component.
  * @returns A JSX element representing the tag label.
  */
 export const TagLabel: React.FC<TagLabelProps> = ({ icon, text, color = "green" }) => {

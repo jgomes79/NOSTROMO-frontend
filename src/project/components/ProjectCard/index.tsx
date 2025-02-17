@@ -19,52 +19,52 @@ interface ProjectCardProps {
   /**
    * The unique identifier for the project.
    */
-  slug: string;
+  readonly slug: string;
 
   /**
    * The title of the project.
    */
-  title: string;
+  readonly title: string;
 
   /**
    * A brief description of the project.
    */
-  description: string;
+  readonly description: string;
 
   /**
    * The URL of the project's photo.
    */
-  photoUrl: string;
+  readonly photoUrl: string;
 
   /**
    * The URL of the project's banner image.
    */
-  bannerUrl: string;
+  readonly bannerUrl: string;
 
   /**
-   * The fundraising goal amount for the project.
+   * The fundraising goal for the project.
    */
-  fundraisingGoal: number;
+  readonly fundraisingGoal: number;
 
   /**
-   * The price of the project's token.
+   * The price of the token associated with the project.
    */
-  tokenPrice: number;
+  readonly tokenPrice: number;
 
   /**
-   * The currency in which the fundraising goal and token price are denominated.
+   * The currency in which the fundraising goal is set.
    */
-  currency: string;
+  readonly currency: string;
 
   /**
-   * The date when the project registration ends.
+   * The date when the project is scheduled to start or has started.
    */
-  date: Date;
+  readonly date: Date;
 
   /**
-   * Project state
+   * The current state of the project.
    */
-  state: ProjectStates;
+  readonly state: ProjectStates;
 }
 
 /**

@@ -4,53 +4,24 @@ import classNames from "clsx";
 
 import styles from "./Typography.module.scss";
 
+/**
+ * Props for the Typography component.
+ *
+ * @property {("heading" | "body" | "label")} [variant] - Specifies the visual style of the text.
+ * @property {("xxlarge" | "xlarge" | "large" | "medium" | "small" | "xsmall")} [size] - Specifies the size of the text.
+ * @property {CSSProperties["textTransform"]} [textTransform] - Specifies the text transformation.
+ * @property {React.ReactNode | string | number} children - The content to be rendered inside the Typography component.
+ * @property {keyof JSX.IntrinsicElements} [as] - The HTML tag or React component to render. Defaults to 'span'.
+ * @property {CSSProperties["textAlign"]} [textAlign] - Sets the text alignment. Defaults to 'left'.
+ * @property {string} [className] - Additional CSS class names to apply to the component.
+ */
 export interface TypographyProps {
-  /**
-   * Specifies the visual style of the text.
-   * - 'heading': For headings.
-   * - 'body': For standard body text.
-   * - 'label': For label text.
-   */
   readonly variant?: "heading" | "body" | "label";
-
-  /**
-   * Specifies the size of the text.
-   * - 'xxlarge': Extra large text.
-   * - 'xlarge': X-large text.
-   * - 'large': Large text.
-   * - 'medium': Medium text (default).
-   * - 'small': Small text.
-   * - 'xsmall': Extra small text.
-   */
   readonly size?: "xxlarge" | "xlarge" | "large" | "medium" | "small" | "xsmall";
-
-  /**
-   * Specifies the text transformation.
-   * - 'none': No transformation (default).
-   * - 'uppercase': Transform text to uppercase.
-   * - 'lowercase': Transform text to lowercase.
-   * - 'capitalize': Capitalize first letter of each word.
-   */
   readonly textTransform?: CSSProperties["textTransform"];
-
-  /**
-   * The content to be rendered inside the Typography component.
-   */
   readonly children: React.ReactNode | string | number;
-
-  /**
-   * The HTML tag or React component to render. Defaults to 'span'.
-   */
   readonly as?: keyof JSX.IntrinsicElements;
-
-  /**
-   * Sets the text alignment. Defaults to 'left'.
-   */
   readonly textAlign?: CSSProperties["textAlign"];
-
-  /**
-   * Additional CSS class names to apply to the component.
-   */
   readonly className?: string;
 }
 

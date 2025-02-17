@@ -1,10 +1,23 @@
 import React, { useEffect, useState } from "react";
 
+/**
+ * Props for the Countdown component.
+ */
 interface CountdownProps {
+  /**
+   * The target date for the countdown.
+   */
   readonly date: Date;
+  /**
+   * A function that receives the time left and returns a JSX element.
+   */
   readonly children: (timeLeft: { days: number; hours: number; minutes: number; seconds: number }) => JSX.Element;
 }
 
+/**
+ * Countdown component that calculates the time left until a specified date.
+ *
+ */
 export const Countdown: React.FC<CountdownProps> = ({ date, children }) => {
   const calculateTimeLeft = () => {
     const difference = +new Date(date) - +new Date();

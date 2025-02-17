@@ -4,26 +4,18 @@ import classNames from "clsx";
 
 import styles from "./SectionIndicator.module.scss";
 
+/**
+ * Props for the SectionIndicator component.
+ *
+ * @property {("vertical" | "horizontal")} [orientation] - The orientation of the stepper, either "vertical" or "horizontal".
+ * @property {number} step - The current step number.
+ * @property {string[]} steps - The list of steps.
+ * @property {(index: number) => void} [onClick] - The callback function that is called when a step is clicked.
+ */
 interface SectionIndicatorProps {
-  /**
-   * The orientation of the stepper.
-   * It can be either "vertical" or "horizontal".
-   */
   readonly orientation?: "vertical" | "horizontal";
-
-  /**
-   * The current step number.
-   */
   readonly step: number;
-
-  /**
-   * The list of steps.
-   */
   readonly steps: string[];
-
-  /**
-   * The callback function that is called when a step is clicked.
-   */
   readonly onClick?: (index: number) => void;
 }
 

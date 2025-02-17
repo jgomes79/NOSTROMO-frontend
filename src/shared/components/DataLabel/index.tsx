@@ -8,17 +8,15 @@ import { Typography } from "../Typography";
  */
 interface DataLabelProps {
   /**
-   * The label to display.
+   * The label of the data label.
    */
   readonly label: string;
-
   /**
-   * The value to display.
+   * The value of the data label.
    */
   readonly value: string;
-
   /**
-   * The icon to display.
+   * The icon of the data label.
    */
   readonly icon?: React.ReactNode;
 }

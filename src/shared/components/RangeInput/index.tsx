@@ -5,49 +5,24 @@ import { Typography } from "../Typography";
 
 /**
  * Props for the RangeInput component.
+ *
+ * @property {number} [step=1] - The step value for the range input, determining the intervals between selectable values.
+ * @property {string} label - The label for the range input, describing its purpose.
+ * @property {string} [description] - An optional description providing additional information about the range input.
+ * @property {string | number} min - The minimum value for the range input.
+ * @property {string | number} max - The maximum value for the range input.
+ * @property {(value: string | number) => React.ReactNode} [renderValue] - A function that renders the value of the range input.
+ * @property {string | number} [value] - The controlled value of the range input.
+ * @property {string | number} [defaultValue] - The default value of the range input for uncontrolled usage.
  */
 interface RangeInputProps extends Omit<React.HTMLProps<HTMLInputElement>, "value" | "defaultValue"> {
-  /**
-   * The step value for the range input, which determines the intervals between selectable values.
-   * @default 1
-   */
   readonly step?: number;
-
-  /**
-   * The label for the range input, which describes its purpose.
-   */
   readonly label: string;
-
-  /**
-   * An optional description providing additional information about the range input.
-   */
   readonly description?: string;
-
-  /**
-   * The minimum value for the range input.
-   * @default 0
-   */
   readonly min: string | number;
-
-  /**
-   * The maximum value for the range input.
-   * @default 100
-   */
   readonly max: string | number;
-
-  /**
-   * A function that renders the value of the range input.
-   */
   readonly renderValue?: (value: string | number) => React.ReactNode;
-
-  /**
-   * The controlled value of the range input.
-   */
   readonly value?: string | number;
-
-  /**
-   * The default value of the range input for uncontrolled usage.
-   */
   readonly defaultValue?: string | number;
 }
 

@@ -6,23 +6,16 @@ import styles from "./ErrorPage.module.scss";
 
 /**
  * Props for the ErrorPage component.
+ *
+ * @property {string | React.ReactNode} [code] - Optional error code to display.
+ * @property {string} title - Title of the error page.
+ * @property {string} description - Description of the error.
+ * @property {React.ReactNode[]} [actions] - Optional actions to be displayed on the error page.
  */
 interface ErrorPageProps {
-  /**
-   * Optional error code to display.
-   */
   readonly code?: string | React.ReactNode;
-  /**
-   * Title of the error page.
-   */
   readonly title: string;
-  /**
-   * Description of the error.
-   */
   readonly description: string;
-  /**
-   * Optional actions to be displayed on the error page.
-   */
   readonly actions?: React.ReactNode[];
 }
 

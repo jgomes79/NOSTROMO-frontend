@@ -8,9 +8,7 @@ import styles from "./Separator.module.scss";
  * @property {string} [className] - The optional className to be applied to the separator.
  */
 interface SeparatorProps {
-  /**
-   * The optional className to be applied to the separator.
-   */
+  /** The optional className to be applied to the separator. */
   readonly className?: string;
 }
 
@@ -19,6 +17,7 @@ interface SeparatorProps {
  *
  * This component renders a horizontal separator line with a gradient background.
  *
+ * @param {SeparatorProps} props - The properties for the Separator component.
  * @returns {JSX.Element} The rendered separator component.
  */
 export const Separator: React.FC<SeparatorProps> = ({ className }) => {

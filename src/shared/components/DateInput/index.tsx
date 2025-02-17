@@ -15,43 +15,34 @@ import "react-datepicker/dist/react-datepicker.css";
  */
 interface DateInputProps {
   /**
-   * The name of the input field.
+   * The name of the date input.
    */
   readonly name: string;
-
   /**
-   * The label for the input field.
+   * The label of the date input.
    */
   readonly label: string;
-
   /**
-   * The placeholder text for the input field.
+   * The placeholder of the date input.
    */
   readonly placeholder?: string;
-
   /**
-   * A description for the input field.
+   * The description of the date input.
    */
   readonly description?: string;
-
   /**
-   * The currently selected date value.
+   * The value of the date input.
    */
   readonly value: Date;
-
   /**
-   * Callback function to handle date changes.
-   *
-   * @param date - The new date selected or null if the date is cleared.
-   * @param event - The event that triggered the change, if applicable.
+   * The onChange handler of the date input.
    */
   readonly onChange: (
     date: Date | null,
     event?: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>,
   ) => void;
-
   /**
-   * The error message to display.
+   * The error of the date input.
    */
   readonly error?: string;
 }

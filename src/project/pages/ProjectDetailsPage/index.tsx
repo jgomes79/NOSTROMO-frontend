@@ -96,7 +96,7 @@ export const ProjectDetailsPage: React.FC = () => {
     if (!data) return null;
 
     switch (data.state) {
-      case ProjectStates.FUNDING_PHASE_1:
+      case ProjectStates.UPCOMING:
         return (
           <ProjectRegister
             registration={{

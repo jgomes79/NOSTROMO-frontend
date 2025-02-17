@@ -4,16 +4,16 @@ import classNames from "clsx";
 
 import styles from "./Backdrop.module.scss";
 
+/**
+ * Props for the Backdrop component.
+ */
 interface BackdropProps {
   /**
-   * The content to be rendered inside the backdrop.
+   * The children of the component.
    */
   readonly children: ReactNode;
-
   /**
-   * The visual style variant of the backdrop.
-   * - "dialog": Used specifically for dialog modals.
-   * - "default": Used for general purposes.
+   * The variant of the backdrop.
    */
   readonly variant?: "dialog" | "default";
 }
