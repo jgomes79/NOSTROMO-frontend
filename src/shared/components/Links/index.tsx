@@ -3,6 +3,7 @@ import React from "react";
 import classNames from "clsx";
 
 import styles from "./Links.module.scss";
+import { IconButton } from "../IconButton";
 
 /**
  * Represents the properties for the Links component.
@@ -27,8 +28,8 @@ interface LinksProps {
 export const Links: React.FC<LinksProps> = ({ className, data = [] }) => (
   <nav className={classNames(styles.layout, className)}>
     {data.map((link, index) => (
-      <a href={link.path} target={"_blank"} className={styles.link} rel="noreferrer" key={`--link-${index.toString()}`}>
-        {link.icon}
+      <a href={link.path} target={"_blank"} rel="noreferrer" key={`--link-${index.toString()}`}>
+        <IconButton variant={"ghost"} color={"primary"} size={"medium"} icon={link.icon} />
       </a>
     ))}
   </nav>

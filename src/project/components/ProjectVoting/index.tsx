@@ -17,37 +17,23 @@ type Vote = "yes" | "no";
 
 /**
  * Props for the ProjectVoting component.
+ * @property {Object} votation - The voting details for the project.
+ * @property {Date} votation.limitDate - The date by which the voting must be completed.
+ * @property {number[]} votation.count - An array of votes, where the first element represents "yes" votes and the second represents "no" votes.
+ * @property {Object} user - The user details related to voting.
+ * @property {Vote} [user.vote] - The user's vote.
+ * @property {Vote} [isLoading] - The loading state of the user's vote.
+ * @property {(vote: Vote) => void} [onClick] - The callback function that is called when a vote is clicked.
  */
 interface ProjectVotingProps {
-  /**
-   * The voting details for the project.
-   */
   readonly votation: {
-    /**
-     * The date by which the voting must be completed.
-     */
     readonly limitDate: Date;
-    /**
-     * An array of votes, where the first element represents "yes" votes and the second represents "no" votes.
-     */
     readonly count: number[];
   };
-  /**
-   * The user details related to voting.
-   */
   readonly user: {
-    /**
-     * The user's vote.
-     */
     readonly vote?: Vote;
   };
-  /**
-   * The loading state of the user's vote.
-   */
   readonly isLoading?: Vote;
-  /**
-   * The callback function that is called when a vote is clicked.
-   */
   readonly onClick?: (vote: Vote) => void;
 }
 
@@ -58,11 +44,6 @@ interface ProjectVotingProps {
  * @returns {JSX.Element} The JSX code for the ProjectVoting component.
  */
 export const ProjectVoting: React.FC<ProjectVotingProps> = ({ votation, user, isLoading, onClick }) => {
-  /**
-   * A record that maps the user's vote to corresponding titles and descriptions.
-   *
-   * @type {Record<Vote, { title: string; color?: string; description: string }>}
-   */
   const literals: Record<Vote, { title: string; color?: string; description: string }> = {
     yes: {
       title: "You have voted in favor of this project",
@@ -74,21 +55,11 @@ export const ProjectVoting: React.FC<ProjectVotingProps> = ({ votation, user, is
     },
   };
 
-  /**
-   * The default vote message displayed when the user has not voted yet.
-   *
-   * @type {{ title: string; description: string }}
-   */
   const defaultVote = {
     title: "This project is in the voting process",
     description: `You have until ${format(votation.limitDate, "MMMM do, yyyy 'at' h:mm a")} to vote on this project`,
   };
 
-  /**
-   * The current vote message based on the user's vote or the default message.
-   *
-   * @type {{ title: string; description: string }}
-   */
   const currentVote = user.vote ? literals[user.vote] : defaultVote;
 
   return (
@@ -107,7 +78,7 @@ export const ProjectVoting: React.FC<ProjectVotingProps> = ({ votation, user, is
           <div className={styles.actions}>
             <Button
               caption="Yes"
-              color={"secondary"}
+              color={"primary"}
               onClick={() => onClick?.("yes")}
               isLoading={isLoading === "yes"}
               disabled={!!isLoading}
@@ -115,7 +86,7 @@ export const ProjectVoting: React.FC<ProjectVotingProps> = ({ votation, user, is
             />
             <Button
               caption="No"
-              color={"red"}
+              color={"error"}
               onClick={() => onClick?.("no")}
               isLoading={isLoading === "no"}
               disabled={!!isLoading}

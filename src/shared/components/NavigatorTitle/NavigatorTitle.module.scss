@@ -1,0 +1,12 @@
+.container {
+  display: grid;
+  grid-template-columns: 0fr 1fr;
+  gap: 14px;
+  align-items: center;  
+
+  @include crtAnimation();
+
+  h2 {
+    color: $green-04;
+  }
+}

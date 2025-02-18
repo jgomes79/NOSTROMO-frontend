@@ -64,22 +64,9 @@ export const IconButton: React.FC<Readonly<IconButtonProps>> = ({
     aria-label="button"
     type={type}
     disabled={isLoading || disabled}
-    className={classNames(
-      styles.layout,
-      isLoading && styles.withLoader,
-      styles[variant],
-      styles[size],
-      styles[color],
-      className,
-    )}
+    className={classNames(styles.layout, styles[variant], styles[size], styles[color], className)}
     {...props}
   >
-    <div className={styles.caption}>{icon}</div>
-
-    {isLoading && (
-      <div className={styles.loader}>
-        <Loader size={22} />
-      </div>
-    )}
+    {isLoading ? <Loader /> : icon}
   </button>
 );

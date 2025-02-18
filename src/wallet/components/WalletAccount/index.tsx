@@ -8,6 +8,7 @@ import { HOME_ROUTES } from "@/home/home.constants";
 import { getRoute } from "@/lib/router";
 import { Button } from "@/shared/components/Button";
 import { IconButton } from "@/shared/components/IconButton";
+import useResponsive from "@/shared/hooks/useResponsive";
 import { USER_ROUTES } from "@/user/user.constants";
 import { UserSettingsTabs } from "@/user/user.types";
 
@@ -23,13 +24,16 @@ export const WalletAccount: React.FC = () => {
   const { data } = useWalletClient();
   const { disconnect } = useDisconnect();
   const navigate = useNavigate();
+  const { isMobile, isTabletVertical } = useResponsive();
+
+  const isMobileOrTabletVertical = isMobile || isTabletVertical;
 
   /**
    * Handles the click event for the account button.
    * Navigates to the user settings page.
    */
   const handleClickAccount = () => {
-    navigate(getRoute(USER_ROUTES.SETTINGS, { tabId: UserSettingsTabs.TIER }));
+    navigate(getRoute(USER_ROUTES.SETTINGS, { tabId: UserSettingsTabs.MY_TIER }));
   };
 
   /**
@@ -48,15 +52,20 @@ export const WalletAccount: React.FC = () => {
           <>
             {connected && data ? (
               <div className={styles.actions}>
-                <Button
-                  size={"small"}
-                  variant={"ghost"}
-                  iconRight={<RiAliensFill />}
-                  caption={shortHex(data.account.address, 5)}
-                  onClick={handleClickAccount}
-                />
+                {isMobileOrTabletVertical ? (
+                  <IconButton size={"medium"} variant={"ghost"} icon={<RiAliensFill />} onClick={handleClickAccount} />
+                ) : (
+                  <Button
+                    size={"medium"}
+                    variant={"ghost"}
+                    iconRight={<RiAliensFill />}
+                    caption={shortHex(data.account.address, 5)}
+                    onClick={handleClickAccount}
+                  />
+                )}
+
                 <IconButton
-                  size={"small"}
+                  size={"medium"}
                   variant={"ghost"}
                   icon={<RiLogoutBoxLine />}
                   onClick={handleClickDisconnect}
@@ -66,7 +75,7 @@ export const WalletAccount: React.FC = () => {
               <Button
                 variant={"solid"}
                 color={"primary"}
-                size={"small"}
+                size={"medium"}
                 caption={"Connect Wallet"}
                 onClick={connect}
                 iconLeft={<RiWallet2Line />}

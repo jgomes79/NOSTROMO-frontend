@@ -14,56 +14,27 @@ import { ProjectFormTabs, ProjectStates } from "../../project.types";
 
 /**
  * Props for the ProjectCard component.
+ * @property {string} slug - The unique identifier for the project.
+ * @property {string} title - The title of the project.
+ * @property {string} description - A brief description of the project.
+ * @property {string} photoUrl - The URL of the project's photo.
+ * @property {string} bannerUrl - The URL of the project's banner image.
+ * @property {number} fundraisingGoal - The fundraising goal for the project.
+ * @property {number} tokenPrice - The price of the token associated with the project.
+ * @property {string} currency - The currency in which the fundraising goal is set.
+ * @property {Date} date - The date when the project is scheduled to start or has started.
+ * @property {ProjectStates} state - The current state of the project.
  */
 interface ProjectCardProps {
-  /**
-   * The unique identifier for the project.
-   */
   readonly slug: string;
-
-  /**
-   * The title of the project.
-   */
   readonly title: string;
-
-  /**
-   * A brief description of the project.
-   */
   readonly description: string;
-
-  /**
-   * The URL of the project's photo.
-   */
   readonly photoUrl: string;
-
-  /**
-   * The URL of the project's banner image.
-   */
   readonly bannerUrl: string;
-
-  /**
-   * The fundraising goal for the project.
-   */
   readonly fundraisingGoal: number;
-
-  /**
-   * The price of the token associated with the project.
-   */
   readonly tokenPrice: number;
-
-  /**
-   * The currency in which the fundraising goal is set.
-   */
   readonly currency: string;
-
-  /**
-   * The date when the project is scheduled to start or has started.
-   */
   readonly date: Date;
-
-  /**
-   * The current state of the project.
-   */
   readonly state: ProjectStates;
 }
 

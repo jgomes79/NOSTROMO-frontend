@@ -63,9 +63,9 @@ export const ProjectEvaluation: React.FC = () => {
 
       {isAdmin && (
         <div className={styles.actions}>
-          <Button caption="Accept" color={"secondary"} onClick={handleAccept} />
-          <Button caption="Request info" color={"yellow"} onClick={handleRequestMoreInformation} />
-          <Button caption="Reject" color={"red"} onClick={handleReject} />
+          <Button caption="Accept" color={"primary"} onClick={handleAccept} />
+          <Button caption="Request info" color={"warning"} onClick={handleRequestMoreInformation} />
+          <Button caption="Reject" color={"error"} onClick={handleReject} />
         </div>
       )}
     </Card>

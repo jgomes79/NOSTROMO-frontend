@@ -125,7 +125,6 @@ export const ProjectHeader: React.FC<ProjectHeaderProps> = ({
                 {Object.keys(social).length > 0 && Object.values(social).some((value) => value === undefined) && (
                   <div className={styles.links}>
                     <Links
-                      className={styles.links}
                       data={Object.entries(social)
                         .filter(([, value]) => value)
                         .map(([key, value]) => {

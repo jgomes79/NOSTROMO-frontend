@@ -16,7 +16,7 @@ import styles from "./Typography.module.scss";
  * @property {string} [className] - Additional CSS class names to apply to the component.
  */
 export interface TypographyProps {
-  readonly variant?: "heading" | "body" | "label";
+  readonly variant?: "heading" | "body" | "label" | "button";
   readonly size?: "xxlarge" | "xlarge" | "large" | "medium" | "small" | "xsmall";
   readonly textTransform?: CSSProperties["textTransform"];
   readonly children: React.ReactNode | string | number;

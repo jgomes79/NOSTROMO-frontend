@@ -1,6 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
+import classNames from "clsx";
+
 import { socialNetworks } from "@/shared/shared.constants";
 
 import styles from "./Footer.module.scss";
@@ -24,7 +26,7 @@ export const Footer: React.FC = () => {
           <Typography variant={"heading"} size={"small"}>
             The Company
           </Typography>
-          <nav className={styles.links}>
+          <nav className={classNames(styles.links, styles.column)}>
             <Link to={"#"}>
               <Typography variant={"body"} size={"small"}>
                 Terms of Service
@@ -47,7 +49,7 @@ export const Footer: React.FC = () => {
         </div>
         <div className={styles.brand}>
           <Typography>Follow us on</Typography>
-          <Links data={socialNetworks} />
+          <Links data={socialNetworks} className={styles.links} />
         </div>
       </footer>
     </>

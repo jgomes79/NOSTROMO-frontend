@@ -151,25 +151,6 @@ $avatar-size: 128px;
   gap: 12px;
 }
 
-.links {
-  display: flex;
-  flex-direction: row;
-  gap: 12px;
-  align-items: center;
-
-  @include respond-to(mobile) {
-    flex-direction: column;
-  }
-
-  a {
-    color: $green-03;
-
-    svg {
-      width: 22px;
-      height: 22px;
-    }
-  }
-}
 
 .grid {
   display: grid;

@@ -1,8 +1,11 @@
-import { useState, useCallback } from "react";
+import { useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 
 import classNames from "clsx";
+import { RiArrowUpCircleLine, RiHandCoinLine } from "react-icons/ri";
 
 import { formatPrice } from "@/lib/number";
+import { getRoute } from "@/lib/router";
 import { Button } from "@/shared/components/Button";
 import { DataLabel } from "@/shared/components/DataLabel";
 import { Fieldset } from "@/shared/components/Fieldset";
@@ -11,34 +14,35 @@ import { Typography } from "@/shared/components/Typography";
 import { TierImage } from "@/tier/components/TierImage";
 import { TierSelector } from "@/tier/components/TierSelector";
 import { Tier, Tiers } from "@/tier/tier.types";
+import { USER_ROUTES } from "@/user/user.constants";
 
-import styles from "./UserTiersTab.module.scss";
+import styles from "./UserTier.module.scss";
 import { useSetUserTier } from "../../hooks/useSetUserTier";
 import { useUnstakeTokens } from "../../hooks/useUnstakeTokens";
 import { useUserByWallet } from "../../hooks/useUserByWallet";
 import { User } from "../../user.types";
 
 /**
- * Props interface for UserTiersTab component
- * @interface UserTiersTabProps
+ * Props interface for UserTier component
+ * @interface UserTierProps
  * @property {User["wallet"]} walletAddress - The wallet address of the user
  */
-interface UserTiersTabProps {
-  walletAddress: User["wallet"];
+interface UserTierProps {
+  wallet: User["wallet"];
 }
 
 /**
  * Component that displays and manages user tiers
  * @component
- * @param {UserTiersTabProps} props - Component props
+ * @param {UserTierProps} props - Component props
  * @returns {JSX.Element} Rendered component
  */
-export const UserTiersTab: React.FC<UserTiersTabProps> = ({ walletAddress }) => {
+export const UserTier: React.FC<UserTierProps> = ({ wallet }) => {
+  const navigate = useNavigate();
   const setUserTier = useSetUserTier();
   const unstakeTokens = useUnstakeTokens();
 
-  const { data: user, isLoading: isLoadingUser, refetch: refetchUserbyWallet } = useUserByWallet(walletAddress);
-  const [isTryingUpgrade, setTryingUpgrade] = useState<boolean>(false);
+  const { data: user, isLoading: isLoadingUser, refetch: refetchUserbyWallet } = useUserByWallet(wallet);
 
   /**
    * Handles the click event for upgrading the user's tier
@@ -46,7 +50,7 @@ export const UserTiersTab: React.FC<UserTiersTabProps> = ({ walletAddress }) => 
    * @returns {void}
    */
   const handleClickUpgradeTier = useCallback(() => {
-    setTryingUpgrade(true);
+    navigate(getRoute(USER_ROUTES.CHANGE_TIER));
   }, []);
 
   /**
@@ -55,12 +59,11 @@ export const UserTiersTab: React.FC<UserTiersTabProps> = ({ walletAddress }) => 
    * @returns {Promise<void>} A promise that resolves when tokens are unstaked
    */
   const handleClickUnstakeTokens = useCallback(async () => {
-    if (walletAddress) {
-      await unstakeTokens.mutateAsync({ wallet: walletAddress });
+    if (wallet) {
+      await unstakeTokens.mutateAsync({ wallet });
       refetchUserbyWallet();
-      setTryingUpgrade(false);
     }
-  }, [walletAddress, unstakeTokens, refetchUserbyWallet]);
+  }, [wallet, unstakeTokens, refetchUserbyWallet]);
 
   /**
    * Handles the tier selection and updates the user's tier
@@ -70,13 +73,12 @@ export const UserTiersTab: React.FC<UserTiersTabProps> = ({ walletAddress }) => 
    */
   const handleClickSetTier = useCallback(
     async (tier: Tier) => {
-      if (walletAddress) {
-        await setUserTier.mutateAsync({ wallet: walletAddress, tierId: tier.id });
+      if (wallet) {
+        await setUserTier.mutateAsync({ wallet, tierId: tier.id });
         refetchUserbyWallet();
-        setTryingUpgrade(false);
       }
     },
-    [walletAddress, setUserTier, refetchUserbyWallet],
+    [wallet, setUserTier, refetchUserbyWallet],
   );
 
   if (!user || isLoadingUser) {
@@ -87,7 +89,7 @@ export const UserTiersTab: React.FC<UserTiersTabProps> = ({ walletAddress }) => 
     );
   }
 
-  if (isTryingUpgrade || user.tier.id === Tiers.TIER_NONE) {
+  if (user.tier.id === Tiers.TIER_NONE) {
     return (
       <div className={classNames(styles.grid, styles.spacing)}>
         <Typography variant={"body"} size={"xlarge"} className={styles.title} textAlign={"center"}>
@@ -109,8 +111,20 @@ export const UserTiersTab: React.FC<UserTiersTabProps> = ({ walletAddress }) => 
           <TierImage tier={user.tier.id} size={256} />
         </div>
         <div className={styles.actions}>
-          <Button variant={"solid"} color={"primary"} caption={"Upgrade Tier"} onClick={handleClickUpgradeTier} />
-          <Button variant={"ghost"} color={"primary"} caption={"Unstake Tokens"} onClick={handleClickUnstakeTokens} />
+          <Button
+            variant={"solid"}
+            color={"warning"}
+            iconLeft={<RiArrowUpCircleLine />}
+            caption={"Upgrade Tier"}
+            onClick={handleClickUpgradeTier}
+          />
+          <Button
+            variant={"solid"}
+            color={"primary"}
+            iconLeft={<RiHandCoinLine />}
+            caption={"Unstake Tokens"}
+            onClick={handleClickUnstakeTokens}
+          />
         </div>
       </div>
       <div className={styles.grid}>

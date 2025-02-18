@@ -3,11 +3,11 @@ import React from "react";
 import classNames from "clsx";
 
 import { formatPrice } from "@/lib/number";
-import { Animatable } from "@/shared/components/Animatable";
 import { Button } from "@/shared/components/Button";
 import { Fieldset } from "@/shared/components/Fieldset";
 import { Skeleton } from "@/shared/components/Skeleton";
 import { Typography } from "@/shared/components/Typography";
+import useResponsive from "@/shared/hooks/useResponsive";
 
 import styles from "./TierSelector.module.scss";
 import { useTiers } from "../../hooks/useTiers";
@@ -34,6 +34,9 @@ interface TierSelectorProps {
  */
 export const TierSelector: React.FC<TierSelectorProps> = ({ isLoading, focusLoadingId, onSelectTier }) => {
   const { data, isLoading: isLoadingTiers } = useTiers();
+  const { isMobile, isTabletVertical } = useResponsive();
+
+  const isMobileOrTabletVertical = isMobile || isTabletVertical;
 
   /**
    * Renders an individual tier card
@@ -41,37 +44,40 @@ export const TierSelector: React.FC<TierSelectorProps> = ({ isLoading, focusLoad
    * @returns {React.ReactElement} Rendered tier card
    */
   const renderTier = (tier: Tier) => (
-    <Animatable>
-      <div className={classNames(styles.tier, styles[`tier_${tier.id}`])}>
-        <TierImage tier={tier.id} size={128} />
-        <div className={styles.data}>
-          <div className={classNames(styles.data, styles.title)}>
-            <Typography variant={"heading"} size={"medium"}>
-              {tier.name}
-            </Typography>
-            <Typography variant={"body"} size={"medium"} className={styles.description}>
-              {tier.description}
-            </Typography>
-          </div>
-
-          <Fieldset title={"Benefits"} className={styles.fieldset}>
-            <Typography variant={"body"} size={"medium"}>
-              <p dangerouslySetInnerHTML={{ __html: tier.benefits }} />
-            </Typography>
-          </Fieldset>
-        </div>
-        <div className={styles.actions}>
-          <Button
-            variant={"solid"}
+    <div className={classNames(styles.tier, styles[`tier_${tier.id}`])}>
+      <TierImage tier={tier.id} size={128} />
+      <div className={styles.data}>
+        <div className={classNames(styles.data, styles.title)}>
+          <Typography variant={"heading"} size={"medium"} textAlign={isMobileOrTabletVertical ? "center" : "left"}>
+            {tier.name}
+          </Typography>
+          <Typography
+            variant={"body"}
             size={"medium"}
-            caption={`Stake ${formatPrice(tier.stakeAmount, "QUBIC", 0)}`}
-            className={styles.button}
-            isLoading={isLoading && focusLoadingId === tier.id}
-            onClick={() => onSelectTier(tier)}
-          />
+            textAlign={isMobileOrTabletVertical ? "center" : "left"}
+            className={styles.description}
+          >
+            {tier.description}
+          </Typography>
         </div>
+
+        <Fieldset title={"Benefits"} className={styles.fieldset}>
+          <Typography variant={"body"} size={"medium"}>
+            <p dangerouslySetInnerHTML={{ __html: tier.benefits }} />
+          </Typography>
+        </Fieldset>
       </div>
-    </Animatable>
+      <div className={styles.actions}>
+        <Button
+          variant={"solid"}
+          size={"medium"}
+          caption={`Stake ${formatPrice(tier.stakeAmount, "QUBIC", 0)}`}
+          className={styles.button}
+          isLoading={isLoading && focusLoadingId === tier.id}
+          onClick={() => onSelectTier(tier)}
+        />
+      </div>
+    </div>
   );
 
   return (

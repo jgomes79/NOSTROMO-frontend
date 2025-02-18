@@ -51,9 +51,15 @@
   @include crtAnimation()
 }
 
+
 .links {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  gap: 4px;
+
+  &.column {
+    flex-direction: column;
+  }
 
   a {
     color: #649C30;
@@ -62,6 +68,14 @@
 
     &:hover {
       color: #C7D2BE;
+    }
+  }
+
+  button {
+    color: #478911 !important;
+
+    &:hover {
+      color: #C7D2BE !important;
     }
   }
 }

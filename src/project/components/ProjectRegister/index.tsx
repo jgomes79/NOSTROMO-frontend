@@ -17,63 +17,41 @@ import styles from "./ProjectRegister.module.scss";
 
 /**
  * Props for the ProjectRegister component.
+ * @property {Object} registration - Registration details for the project.
+ * @property {Object} registration.limitDate - The limit date for registration.
+ * @property {Date} registration.limitDate - The limit date for registration.
+ * @property {number} registration.count - The total count of votes.
+ * @property {Object} user - User details related to the registration.
+ * @property {Object} user.tier - The user's tier information.
+ * @property {Object} user.tier.id - The ID of the user's tier.
+ * @property {string} user.tier.name - The name of the user's tier.
+ * @property {Object} user.investment - Investment details for the user.
+ * @property {number} user.investment.value - The current investment value.
+ * @property {Object} user.investment.max - The maximum investment details.
+ * @property {number} user.investment.max.value - The maximum investment value allowed.
+ * @property {Object} user.investment.max.currency - The currency of the maximum investment.
+ * @property {string} user.investment.max.currency.name - The name of the currency.
+ * @property {boolean} user.isRegistered - Indicates if the user is registered.
+ * @property {Function} [onClick] - Callback function for click events.
+ * @property {boolean} [isLoading] - Indicates if the component is in a loading state.
  */
 export interface ProjectRegisterProps {
-  /**
-   * Registration details for the project.
-   */
   readonly registration: {
-    /**
-     * The limit date for registration.
-     */
     readonly limitDate: Date;
-    /**
-     * The total count of votes.
-     */
     readonly count: number;
   };
-  /**
-   * User details related to the registration.
-   */
   readonly user: {
-    /**
-     * The user's tier information.
-     */
     readonly tier: Pick<Tier, "id" | "name">;
-    /**
-     * Investment details for the user.
-     */
     readonly investment: {
-      /**
-       * The current investment value.
-       */
       readonly value: number;
-      /**
-       * The maximum investment details.
-       */
       readonly max: {
-        /**
-         * The maximum investment value allowed.
-         */
         readonly value: number;
-        /**
-         * The currency of the maximum investment.
-         */
         readonly currency: Pick<Currency, "name">;
       };
     };
-    /**
-     * Indicates if the user is registered.
-     */
     readonly isRegistered: boolean;
   };
-  /**
-   * Callback function for click events.
-   */
   readonly onClick?: () => void;
-  /**
-   * Indicates if the component is in a loading state.
-   */
   readonly isLoading?: boolean;
 }
 
@@ -116,7 +94,7 @@ export const ProjectRegister: React.FC<ProjectRegisterProps> = ({ registration, 
             <div className={styles.actions}>
               <Button
                 caption="Register"
-                color={"secondary"}
+                color={"primary"}
                 size={"small"}
                 onClick={onClick}
                 isLoading={isLoading}
@@ -124,7 +102,7 @@ export const ProjectRegister: React.FC<ProjectRegisterProps> = ({ registration, 
               />
               <Button
                 caption="Upgrade Tier"
-                color={"yellow"}
+                color={"warning"}
                 onClick={onClick}
                 size={"small"}
                 iconLeft={<RiArrowUpCircleFill size={24} />}

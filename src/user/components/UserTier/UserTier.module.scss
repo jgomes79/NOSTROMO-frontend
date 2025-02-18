@@ -46,7 +46,7 @@
 .actions {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
 
   @include respond-to(tablet-vertical) {
     display: inline-flex;

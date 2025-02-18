@@ -68,7 +68,7 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({ onClose }) => {
           <img src={logo} alt="nostromo" width={140} />
         </Link>
 
-        <IconButton size={"small"} variant={"ghost"} icon={<RiCloseFill />} onClick={onClose} />
+        <IconButton size={"large"} variant={"ghost"} icon={<RiCloseFill />} onClick={onClose} />
       </div>
       <div className={styles.container}>
         <nav className={styles.navigator}>

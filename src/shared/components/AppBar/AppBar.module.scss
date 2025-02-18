@@ -13,7 +13,7 @@
   }
 
   &:before {
-    background: linear-gradient(90deg, rgb(27 43 13 / 24%) 0%, rgba(0, 0, 0, 0.7) 50%, rgba(0, 0, 0, 0.6) 100%);
+    background: linear-gradient(90deg, rgb(27 43 13 / 70%) 0%, rgba(0, 0, 0, 0.9) 50%, rgba(0, 0, 0, 0.6) 100%);
     backdrop-filter: blur(44px);
     height: 100%;
     inset: 0;
@@ -73,10 +73,20 @@
 .row {
   display: flex;
   flex-direction: row;
-  gap: 40px;
+  gap: 8px;
   align-items: center;
 }
 
 .isActive {
   color: #8af827 !important;
+}
+
+.links {
+  button {
+    color: #478911 !important;
+
+    &:hover {
+      color: #C7D2BE !important;
+    }
+  }
 }

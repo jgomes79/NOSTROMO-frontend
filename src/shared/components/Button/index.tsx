@@ -8,39 +8,24 @@ import { Typography } from "../Typography";
 
 /**
  * Props for the Button component.
+ *
+ * @property {boolean} [isLoading] - Indicates if the button is in a loading state.
+ * @property {React.ReactNode} [iconLeft] - An optional icon to display on the left side of the button.
+ * @property {React.ReactNode} [iconRight] - An optional icon to display on the right side of the button.
+ * @property {string} caption - The caption of the button.
+ * @property {"primary" | "secondary" | "yellow" | "red"} [color] - The color variant of the button.
+ * @property {"small" | "medium" | "large"} [size] - The size variant of the button.
+ * @property {"solid" | "outline" | "ghost"} [variant] - The styling variant of the button.
+ * @property {React.ButtonHTMLAttributes<HTMLButtonElement>["type"]} [type] - The type of the button.
  */
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  /**
-   * Indicates if the button is in a loading state.
-   */
   readonly isLoading?: boolean;
-  /**
-   * An optional icon to display on the left side of the button.
-   */
   readonly iconLeft?: React.ReactNode;
-  /**
-   * An optional icon to display on the right side of the button.
-   */
   readonly iconRight?: React.ReactNode;
-  /**
-   * The caption of the button.
-   */
   readonly caption: string;
-  /**
-   * The color variant of the button.
-   */
-  readonly color?: "primary" | "secondary" | "yellow" | "red";
-  /**
-   * The size variant of the button.
-   */
+  readonly color?: "primary" | "secondary" | "warning" | "error";
   readonly size?: "small" | "medium" | "large";
-  /**
-   * The styling variant of the button.
-   */
   readonly variant?: "solid" | "outline" | "ghost";
-  /**
-   * The type of the button.
-   */
   readonly type?: React.ButtonHTMLAttributes<HTMLButtonElement>["type"];
 }
 
@@ -74,13 +59,11 @@ export const Button: React.FC<Readonly<ButtonProps>> = ({
     )}
     {...props}
   >
-    {iconLeft && <div className={styles.icon}>{iconLeft}</div>}
-    <div className={styles.caption}>
-      <Typography variant={"label"} size={size}>
-        {caption}
-      </Typography>
-    </div>
-    {iconRight && <div className={styles.icon}>{iconRight}</div>}
+    {iconLeft && iconLeft}
+    <Typography variant={"button"} size={size}>
+      {caption}
+    </Typography>
+    {iconRight && iconRight}
 
     {isLoading && (
       <div className={styles.loader}>

@@ -7,46 +7,24 @@ import styles from "./Skeleton.module.scss";
 
 /**
  * Props for the Skeleton component.
+ *
+ * @property {number} count - The number of skeleton rows to display.
+ * @property {boolean} isLoading - Flag to determine if the skeleton should be displayed.
+ * @property {React.ReactNode} children - The content to display when not loading.
+ * @property {string} [className] - Additional class names to apply to the skeleton.
+ * @property {"random" | "full"} [width] - The width style of the skeleton, either "random" or "full".
+ * @property {number} [height] - The height of each skeleton row in pixels.
+ * @property {"horizontal" | "vertical"} [orientation] - The orientation of the skeleton, either "horizontal" or "vertical".
+ * @property {number} [gap] - The gap between skeleton rows in pixels.
  */
 interface SkeletonProps {
-  /**
-   * The number of skeleton rows to display.
-   */
   readonly count: number;
-
-  /**
-   * Flag to determine if the skeleton should be displayed.
-   */
   readonly isLoading: boolean;
-
-  /**
-   * The content to display when not loading.
-   */
   readonly children: React.ReactNode;
-
-  /**
-   * Additional class names to apply to the skeleton.
-   */
   readonly className?: string;
-
-  /**
-   * The width style of the skeleton, either "random" or "full".
-   */
   readonly width?: "random" | "full";
-
-  /**
-   * The height of each skeleton row in pixels.
-   */
   readonly height?: number;
-
-  /**
-   * The orientation of the skeleton, either "horizontal" or "vertical".
-   */
   readonly orientation?: "horizontal" | "vertical";
-
-  /**
-   * The gap between skeleton rows in pixels.
-   */
   readonly gap?: number;
 }
 

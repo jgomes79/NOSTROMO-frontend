@@ -14,19 +14,22 @@ import { USER_ROUTES } from "@/user/user.constants";
 import { WalletAccount } from "@/wallet/components/WalletAccount";
 
 import styles from "./AppBar.module.scss";
+import isotype from "../../assets/images/isotype.png";
 import logo from "../../assets/images/logotype.png";
 import { Links } from "../../components/Links";
 import { IconButton } from "../IconButton";
 import { MobileMenu } from "../MobileMenu";
 
 export const AppBar: React.FC = () => {
-  const { isMobile } = useResponsive();
+  const { isMobile, isTabletVertical } = useResponsive();
   const { data } = useWalletClient();
   const { y: scrollY } = useWindowScroll();
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const headerHeight = scrollY > 5 ? "70px" : "90px";
 
   useLockBodyScroll(isMenuOpen);
+
+  const isMobileOrTabletVertical = isMobile || isTabletVertical;
 
   /**
    * Combines the base navigation menu with conditional user settings route
@@ -57,14 +60,18 @@ export const AppBar: React.FC = () => {
     >
       <div className={styles.container}>
         <Link to={"/"}>
-          <img src={logo} alt="nostromo" width={140} />
+          <img
+            src={isMobileOrTabletVertical ? isotype : logo}
+            alt="nostromo"
+            width={isMobileOrTabletVertical ? 100 : 140}
+          />
         </Link>
 
         {isMenuOpen && isMobile && <MobileMenu onClose={() => setIsMenuOpen(false)} />}
 
         {isMobile && (
           <IconButton
-            size={"small"}
+            size={"large"}
             variant={"ghost"}
             icon={<RiMenuFill />}
             onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -87,7 +94,7 @@ export const AppBar: React.FC = () => {
               ))}
             </nav>
             <div className={styles.row}>
-              <Links data={socialNetworks} />
+              <Links data={socialNetworks} className={styles.links} />
               <WalletAccount />
             </div>
           </>

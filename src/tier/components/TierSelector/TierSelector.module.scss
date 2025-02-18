@@ -16,21 +16,15 @@
 
   transition: border-color 120ms linear;
   user-select: none;
-  overflow: hidden;
 
-  .fieldset {
-    visibility: hidden;
-    opacity: 0;
-    transition: all 500ms linear;
-    height: 0px;
+  @include respond-to(mobile) {
+    grid-template-columns: 1fr;
+    justify-items: center; 
   }
 
-  &:hover {
-    .fieldset {
-      visibility: visible;
-      opacity: 1;
-      height: auto;
-    }
+  @include respond-to(tablet-vertical) {
+    grid-template-columns: 1fr;
+    justify-items: center; 
   }
 
   &.tier_2 {
@@ -119,6 +113,14 @@
   gap: 18px;
   padding: 12px 0;
 
+  @include respond-to(mobile) {
+    width: 100%;
+  }
+
+  @include respond-to(tablet-vertical) {
+    width: 100%;
+  }
+
   &.title {
     gap: 8px;
   }
@@ -127,6 +129,11 @@
 .actions {
   display: flex;
   flex-direction: row;
+  width: 100%;
+
+  button {
+    width: 100%;
+  }
 }
 
 .button {
