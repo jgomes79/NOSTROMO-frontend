@@ -142,10 +142,9 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
               label="Tokens Unlocked at TGE"
               type="number"
               placeholder="Tokens Unlocked at TGE"
-              description={"Specify the number of tokens to be unlocked on the listing date."}
+              description={"Specify the percentage of tokens to be unlocked on the listing date."}
               maxLength={2}
-              disabled={!tokenName}
-              symbol={tokenName}
+              symbol={"%"}
               error={dirtyFields.unlockTokensTGE ? errors.unlockTokensTGE?.message : undefined}
               {...register("unlockTokensTGE", { valueAsNumber: true })}
             />
@@ -299,7 +298,7 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
                 label="Token For Sale"
                 type="number"
                 placeholder={formatPrice(500000, undefined, 0)}
-                symbol={currency?.name ?? ""}
+                symbol={tokenName ?? ""}
                 description={
                   "Indicate the amount of funds you need to raise to make your project work. These will be expressed in the currency you select"
                 }

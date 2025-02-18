@@ -1,8 +1,8 @@
+import { RiSearchEyeLine } from "react-icons/ri";
 import { useWalletClient } from "wagmi";
 
 import { Button } from "@/shared/components/Button";
 import { Card } from "@/shared/components/Card";
-import { Loader } from "@/shared/components/Loader";
 import { Typography } from "@/shared/components/Typography";
 import { useUserByWallet } from "@/user/hooks/useUserByWallet";
 
@@ -51,7 +51,7 @@ export const ProjectEvaluation: React.FC = () => {
 
   return (
     <Card className={styles.layout}>
-      <Loader size={52} />
+      <RiSearchEyeLine size={48} />
       <div className={styles.field}>
         <Typography as={"h2"} variant={"heading"} size={"medium"} textAlign={"center"}>
           {literals[mode].title}

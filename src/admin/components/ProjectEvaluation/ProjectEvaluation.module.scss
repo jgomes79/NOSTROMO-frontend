@@ -12,6 +12,10 @@
   @include respond-to(mobile) {
     padding: 32px 22px;
   }
+
+  svg {
+    color: $green-03;
+  }
 }
 
 
