@@ -4,6 +4,7 @@ import { Outlet } from "react-router-dom";
 import { useErrorInterceptor } from "@/core/errors/hooks/useErrorInterceptor";
 import { AppBar } from "@/shared/components/AppBar";
 import { Footer } from "@/shared/components/Footer";
+import { ScrollToTop } from "@/shared/components/ScrollToTop";
 
 import styles from "./AppLayout.module.scss";
 
@@ -37,6 +38,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }: AppLayoutProps
   return (
     <div className={styles.container}>
       <AppBar />
+      <ScrollToTop />
       <main>
         <Outlet />
         {children}

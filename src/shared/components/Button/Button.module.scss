@@ -5,9 +5,17 @@
   transition: all 100ms linear;
   border-radius: 6px;
   border: none;
+  position: relative;
+  
 
   &:not([disabled]) {
     cursor: pointer;
+  }
+
+  &.withLoader {
+    .content {
+      opacity: 0;
+    }
   }
 
   span {
@@ -15,18 +23,33 @@
   }
 }
 
+.content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
 .small {
-  gap: 12px;
   padding: 0 12px;
   height: 42px;
+
+  .content {
+    gap: 12px;
+  }
 
   svg {
     font-size: 22px;
   }
 }
+
 .medium {
-  gap: 12px;
   padding: 0 12px;
+
+  .content {
+    gap: 12px;
+  }
+
   height: 48px;
 
   svg {
@@ -35,9 +58,12 @@
 }
 
 .large {
-  gap: 12px;
   padding: 0 22px;
   height: 58px;
+
+  .content {
+    gap: 12px;
+  }
 
   svg {
     font-size: 22px;
@@ -124,4 +150,12 @@
       }
     }
   }
+}
+
+.loader {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  justify-content: center;
+  align-items: center;
 }

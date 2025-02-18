@@ -1,7 +1,7 @@
 import React, { useMemo, useRef, useState } from "react";
 
 import classNames from "clsx";
-import { RiArrowLeftFill, RiArrowRightFill } from "react-icons/ri";
+import { RiArrowLeftLine, RiArrowRightLine } from "react-icons/ri";
 
 import { ProjectOverview } from "@/project/components/ProjectOverview";
 import { ProjectsListByState } from "@/project/components/ProjectsListByState";
@@ -31,7 +31,7 @@ export const LaunchpadPage: React.FC = () => {
     return (
       <div className={styles.stepper}>
         <IconButton
-          icon={<RiArrowLeftFill />}
+          icon={<RiArrowLeftLine />}
           size={"small"}
           variant={"ghost"}
           onClick={() => slider.current?.previous()}
@@ -44,7 +44,7 @@ export const LaunchpadPage: React.FC = () => {
           orientation="horizontal"
         />
         <IconButton
-          icon={<RiArrowRightFill />}
+          icon={<RiArrowRightLine />}
           size={"small"}
           variant={"ghost"}
           onClick={() => slider.current?.next()}

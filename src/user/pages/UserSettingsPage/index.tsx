@@ -8,6 +8,7 @@ import { ProjectsListByWallet } from "@/project/components/ProjectsListByWallet"
 import { Loader } from "@/shared/components/Loader";
 import { Separator } from "@/shared/components/Separator";
 import { Tabs } from "@/shared/components/Tabs";
+import { useAppTitle } from "@/shared/hooks/useAppTitle";
 
 import styles from "./UserSettingsPage.module.scss";
 import { UserTier } from "../../components/UserTier";
@@ -27,6 +28,8 @@ export const UserSettingsPage: React.FC = () => {
   const { data: wallet } = useWalletClient();
   const params = useParams<UserSettingsPageParams>();
   const navigate = useNavigate();
+
+  useAppTitle("User settings");
 
   if (!params || !params.tabId) {
     return <Navigate to={getRoute(USER_ROUTES.SETTINGS, { tabId: UserSettingsTabs.MY_TIER })} />;

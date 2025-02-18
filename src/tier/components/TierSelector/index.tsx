@@ -48,7 +48,7 @@ export const TierSelector: React.FC<TierSelectorProps> = ({ isLoading, focusLoad
       <TierImage tier={tier.id} size={128} />
       <div className={styles.data}>
         <div className={classNames(styles.data, styles.title)}>
-          <Typography variant={"heading"} size={"medium"} textAlign={isMobileOrTabletVertical ? "center" : "left"}>
+          <Typography variant={"heading"} size={"large"} textAlign={isMobileOrTabletVertical ? "center" : "left"}>
             {tier.name}
           </Typography>
           <Typography
@@ -66,16 +66,17 @@ export const TierSelector: React.FC<TierSelectorProps> = ({ isLoading, focusLoad
             <p dangerouslySetInnerHTML={{ __html: tier.benefits }} />
           </Typography>
         </Fieldset>
-      </div>
-      <div className={styles.actions}>
-        <Button
-          variant={"solid"}
-          size={"medium"}
-          caption={`Stake ${formatPrice(tier.stakeAmount, "QUBIC", 0)}`}
-          className={styles.button}
-          isLoading={isLoading && focusLoadingId === tier.id}
-          onClick={() => onSelectTier(tier)}
-        />
+
+        <div className={styles.actions}>
+          <Button
+            variant={"solid"}
+            size={"medium"}
+            caption={`Stake ${formatPrice(tier.stakeAmount, "QUBIC", 0)}`}
+            className={styles.button}
+            isLoading={isLoading && focusLoadingId === tier.id}
+            onClick={() => onSelectTier(tier)}
+          />
+        </div>
       </div>
     </div>
   );

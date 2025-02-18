@@ -59,11 +59,13 @@ export const Button: React.FC<Readonly<ButtonProps>> = ({
     )}
     {...props}
   >
-    {iconLeft && iconLeft}
-    <Typography variant={"button"} size={size}>
-      {caption}
-    </Typography>
-    {iconRight && iconRight}
+    <div className={styles.content}>
+      {iconLeft && iconLeft}
+      <Typography variant={"button"} size={size}>
+        {caption}
+      </Typography>
+      {iconRight && iconRight}
+    </div>
 
     {isLoading && (
       <div className={styles.loader}>

@@ -1,4 +1,4 @@
-import React, { useLayoutEffect } from "react";
+import React from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 
 import classNames from "clsx";
@@ -49,11 +49,6 @@ export const ProjectDetailsPage: React.FC = () => {
     { data, ...project } = useProject(slug);
 
   const navigate = useNavigate();
-
-  useLayoutEffect(() => {
-    console.log("hola");
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }, []);
 
   /**
    * Array of tabs to be excluded from the project details view.
