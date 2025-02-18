@@ -152,8 +152,8 @@ export const ProjectHeader: React.FC<ProjectHeaderProps> = ({
             <div className={styles.actions}>
               <a href={whitepaperUrl} target={"_blank"}>
                 <Button
-                  variant="solid"
-                  color="secondary"
+                  variant="outline"
+                  color="primary"
                   caption="Whitepaper"
                   size="small"
                   iconLeft={<RiExternalLinkLine />}
@@ -161,8 +161,8 @@ export const ProjectHeader: React.FC<ProjectHeaderProps> = ({
               </a>
               <a href={tokenomicsUrl} target={"_blank"}>
                 <Button
-                  variant="solid"
-                  color="secondary"
+                  variant="outline"
+                  color="primary"
                   caption="Tokenomics"
                   size="small"
                   iconLeft={<RiExternalLinkLine />}
@@ -170,8 +170,8 @@ export const ProjectHeader: React.FC<ProjectHeaderProps> = ({
               </a>
               <a href={litepaperUrl} target={"_blank"}>
                 <Button
-                  variant="solid"
-                  color="secondary"
+                  variant="outline"
+                  color="primary"
                   caption="Litepaper"
                   size="small"
                   iconLeft={<RiExternalLinkLine />}
@@ -186,7 +186,17 @@ export const ProjectHeader: React.FC<ProjectHeaderProps> = ({
           </Card>
           <Card className={styles.card}>
             <DataLabel
-              icon={<img width={48} height={48} className={styles.tokenImage} src={tokenImageUrl} />}
+              icon={
+                <img
+                  width={48}
+                  height={48}
+                  className={styles.tokenImage}
+                  src={tokenImageUrl || "/invalid-image.png"}
+                  onError={(e) => {
+                    e.currentTarget.src = "/invalid-image.png";
+                  }}
+                />
+              }
               label="Token Name"
               value={tokenName}
             />

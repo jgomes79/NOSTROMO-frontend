@@ -6,6 +6,7 @@
   border-radius: 6px;
   border: none;
   position: relative;
+  min-width: 140px;
   
 
   &:not([disabled]) {
@@ -113,6 +114,23 @@
       &:active {
         color: $green-03;
         background: $green-01;
+      }
+    }
+  }
+
+  &.outline {
+    border: 1px solid $green-04;
+    color: $green-04;
+
+    &:not([disabled]) {
+      &:hover {
+        color: $green-03;
+        border-color: $green-03;
+      } 
+
+      &:active {
+        color: $green-03;
+        border-color: $green-02;
       }
     }
   }

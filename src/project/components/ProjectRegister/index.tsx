@@ -1,8 +1,11 @@
+import { useNavigate } from "react-router-dom";
+
 import classNames from "clsx";
 import { RiArrowUpCircleFill, RiQuillPenFill } from "react-icons/ri";
 
 import { Currency } from "@/currency/currency.types";
 import { formatNumber, formatPrice } from "@/lib/number";
+import { getRoute } from "@/lib/router";
 import { Button } from "@/shared/components/Button";
 import { Countdown } from "@/shared/components/Countdown";
 import { DataLabel } from "@/shared/components/DataLabel";
@@ -12,6 +15,7 @@ import { Typography } from "@/shared/components/Typography";
 import useResponsive from "@/shared/hooks/useResponsive";
 import { TierImage } from "@/tier/components/TierImage";
 import { Tier } from "@/tier/tier.types";
+import { USER_ROUTES } from "@/user/user.constants";
 
 import styles from "./ProjectRegister.module.scss";
 
@@ -62,6 +66,15 @@ export interface ProjectRegisterProps {
  */
 export const ProjectRegister: React.FC<ProjectRegisterProps> = ({ registration, user, isLoading, onClick }) => {
   const { isMobile } = useResponsive();
+  const navigate = useNavigate();
+
+  /**
+   * Handles the click event for upgrading the user's tier.
+   * Navigates the user to the change tier route.
+   */
+  const handleClickUpgradeTier = () => {
+    navigate(getRoute(USER_ROUTES.CHANGE_TIER));
+  };
 
   return (
     <Fieldset title={"Register to Invest"} className={styles.section}>
@@ -103,9 +116,9 @@ export const ProjectRegister: React.FC<ProjectRegisterProps> = ({ registration, 
               <Button
                 caption="Upgrade Tier"
                 color={"warning"}
-                onClick={onClick}
                 size={"small"}
                 iconLeft={<RiArrowUpCircleFill size={24} />}
+                onClick={handleClickUpgradeTier}
               />
             </div>
           )}
