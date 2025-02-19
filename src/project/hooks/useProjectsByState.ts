@@ -92,7 +92,7 @@ export const useProjectsByState = (): UseProjectsProps => {
 
     total: projects.data?.count || 0,
     projects: projects.data?.projects || [],
-    isLoading: projects.isLoading,
+    isLoading: projects.isLoading || projects.isFetching,
 
     fetchProjectsByState,
   };

@@ -5,7 +5,7 @@ import { RiArrowLeftLine, RiArrowRightLine } from "react-icons/ri";
 
 import { ProjectOverview } from "@/project/components/ProjectOverview";
 import { ProjectsListByState } from "@/project/components/ProjectsListByState";
-import { useProjectsByState } from "@/project/hooks/useProjectsByState";
+import { useProjectsVip } from "@/project/hooks/useProjectsVip";
 import { IconButton } from "@/shared/components/IconButton";
 import { Loader } from "@/shared/components/Loader";
 import { SectionIndicator } from "@/shared/components/SectionIndicator";
@@ -18,7 +18,7 @@ import { HowToBoyIdoSection } from "../../components/HowToBoyIdoSection";
 export const LaunchpadPage: React.FC = () => {
   const slider = useRef<SliderElement>();
   const [currentIndex, setCurrentIndex] = useState<number>(0);
-  const { projects, isLoading } = useProjectsByState();
+  const { projects, isLoading } = useProjectsVip();
 
   useAppTitle("Launchpad");
 

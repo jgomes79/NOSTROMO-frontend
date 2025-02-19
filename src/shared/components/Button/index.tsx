@@ -13,7 +13,7 @@ import { Typography } from "../Typography";
  * @property {React.ReactNode} [iconLeft] - An optional icon to display on the left side of the button.
  * @property {React.ReactNode} [iconRight] - An optional icon to display on the right side of the button.
  * @property {string} caption - The caption of the button.
- * @property {"primary" | "secondary" | "yellow" | "red"} [color] - The color variant of the button.
+ * @property {"primary" | "secondary" | "warning" | "error" | "neutral"} [color] - The color variant of the button.
  * @property {"small" | "medium" | "large"} [size] - The size variant of the button.
  * @property {"solid" | "outline" | "ghost"} [variant] - The styling variant of the button.
  * @property {React.ButtonHTMLAttributes<HTMLButtonElement>["type"]} [type] - The type of the button.
@@ -23,7 +23,7 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   readonly iconLeft?: React.ReactNode;
   readonly iconRight?: React.ReactNode;
   readonly caption: string;
-  readonly color?: "primary" | "secondary" | "warning" | "error";
+  readonly color?: "primary" | "secondary" | "warning" | "error" | "neutral";
   readonly size?: "small" | "medium" | "large";
   readonly variant?: "solid" | "outline" | "ghost";
   readonly type?: React.ButtonHTMLAttributes<HTMLButtonElement>["type"];

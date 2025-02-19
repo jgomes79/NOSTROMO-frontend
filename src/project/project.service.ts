@@ -1,5 +1,5 @@
 import { getEndpoint, request, requestWithFile } from "@/core/api/api.helpers";
-import { Project, ProjectStates } from "@/project/project.types";
+import { Project, ProjectReviewStatus, ProjectStates } from "@/project/project.types";
 
 /**
  * Fetches a project by its slug.
@@ -94,4 +94,55 @@ export const getProjectsByWallet = (
 export const publishProject = (projectId: Project["id"]) =>
   request<void>(getEndpoint("projects-service", `/projects/${projectId}/publish`), {
     method: "POST",
+  });
+
+/**
+ * Type representing the response from the getProjectsVip API.
+ *
+ * @property {Project[]} rows - An array of VIP projects.
+ * @property {number} count - The total number of VIP projects.
+ */
+export type GetProjectsVipResponse = {
+  rows: Project[];
+  count: number;
+};
+
+/**
+ * Fetches VIP projects from the projects service.
+ *
+ * @returns {Promise<GetProjectsVipResponse>} - A promise that resolves to an object containing:
+ *   - rows: An array of VIP projects.
+ *   - count: Total number of VIP projects.
+ */
+export const getProjectsVip = () =>
+  request<GetProjectsVipResponse>(getEndpoint("projects-service", "/projects/vip"), {
+    method: "GET",
+  });
+
+/**
+ * Represents the data structure for the review project request.
+ *
+ * @typedef {Object} ReviewProjectData
+ * @property {ProjectReviewStatus} response - The review status of the project, indicating whether it was approved, rejected, or requires more information.
+ * @property {string} comments - Comments provided during the review process, offering feedback or additional context.
+ */
+export type ReviewProjectData = {
+  response: ProjectReviewStatus;
+  comments: string;
+};
+
+/**
+ * Submits a review for a specific project.
+ *
+ * @param {Project["id"]} id - The unique identifier of the project being reviewed.
+ * @param {ReviewProjectData} reviewData - An object containing the review status and comments for the project.
+ * @returns {Promise<void>} - A promise that resolves when the review submission is complete.
+ */
+export const reviewProject = (id: Project["id"], { response, comments }: ReviewProjectData) =>
+  request<void>(getEndpoint("projects-service", `/projects/${id}/review`), {
+    method: "POST",
+    data: {
+      response,
+      comments,
+    },
   });

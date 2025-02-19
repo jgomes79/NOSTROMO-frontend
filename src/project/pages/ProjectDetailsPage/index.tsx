@@ -3,10 +3,11 @@ import { Navigate, useNavigate, useParams } from "react-router-dom";
 
 import classNames from "clsx";
 import { format } from "date-fns/format";
+import { useWalletClient } from "wagmi";
 
-import { ProjectEvaluation } from "@/admin/components/ProjectEvaluation";
 import { formatPrice } from "@/lib/number";
 import { getRoute } from "@/lib/router";
+import { ProjectEvaluation } from "@/project/components/ProjectEvaluation";
 import { ProjectVoting } from "@/project/components/ProjectVoting";
 import { Button } from "@/shared/components/Button";
 import { Card } from "@/shared/components/Card";
@@ -46,6 +47,7 @@ type ProjectDetailsPageParams = {
  */
 export const ProjectDetailsPage: React.FC = () => {
   const { slug, tabId } = useParams<ProjectDetailsPageParams>(),
+    { data: wallet } = useWalletClient(),
     { data, ...project } = useProject(slug);
 
   const navigate = useNavigate();
@@ -88,7 +90,7 @@ export const ProjectDetailsPage: React.FC = () => {
    * - Returns null for any other project state
    */
   const renderActionCard = (): JSX.Element | null => {
-    if (!data) return null;
+    if (!data || !wallet) return null;
 
     switch (data.state) {
       case ProjectStates.UPCOMING:
@@ -135,7 +137,14 @@ export const ProjectDetailsPage: React.FC = () => {
         );
 
       case ProjectStates.SENT_TO_REVIEW:
-        return <ProjectEvaluation />;
+        return (
+          <ProjectEvaluation
+            projectId={data.id}
+            admin={{
+              wallet: wallet.account.address,
+            }}
+          />
+        );
 
       default:
         return null;

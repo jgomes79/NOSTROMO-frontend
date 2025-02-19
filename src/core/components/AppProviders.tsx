@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { I18nProvider } from "@/i18n/i18n.provider";
 import { WalletProvider } from "@/wallet/wallet.provider";
 
+import { ModalProvider } from "../modals/ModalProvider";
 import { queryClient as defaultQueryClient } from "../queryClient";
 
 interface AppProvidersProps {
@@ -25,7 +26,9 @@ export function AppProviders({ queryClient = defaultQueryClient, children }: App
   return (
     <QueryClientProvider client={queryClient}>
       <WalletProvider>
-        <I18nProvider>{children ? children : <Outlet />}</I18nProvider>
+        <I18nProvider>
+          <ModalProvider>{children ? children : <Outlet />}</ModalProvider>
+        </I18nProvider>
       </WalletProvider>
     </QueryClientProvider>
   );

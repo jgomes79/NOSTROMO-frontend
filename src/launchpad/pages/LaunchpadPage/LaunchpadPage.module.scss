@@ -41,6 +41,7 @@
 
   position: relative;
   z-index: 4;
+  min-height: 600px;
 
   &.large {
     max-width: 1400px !important;
@@ -49,7 +50,7 @@
   &.bottomLighting {
     padding-top: 128px;
     padding-bottom: 42px;
-
+    min-height: auto;
     
     @include bottomLighting();
   }

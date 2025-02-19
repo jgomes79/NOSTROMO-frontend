@@ -5,9 +5,7 @@
   transition: all 100ms linear;
   border-radius: 6px;
   border: none;
-  position: relative;
-  min-width: 140px;
-  
+  position: relative; 
 
   &:not([disabled]) {
     cursor: pointer;
@@ -32,7 +30,7 @@
 }
 
 .small {
-  padding: 0 12px;
+  padding: 0 18px;
   height: 42px;
 
   .content {
@@ -45,7 +43,7 @@
 }
 
 .medium {
-  padding: 0 12px;
+  padding: 0 22px;
 
   .content {
     gap: 12px;
@@ -153,6 +151,22 @@
   }
 }
 
+.neutral {
+  &.ghost {
+    color: rgb(255 255 255 / 63%);
+
+    &:not([disabled]) {
+      &:hover {
+        background: rgb(255 255 255 / 8%);
+      }
+
+      &:active {
+        background: rgb(255 255 255 / 4%)
+      }
+    }
+  }
+}
+
 .error {
   &.solid {
     background: rgb(87 31 31);
@@ -168,11 +182,27 @@
       }
     }
   }
+
+  &.ghost {
+    color: rgb(240, 80, 80);
+
+    &:not([disabled]) {
+      &:hover {
+        background: rgb(87 31 31);
+      }
+
+      &:active {
+        background: rgb(64, 22, 22);
+      }
+    }
+  }
 }
 
 .loader {
   inset: 0;
   z-index: 10;
+  display: flex;
   justify-content: center;
   align-items: center;
+  position: absolute;
 }

@@ -84,3 +84,12 @@ export enum ProjectFormTabs {
   RAISING_FUNDS = "raising-funds",
   VESTING_OPTIONS = "vesting-options",
 }
+
+/**
+ * Enum representing the possible review statuses of a project.
+ */
+export enum ProjectReviewStatus {
+  REJECTED = 0,
+  APPROVED = 1,
+  REQUEST_MORE_INFO = 2,
+}
