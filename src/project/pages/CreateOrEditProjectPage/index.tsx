@@ -62,8 +62,7 @@ export const CreateOrEditProjectPage: React.FC = () => {
       }
       await project.refetch();
 
-      if (isPublishing || values.id === undefined) navigate(getRoute(USER_ROUTES.MY_PROJECTS));
-      // TODO. else poner el scroll arriba del todo
+      navigate(getRoute(USER_ROUTES.MY_PROJECTS));
     },
     [upsertProject, project, publishProject, navigate],
   );
