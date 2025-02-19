@@ -508,11 +508,11 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
                 {...register("name")}
               />
               <TextInput
-                label="Project Slug"
+                label="Email"
                 type="text"
-                placeholder="Project Slug"
-                error={dirtyFields.slug ? errors.slug?.message : undefined}
-                {...register("slug")}
+                placeholder="Project email"
+                error={dirtyFields.email ? errors.email?.message : undefined}
+                {...register("email")}
               />
             </div>
 
@@ -522,6 +522,16 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
               placeholder="Write an appropriate and detailed description of your project that is attractive and clear for users. Make sure to include objectives, main features, and any relevant information that may capture the interest of potential users."
               error={dirtyFields.description ? errors.description?.message : undefined}
             />
+
+            <div className={classNames(styles.grid, styles.two, styles.withPaddingTop)}>
+              <TextInput
+                label="Project Slug"
+                type="text"
+                placeholder="Project Slug"
+                error={dirtyFields.slug ? errors.slug?.message : undefined}
+                {...register("slug")}
+              />
+            </div>
           </div>
         );
 

@@ -13,6 +13,7 @@ export const OptionalFormSchema = z.object({
   name: ProjectSchema.shape.name,
   slug: ProjectSchema.shape.slug,
   description: ProjectSchema.shape.description.optional().or(z.literal("")),
+  email: ProjectSchema.shape.email,
 
   // Token details and financial information
   tokensSupply: ProjectSchema.shape.tokensSupply.optional().or(z.literal("")),
@@ -59,6 +60,7 @@ export const OptionalFormSchema = z.object({
  * Extended schema with all fields required except social media
  */
 export const ProjectFormSchema = OptionalFormSchema.extend({
+  email: ProjectSchema.shape.email,
   description: ProjectSchema.shape.description,
   tokensSupply: ProjectSchema.shape.tokensSupply,
   amountToRaise: ProjectSchema.shape.amountToRaise,

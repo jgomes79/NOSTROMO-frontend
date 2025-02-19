@@ -42,6 +42,8 @@ export const CreateOrEditProjectPage: React.FC = () => {
   const { data: wallet, isLoading: isLoadingWallet } = useWalletClient(),
     project = useProject(params.slug);
 
+  console.log("project", project);
+
   /**
    * Handles the form submission for creating, updating, or publishing a project.
    *

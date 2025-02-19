@@ -4,6 +4,7 @@ export const getDefaultProjectFormValues = () => ({
   name: "",
   slug: "",
   description: "",
+  email: "",
   photoUrl: undefined,
   bannerUrl: undefined,
   social: {
