@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 import { WalletButton } from "@rainbow-me/rainbowkit";
 import { RiAliensFill, RiWallet2Line } from "react-icons/ri";
@@ -34,6 +34,8 @@ type CreateOrEditProjectPageParams = {
  * @returns {JSX.Element} The rendered new project page component.
  */
 export const CreateOrEditProjectPage: React.FC = () => {
+  const navigate = useNavigate();
+
   const upsertProject = useUpsertProject(),
     publishProject = usePublishProject();
 
@@ -41,8 +43,6 @@ export const CreateOrEditProjectPage: React.FC = () => {
 
   const { data: wallet, isLoading: isLoadingWallet } = useWalletClient(),
     project = useProject(params.slug);
-
-  console.log("project", project);
 
   /**
    * Handles the form submission for creating, updating, or publishing a project.
@@ -58,9 +58,12 @@ export const CreateOrEditProjectPage: React.FC = () => {
       } else {
         await upsertProject.mutateAsync(values);
       }
-      project.refetch();
+      await project.refetch();
+
+      if (isPublishing || values.id === undefined) navigate("/user/settings/my-projects");
+      // TODO. else poner el scroll arriba del todo
     },
-    [upsertProject, project, publishProject],
+    [upsertProject, project, publishProject, navigate],
   );
 
   /**

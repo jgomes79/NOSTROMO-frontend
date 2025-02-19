@@ -236,6 +236,8 @@ export const ProjectDetailsPage: React.FC = () => {
       <ProjectHeader {...data} />
 
       <div className={styles.container}>
+        {renderActionCard()}
+
         <Tabs<ProjectFormTabs>
           size={"large"}
           tabs={currentTabs}
@@ -243,8 +245,6 @@ export const ProjectDetailsPage: React.FC = () => {
           onChange={(tabId) => navigate(getRoute(PROJECT_ROUTES.PROJECT_DETAILS, { slug, tabId }))}
           onRender={renderTab()}
         />
-
-        {renderActionCard()}
       </div>
     </div>
   );
