@@ -115,7 +115,7 @@ export type GetProjectsVipResponse = {
  *   - count: Total number of VIP projects.
  */
 export const getProjectsVip = () =>
-  request<GetProjectsVipResponse>(getEndpoint("projects-service", "/projects/vip"), {
+  request<GetProjectsVipResponse>(getEndpoint("projects-service", "/projects/vip/all"), {
     method: "GET",
   });
 
