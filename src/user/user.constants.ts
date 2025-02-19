@@ -16,4 +16,5 @@ export const USER_ROUTES = {
   MAIN: "/user",
   SETTINGS: "/user/settings/:tabId?",
   CHANGE_TIER: "/user/settings/my-tier/change",
+  MY_PROJECTS: "/user/settings/my-projects",
 };
