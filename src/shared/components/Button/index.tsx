@@ -59,6 +59,12 @@ export const Button: React.FC<Readonly<ButtonProps>> = ({
     )}
     {...props}
   >
+    {isLoading && (
+      <div className={styles.loader}>
+        <Loader size={22} color={"inherit"} />
+      </div>
+    )}
+
     <div className={styles.content}>
       {iconLeft && iconLeft}
       <Typography variant={"button"} size={size}>
@@ -66,11 +72,5 @@ export const Button: React.FC<Readonly<ButtonProps>> = ({
       </Typography>
       {iconRight && iconRight}
     </div>
-
-    {isLoading && (
-      <div className={styles.loader}>
-        <Loader size={22} color={"inherit"} />
-      </div>
-    )}
   </button>
 );

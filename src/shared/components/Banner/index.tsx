@@ -66,7 +66,7 @@ export const Banner: React.FC<BannerProps> = ({ title, description, button, imag
         </div>
         <Button
           caption={button.caption}
-          iconRight={button.icon}
+          iconLeft={button.icon}
           size={isMobile ? "small" : "large"}
           onClick={button.onClick}
         />
