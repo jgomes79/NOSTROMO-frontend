@@ -1,5 +1,6 @@
 import { useCallback } from "react";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 
 import { RiSearchEyeLine } from "react-icons/ri";
 import { useWalletClient } from "wagmi";
@@ -7,6 +8,7 @@ import { useWalletClient } from "wagmi";
 import { useModal } from "@/core/modals/hooks/useModal";
 import { ModalsIds } from "@/core/modals/modals.types";
 import { ToastIds, useToast } from "@/core/toasts/hooks/useToast";
+import { getRoute } from "@/lib/router";
 import { useReviewProject } from "@/project/hooks/useReviewProject";
 import { Project, ProjectReviewStatus } from "@/project/project.types";
 import { Button } from "@/shared/components/Button";
@@ -14,7 +16,8 @@ import { Card } from "@/shared/components/Card";
 import { TextArea } from "@/shared/components/TextArea";
 import { Typography } from "@/shared/components/Typography";
 import { useUserByWallet } from "@/user/hooks/useUserByWallet";
-import { User } from "@/user/user.types";
+import { USER_ROUTES } from "@/user/user.constants";
+import { User, UserSettingsTabs } from "@/user/user.types";
 
 import { confirmationLabels, confirmationVariants, mainLiterals, toastLabels } from "./ProjectEvaluation.constants";
 import styles from "./ProjectEvaluation.module.scss";
@@ -37,6 +40,7 @@ export const ProjectEvaluation: React.FC<ProjectEvaluationProps> = ({ projectId,
   const { data: user } = useUserByWallet(data?.account.address);
   const { openModal, closeModal } = useModal();
   const { createToast } = useToast();
+  const navigate = useNavigate();
 
   const isAdmin = user?.type === "admin";
   const mode = isAdmin ? "admin" : "user";
@@ -80,6 +84,7 @@ export const ProjectEvaluation: React.FC<ProjectEvaluationProps> = ({ projectId,
               description: toastLabels[response].description,
             });
             closeModal();
+            navigate(getRoute(USER_ROUTES.SETTINGS, { tabId: UserSettingsTabs.MY_PROJECTS }));
           },
           onError: () => {
             setLoading(false);
