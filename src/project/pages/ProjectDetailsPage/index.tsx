@@ -7,6 +7,7 @@ import { useWalletClient } from "wagmi";
 
 import { formatPrice } from "@/lib/number";
 import { getRoute } from "@/lib/router";
+import { ProjectComments } from "@/project/components/ProjectComments";
 import { ProjectEvaluation } from "@/project/components/ProjectEvaluation";
 import { ProjectVoting } from "@/project/components/ProjectVoting";
 import { Button } from "@/shared/components/Button";
@@ -146,6 +147,8 @@ export const ProjectDetailsPage: React.FC = () => {
           />
         );
 
+      case ProjectStates.REQUEST_MORE_INFO:
+        return <ProjectComments comments={data.comments || ""} />;
       default:
         return null;
     }

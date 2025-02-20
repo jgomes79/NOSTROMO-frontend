@@ -26,6 +26,8 @@ export const ProjectSchema = z.object({
 
   email: z.string().email({ message: "Invalid email address" }),
 
+  comments: z.string().optional(),
+
   photoUrl: z.string().url({ message: "Invalid URL format" }),
 
   bannerUrl: z.string().url({ message: "Invalid URL format" }),
