@@ -1,5 +1,6 @@
 import { getEndpoint, request, requestWithFile } from "@/core/api/api.helpers";
 import { Project, ProjectReviewStatus, ProjectStates } from "@/project/project.types";
+import { User } from "@/user/user.types";
 
 /**
  * Fetches a project by its slug.
@@ -138,8 +139,8 @@ export type ReviewProjectData = {
  * @param {ReviewProjectData} reviewData - An object containing the review status and comments for the project.
  * @returns {Promise<void>} - A promise that resolves when the review submission is complete.
  */
-export const reviewProject = (id: Project["id"], { response, comments }: ReviewProjectData) =>
-  request<void>(getEndpoint("projects-service", `/projects/${id}/review`), {
+export const reviewProject = (id: Project["id"], wallet: User["wallet"], { response, comments }: ReviewProjectData) =>
+  request<void>(getEndpoint("projects-service", `/projects/${id}/${wallet}/review`), {
     method: "POST",
     data: {
       response,

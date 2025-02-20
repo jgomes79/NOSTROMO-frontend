@@ -25,6 +25,6 @@ interface ReviewProjectProps {
  */
 export const useReviewProject = () => {
   return useMutation<void, Error, ReviewProjectProps>({
-    mutationFn: ({ id, data }) => reviewProject(id, data),
+    mutationFn: ({ id, wallet, data }) => reviewProject(id, wallet, data),
   });
 };
