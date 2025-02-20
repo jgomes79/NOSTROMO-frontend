@@ -93,7 +93,7 @@ export const getProjectsByWallet = (
  * @returns {Promise<void>} - A promise that resolves when the project is successfully published.
  */
 export const publishProject = (projectId: Project["id"]) =>
-  request<void>(getEndpoint("projects-service", `/projects/${projectId}/publish`), {
+  request<Project>(getEndpoint("projects-service", `/projects/${projectId}/publish`), {
     method: "POST",
   });
 

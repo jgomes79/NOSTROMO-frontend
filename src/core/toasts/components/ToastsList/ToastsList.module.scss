@@ -1,0 +1,18 @@
+.layout {
+  position: fixed;
+  right: 22px;
+  bottom: 22px;
+  z-index: 99999999;
+
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 22px;
+
+  @include respond-to(mobile) {
+    right: 0;
+    left: 0;
+    bottom: 0;
+    padding: 12px;
+    gap: 12px;
+  }
+}

@@ -1,0 +1,40 @@
+.layout {
+  position: relative;
+  z-index: 9999999;
+  user-select: none;
+  outline: none;
+  border: none;
+  min-width: 380px;
+  max-width: 420px;
+  
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  overflow: hidden;
+
+  background-color: #171717a8;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  border-radius: 8px;
+  backdrop-filter: blur(7px);
+
+  @include respond-to(mobile) {
+    min-width: 100%;
+  }
+}
+
+.indicator {
+  height: 4px;
+  position: relative;
+}
+
+.bar {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  background: linear-gradient(to right, #00000000, #2d58357d);
+}
+
+.content {
+  padding: 12px 18px;
+}

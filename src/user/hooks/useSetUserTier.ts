@@ -40,11 +40,6 @@ type SetTierParams = {
  *   wallet: "0x123...",
  *   tierId: "tier1"
  * });
- *
- * // Handle loading state
- * if (setTier.isLoading) {
- *   console.log("Updating tier...");
- * }
  * ```
  */
 export const useSetUserTier = () => {

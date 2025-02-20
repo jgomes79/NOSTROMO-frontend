@@ -6,16 +6,17 @@ import { useWalletClient } from "wagmi";
 
 import { useModal } from "@/core/modals/hooks/useModal";
 import { ModalsIds } from "@/core/modals/modals.types";
+import { ToastIds, useToast } from "@/core/toasts/hooks/useToast";
 import { useReviewProject } from "@/project/hooks/useReviewProject";
 import { Project, ProjectReviewStatus } from "@/project/project.types";
 import { Button } from "@/shared/components/Button";
 import { Card } from "@/shared/components/Card";
 import { TextArea } from "@/shared/components/TextArea";
 import { Typography } from "@/shared/components/Typography";
-import { ConfirmationModalProps } from "@/shared/modals/ConfirmationModal";
 import { useUserByWallet } from "@/user/hooks/useUserByWallet";
 import { User } from "@/user/user.types";
 
+import { confirmationLabels, confirmationVariants, mainLiterals, toastLabels } from "./ProjectEvaluation.constants";
 import styles from "./ProjectEvaluation.module.scss";
 
 interface ProjectEvaluationProps {
@@ -35,34 +36,18 @@ export const ProjectEvaluation: React.FC<ProjectEvaluationProps> = ({ projectId,
   const { data } = useWalletClient();
   const { data: user } = useUserByWallet(data?.account.address);
   const { openModal, closeModal } = useModal();
+  const { createToast } = useToast();
 
   const isAdmin = user?.type === "admin";
   const mode = isAdmin ? "admin" : "user";
 
-  const { register, getValues } = useForm<{ comment: string }>({
+  const { register, reset, getValues } = useForm<{ comment: string }>({
     defaultValues: {
       comment: "",
     },
     reValidateMode: "onChange",
     mode: "all",
   });
-
-  /**
-   * Object containing literals for different user modes.
-   * @type {{admin: {title: string, description: string}, user: {title: string, description: string}}}
-   */
-  const literals = {
-    admin: {
-      title: "Pending Review",
-      description:
-        "This project is pending review. Please evaluate it and determine if it is suitable to be published on the platform.",
-    },
-    user: {
-      title: "Pending Review",
-      description:
-        "This project is pending review. It will be evaluated by the Nostromo team before being made official for the rest of the community.",
-    },
-  };
 
   /**
    * Handles the confirmation of a project review.
@@ -88,16 +73,26 @@ export const ProjectEvaluation: React.FC<ProjectEvaluationProps> = ({ projectId,
         },
         {
           onSuccess: () => {
+            reset();
+            createToast(ToastIds.CONFIRMATION, {
+              type: "success",
+              title: toastLabels[response].title,
+              description: toastLabels[response].description,
+            });
             closeModal();
-            setLoading(false);
           },
           onError: () => {
             setLoading(false);
+            createToast(ToastIds.CONFIRMATION, {
+              type: "error",
+              title: "An unexpected error occurred",
+              description: "Please try again. If the error persists, contact support.",
+            });
           },
         },
       );
     },
-    [projectId, admin.wallet, getValues, reviewProject],
+    [projectId, admin.wallet, getValues, reviewProject, createToast],
   );
 
   /**
@@ -110,35 +105,12 @@ export const ProjectEvaluation: React.FC<ProjectEvaluationProps> = ({ projectId,
    * @returns {void} This function does not return a value.
    */
   const handleClickReview = (response: ProjectReviewStatus) => {
-    const labels: Record<ProjectReviewStatus, { title: string; description: string }> = {
-      [ProjectReviewStatus.APPROVED]: {
-        title: "Aprobar proyecto",
-        description:
-          "Esta acción no se puede deshacerse, una vez que el proyecto es aprobado pasa a fase de registro, queda publicado y visible en la plataforma.",
-      },
-      [ProjectReviewStatus.REQUEST_MORE_INFO]: {
-        title: "Solicitar más información",
-        description:
-          "No rechaza el proyecto, pero solicita mas informacion al creador para aportar una mejor evaluación.",
-      },
-      [ProjectReviewStatus.REJECTED]: {
-        title: "Rechazar proyecto",
-        description: "Esta accion no puede deshacerse.",
-      },
-    };
-
-    const variants: Record<ProjectReviewStatus, ConfirmationModalProps["type"]> = {
-      [ProjectReviewStatus.APPROVED]: "success",
-      [ProjectReviewStatus.REQUEST_MORE_INFO]: "info",
-      [ProjectReviewStatus.REJECTED]: "error",
-    };
-
     openModal(ModalsIds.CONFIRMATION, {
-      type: variants[response],
-      title: labels[response].title,
-      description: labels[response].description,
+      type: confirmationVariants[response],
+      title: confirmationLabels[response].title,
+      description: confirmationLabels[response].description,
       ...(response === ProjectReviewStatus.REQUEST_MORE_INFO && {
-        element: <TextArea label="Comments" {...register("comment")} />,
+        element: (isLoading: boolean) => <TextArea label="Comments" {...register("comment")} disabled={isLoading} />,
       }),
       onConfirm: {
         caption: "Confirm",
@@ -156,10 +128,10 @@ export const ProjectEvaluation: React.FC<ProjectEvaluationProps> = ({ projectId,
       <RiSearchEyeLine size={48} />
       <div className={styles.field}>
         <Typography as={"h2"} variant={"heading"} size={"medium"} textAlign={"center"}>
-          {literals[mode].title}
+          {mainLiterals[mode].title}
         </Typography>
         <Typography as={"h2"} variant={"body"} size={"medium"} textAlign={"center"} className={styles.description}>
-          {literals[mode].description}
+          {mainLiterals[mode].description}
         </Typography>
       </div>
 

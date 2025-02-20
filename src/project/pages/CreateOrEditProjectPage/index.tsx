@@ -5,18 +5,16 @@ import { WalletButton } from "@rainbow-me/rainbowkit";
 import { RiAliensFill, RiWallet2Line } from "react-icons/ri";
 import { useWalletClient } from "wagmi";
 
-import { getRoute } from "@/lib/router";
-import { useProject } from "@/project/hooks/useProject";
-import { usePublishProject } from "@/project/hooks/usePublishProject";
-import { useUpsertProject } from "@/project/hooks/useUpsertProject";
 import { Button } from "@/shared/components/Button";
 import { Loader } from "@/shared/components/Loader";
 import { ErrorPage } from "@/shared/pages/ErrorPage";
-import { USER_ROUTES } from "@/user/user.constants";
 
 import styles from "./CreateOrEditProjectPage.module.scss";
 import { ProjectForm } from "../../forms/ProjectForm";
 import { ProjectFormValues } from "../../forms/ProjectForm";
+import { useProject } from "../../hooks/useProject";
+import { usePublishProject } from "../../hooks/usePublishProject";
+import { useUpsertProject } from "../../hooks/useUpsertProject";
 import { Project } from "../../project.types";
 
 /**
@@ -61,8 +59,6 @@ export const CreateOrEditProjectPage: React.FC = () => {
         await upsertProject.mutateAsync(values);
       }
       await project.refetch();
-
-      navigate(getRoute(USER_ROUTES.MY_PROJECTS));
     },
     [upsertProject, project, publishProject, navigate],
   );

@@ -23,3 +23,14 @@ export const generateSlugOf = (input: string): string => {
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
 };
+
+/**
+ * Generates a random key of a specified length.
+ *
+ * @param {number} length - The length of the random key to generate.
+ * @returns {string} - The generated random key.
+ */
+export const generateRandomKey = (length: number): string => {
+  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  return Array.from({ length }, () => characters.charAt(Math.floor(Math.random() * characters.length))).join("");
+};

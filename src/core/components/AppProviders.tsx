@@ -7,6 +7,7 @@ import { WalletProvider } from "@/wallet/wallet.provider";
 
 import { ModalProvider } from "../modals/ModalProvider";
 import { queryClient as defaultQueryClient } from "../queryClient";
+import { ToastProvider } from "../toasts/ToastProvider";
 
 interface AppProvidersProps {
   readonly queryClient?: QueryClient;
@@ -27,7 +28,9 @@ export function AppProviders({ queryClient = defaultQueryClient, children }: App
     <QueryClientProvider client={queryClient}>
       <WalletProvider>
         <I18nProvider>
-          <ModalProvider>{children ? children : <Outlet />}</ModalProvider>
+          <ModalProvider>
+            <ToastProvider>{children ? children : <Outlet />}</ToastProvider>
+          </ModalProvider>
         </I18nProvider>
       </WalletProvider>
     </QueryClientProvider>

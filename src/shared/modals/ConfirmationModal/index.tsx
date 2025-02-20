@@ -37,7 +37,7 @@ export interface ConfirmationModalProps {
   readonly type?: "success" | "warning" | "info" | "error";
   readonly title: string;
   readonly description: string;
-  readonly element?: React.ReactNode;
+  readonly element?: React.ReactNode | ((isLoading: boolean) => React.ReactNode);
   readonly onConfirm?: Action;
   readonly onDecline?: Action;
 }
@@ -89,7 +89,7 @@ export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
             </Typography>
           </div>
         </div>
-        {element && element}
+        {element && typeof element === "function" ? element(loadingState[0]) : element}
       </div>
 
       <div className={styles.actions}>

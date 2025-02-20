@@ -4,18 +4,20 @@ import { useMutation } from "@tanstack/react-query";
 import { addDays } from "date-fns";
 import { useWalletClient } from "wagmi";
 
+import { ToastIds, useToast } from "@/core/toasts/hooks/useToast";
 import { getRoute } from "@/lib/router";
 import { ProjectFormValues } from "@/project/forms/ProjectForm";
 import { upsertProject } from "@/project/project.service";
-
-import { PROJECT_ROUTES } from "../project.constants";
+import { USER_ROUTES } from "@/user/user.constants";
+import { UserSettingsTabs } from "@/user/user.types";
 
 /**
  * Custom hook to create a new project using a mutation.
  */
 export const useUpsertProject = () => {
-  const wallet = useWalletClient();
-  const navigate = useNavigate();
+  const wallet = useWalletClient(),
+    navigate = useNavigate(),
+    { createToast } = useToast();
 
   return useMutation({
     mutationFn: async (data: ProjectFormValues) => {
@@ -91,10 +93,13 @@ export const useUpsertProject = () => {
 
       return upsertProject(projectId, formData);
     },
-    onSuccess: (data) => {
-      if (data && "slug" in data) {
-        navigate(getRoute(PROJECT_ROUTES.EDIT_PROJECT, { slug: data.slug }));
-      }
+    onSuccess: () => {
+      createToast(ToastIds.CONFIRMATION, {
+        type: "success",
+        title: "Changes saved successfully",
+      });
+
+      navigate(getRoute(USER_ROUTES.SETTINGS, { tabId: UserSettingsTabs.MY_PROJECTS }));
     },
   });
 };

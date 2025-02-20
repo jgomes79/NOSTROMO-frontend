@@ -1,0 +1,29 @@
+.layout {
+  display: flex;
+  flex-direction: row;
+  gap: 18px;
+  align-items: center;
+}
+
+.success {
+  svg {
+    color: $green-03;
+  }
+
+  h3 {
+    color: $green-03;
+  }
+
+  p {
+    color: $green-04;
+  }
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+
+  p {
+    padding: 0;
+  }
+}
