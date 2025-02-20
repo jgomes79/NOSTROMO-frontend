@@ -1,3 +1,5 @@
+import { useForm } from "react-hook-form";
+
 import { RiSearchEyeLine } from "react-icons/ri";
 import { useWalletClient } from "wagmi";
 
@@ -35,6 +37,14 @@ export const ProjectEvaluation: React.FC<ProjectEvaluationProps> = ({ projectId,
 
   const isAdmin = user?.type === "admin";
   const mode = isAdmin ? "admin" : "user";
+
+  const { register, getValues } = useForm<{ comment: string }>({
+    defaultValues: {
+      comment: "",
+    },
+    reValidateMode: "onChange",
+    mode: "all",
+  });
 
   /**
    * Object containing literals for different user modes.
@@ -91,23 +101,35 @@ export const ProjectEvaluation: React.FC<ProjectEvaluationProps> = ({ projectId,
       title: labels[response].title,
       description: labels[response].description,
       ...(response === ProjectReviewStatus.REQUEST_MORE_INFO && {
-        element: <TextArea label="Comments" />,
+        element: <TextArea label="Comments" {...register("comment")} />,
       }),
       onConfirm: {
         caption: "Confirm",
-        action: () => {
-          reviewProject.mutate({
-            id: projectId,
-            wallet: admin.wallet,
-            data: {
-              response,
-              comments: "",
+        action: (setLoading: (loading: boolean) => void) => {
+          setLoading(true);
+          reviewProject.mutate(
+            {
+              id: projectId,
+              wallet: admin.wallet,
+              data: {
+                response,
+                comments: getValues("comment"),
+              },
             },
-          });
+            {
+              onSuccess: () => {
+                closeModal();
+                setLoading(false);
+              },
+              onError: () => {
+                setLoading(false);
+              },
+            },
+          );
         },
       },
       onDecline: {
-        caption: "Decline",
+        caption: "Cancel",
         action: () => {
           closeModal();
         },

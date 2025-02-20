@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import classNames from "clsx";
 
@@ -19,7 +19,7 @@ import styles from "./ConfirmationModal.module.scss";
  * @property {() => void} action - The function to be executed when the button is clicked.
  */
 type Action = Pick<ButtonProps, "caption"> & {
-  action: () => void;
+  action: (setLoading: (loading: boolean) => void) => void;
 };
 
 /**
@@ -56,6 +56,25 @@ export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
   onConfirm,
   onDecline,
 }) => {
+  const [loadingState, setLoadingState] = useState<boolean[]>([false, false]);
+
+  /**
+   * Handles the loading state for the specified button index.
+   *
+   * This function returns a callback that updates the loading state
+   * for a button in the confirmation modal. It takes an index to identify
+   * which button's loading state to update.
+   *
+   * @param {number} index - The index of the button whose loading state is to be updated.
+   * @returns {(loading: boolean) => void} A callback function that takes a loading state
+   * and updates the corresponding button's loading state.
+   */
+  const handleLoading = (index: number) => (loading: boolean) => {
+    const newLoadingState = [...loadingState];
+    newLoadingState[index] = loading;
+    setLoadingState(newLoadingState);
+  };
+
   return (
     <Card className={classNames(styles.layout, styles[type])}>
       <div className={styles.content}>
@@ -76,7 +95,8 @@ export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
       <div className={styles.actions}>
         {onConfirm && (
           <Button
-            onClick={onConfirm.action}
+            onClick={() => onConfirm.action(handleLoading(0))}
+            isLoading={loadingState[0]}
             caption={onConfirm.caption}
             variant={primaryVariant[type]}
             color={primaryColor[type]}
@@ -85,7 +105,8 @@ export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
         )}
         {onDecline && (
           <Button
-            onClick={onDecline.action}
+            onClick={() => onDecline.action(handleLoading(1))}
+            isLoading={loadingState[1]}
             caption={onDecline.caption}
             variant={secondaryVariant[type]}
             color={secondaryColor[type]}
