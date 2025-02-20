@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { useForm } from "react-hook-form";
 
 import { RiSearchEyeLine } from "react-icons/ri";
@@ -30,9 +31,9 @@ interface ProjectEvaluationProps {
  * @returns {JSX.Element} The JSX code for ProjectEvaluation component.
  */
 export const ProjectEvaluation: React.FC<ProjectEvaluationProps> = ({ projectId, admin }) => {
+  const reviewProject = useReviewProject();
   const { data } = useWalletClient();
   const { data: user } = useUserByWallet(data?.account.address);
-  const reviewProject = useReviewProject();
   const { openModal, closeModal } = useModal();
 
   const isAdmin = user?.type === "admin";
@@ -62,6 +63,42 @@ export const ProjectEvaluation: React.FC<ProjectEvaluationProps> = ({ projectId,
         "This project is pending review. It will be evaluated by the Nostromo team before being made official for the rest of the community.",
     },
   };
+
+  /**
+   * Handles the confirmation of a project review.
+   *
+   * This function is called when the user confirms their review decision.
+   * It triggers the mutation to submit the review status and comments for the specified project.
+   *
+   * @param {ProjectReviewStatus} response - The review status indicating the outcome of the evaluation.
+   * @param {(loading: boolean) => void} setLoading - A function to set the loading state for the confirmation process.
+   * @returns {void} This function does not return a value.
+   */
+  const onConfirm = useCallback(
+    (response: ProjectReviewStatus, setLoading: (loading: boolean) => void) => {
+      setLoading(true);
+      reviewProject.mutate(
+        {
+          id: projectId,
+          wallet: admin.wallet,
+          data: {
+            response,
+            comments: getValues("comment"),
+          },
+        },
+        {
+          onSuccess: () => {
+            closeModal();
+            setLoading(false);
+          },
+          onError: () => {
+            setLoading(false);
+          },
+        },
+      );
+    },
+    [projectId, admin.wallet, getValues, reviewProject],
+  );
 
   /**
    * Handles the review submission for the project.
@@ -105,34 +142,11 @@ export const ProjectEvaluation: React.FC<ProjectEvaluationProps> = ({ projectId,
       }),
       onConfirm: {
         caption: "Confirm",
-        action: (setLoading: (loading: boolean) => void) => {
-          setLoading(true);
-          reviewProject.mutate(
-            {
-              id: projectId,
-              wallet: admin.wallet,
-              data: {
-                response,
-                comments: getValues("comment"),
-              },
-            },
-            {
-              onSuccess: () => {
-                closeModal();
-                setLoading(false);
-              },
-              onError: () => {
-                setLoading(false);
-              },
-            },
-          );
-        },
+        action: (setLoading) => onConfirm(response, setLoading),
       },
       onDecline: {
         caption: "Cancel",
-        action: () => {
-          closeModal();
-        },
+        action: closeModal,
       },
     });
   };
