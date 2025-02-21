@@ -24,11 +24,20 @@
   .inner {
     display: flex;
     flex-direction: column;
-    padding: 34px;
+    padding: 22px 34px;
     gap: 32px;
 
     @include respond-to(mobile) {
       padding: 18px;
     }
+  }
+}
+
+.warning {
+  background: linear-gradient(20deg, #181003 0%, rgba(0, 0, 0, 0.7) 100%);
+  border: 1px solid rgba(108, 78, 51, 0.8);
+
+  legend {
+    color: #ffd723;
   }
 }

@@ -6,6 +6,7 @@ import classNames from "clsx";
 import {
   RiCheckLine,
   RiDiscordFill,
+  RiDownloadLine,
   RiFileAddLine,
   RiImageAddLine,
   RiInstagramFill,
@@ -46,7 +47,7 @@ import { ProjectFormTabs } from "../../../project/project.types";
  * @param onSubmit - The function to call when the form is submitted.
  * @returns A JSX element representing the project form.
  */
-export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoading, onSubmit }) => {
+export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoading, comments, onSubmit }) => {
   const { data: currencies, isLoading: isCurrenciesLoading } = useCurrencies();
   const [activeTab, setActiveTab] = useState<ProjectFormTabs>(ProjectFormTabs.BASIC_INFORMATION);
 
@@ -58,7 +59,7 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
     setValue,
     getValues,
     handleSubmit,
-    formState: { isDirty, errors, dirtyFields },
+    formState: { isDirty, isValid, errors, dirtyFields },
   } = useForm<ProjectFormValues>({
     defaultValues: defaultValues ?? getDefaultProjectFormValues(),
     resolver: zodResolver(OptionalFormSchema),
@@ -67,10 +68,14 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
   });
 
   const name = watch("name"),
+    slug = watch("slug"),
     amountToRaise = watch("amountToRaise"),
     threshold = watch("threshold"),
     tokenName = watch("tokenName"),
     tokenImage = watch("tokenImageUrl"),
+    whitepaperUrl = watch("whitepaperUrl"),
+    tokenomicsUrl = watch("tokenomicsUrl"),
+    litepaperUrl = watch("litepaperUrl"),
     currencyId = watch("currency.id");
 
   /**
@@ -326,78 +331,117 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
       case ProjectFormTabs.DOCUMENTATION:
         return (
           <div className={classNames(styles.grid, styles.three)}>
-            <Controller
-              name="whitepaperUrl"
-              control={control}
-              key={"whitepaperUrl"}
-              render={({ field }) => (
-                <FileUpload
-                  name={"whitepaper"}
-                  icon={<RiFileAddLine />}
-                  title={"Whitepaper"}
-                  description={"Drag and drop, or click to upload the project whitepaper"}
-                  accept="documents"
-                  value={field.value}
-                  error={errors.whitepaperUrl?.message}
-                  onChange={(file) => field.onChange(file)}
-                  {...(typeof field.value === "string" && {
-                    attachmentLabels: {
-                      icon: <RiCheckLine />,
-                      title: "Whitepaper Uploaded",
-                      description: "The whitepaper has been uploaded successfully",
-                    },
-                  })}
+            <div className={classNames(styles.grid, styles.one)}>
+              {/* Whitepaper */}
+              <Controller
+                name="whitepaperUrl"
+                control={control}
+                key={"whitepaperUrl"}
+                render={({ field }) => (
+                  <FileUpload
+                    name={"whitepaper"}
+                    icon={<RiFileAddLine />}
+                    title={"Whitepaper"}
+                    description={"Drag and drop, or click to upload the project whitepaper"}
+                    accept="documents"
+                    value={field.value}
+                    error={errors.whitepaperUrl?.message}
+                    onChange={(file) => field.onChange(file)}
+                    {...(typeof field.value === "string" && {
+                      attachmentLabels: {
+                        icon: <RiCheckLine />,
+                        title: "Whitepaper Uploaded",
+                        description: "The whitepaper has been uploaded successfully",
+                      },
+                    })}
+                  />
+                )}
+              />
+              {whitepaperUrl && typeof whitepaperUrl === "string" && (
+                <Button
+                  iconRight={<RiDownloadLine />}
+                  variant={"solid"}
+                  caption={"Download File"}
+                  onClick={() => {
+                    window.open(whitepaperUrl, "_blank");
+                  }}
                 />
               )}
-            />
-            <Controller
-              name="tokenomicsUrl"
-              control={control}
-              key={"tokenomicsUrl"}
-              render={({ field }) => (
-                <FileUpload
-                  name={"tokenomics"}
-                  icon={<RiFileAddLine />}
-                  title={"Tokenomics"}
-                  description={"Drag and drop, or click to upload the tokenomics document"}
-                  accept="documents"
-                  value={field.value}
-                  error={dirtyFields.tokenomicsUrl ? errors.tokenomicsUrl?.message : undefined}
-                  onChange={(file) => field.onChange(file)}
-                  {...(typeof field.value === "string" && {
-                    attachmentLabels: {
-                      icon: <RiCheckLine />,
-                      title: "Tokenomics Uploaded",
-                      description: "The tokenomics has been uploaded successfully",
-                    },
-                  })}
+            </div>
+
+            {/* Tokenomics */}
+            <div className={classNames(styles.grid, styles.one)}>
+              <Controller
+                name="tokenomicsUrl"
+                control={control}
+                key={"tokenomicsUrl"}
+                render={({ field }) => (
+                  <FileUpload
+                    name={"tokenomics"}
+                    icon={<RiFileAddLine />}
+                    title={"Tokenomics"}
+                    description={"Drag and drop, or click to upload the tokenomics document"}
+                    accept="documents"
+                    value={field.value}
+                    error={dirtyFields.tokenomicsUrl ? errors.tokenomicsUrl?.message : undefined}
+                    onChange={(file) => field.onChange(file)}
+                    {...(typeof field.value === "string" && {
+                      attachmentLabels: {
+                        icon: <RiCheckLine />,
+                        title: "Tokenomics Uploaded",
+                        description: "The tokenomics has been uploaded successfully",
+                      },
+                    })}
+                  />
+                )}
+              />
+              {tokenomicsUrl && typeof tokenomicsUrl === "string" && (
+                <Button
+                  iconRight={<RiDownloadLine />}
+                  caption={"Download File"}
+                  onClick={() => {
+                    window.open(tokenomicsUrl, "_blank");
+                  }}
                 />
               )}
-            />
-            <Controller
-              name="litepaperUrl"
-              control={control}
-              key={"litepaperUrl"}
-              render={({ field }) => (
-                <FileUpload
-                  name={"litepaper"}
-                  icon={<RiFileAddLine />}
-                  title={"Litepaper"}
-                  description={"Drag and drop, or click to upload the project litepaper"}
-                  accept="documents"
-                  value={field.value}
-                  error={dirtyFields.litepaperUrl ? errors.litepaperUrl?.message : undefined}
-                  onChange={(file) => field.onChange(file)}
-                  {...(typeof field.value === "string" && {
-                    attachmentLabels: {
-                      icon: <RiCheckLine />,
-                      title: "Litepaper Uploaded",
-                      description: "The litepaper has been uploaded successfully",
-                    },
-                  })}
+            </div>
+
+            {/* Litepaper */}
+            <div className={classNames(styles.grid, styles.one)}>
+              <Controller
+                name="litepaperUrl"
+                control={control}
+                key={"litepaperUrl"}
+                render={({ field }) => (
+                  <FileUpload
+                    name={"litepaper"}
+                    icon={<RiFileAddLine />}
+                    title={"Litepaper"}
+                    description={"Drag and drop, or click to upload the project litepaper"}
+                    accept="documents"
+                    value={field.value}
+                    error={dirtyFields.litepaperUrl ? errors.litepaperUrl?.message : undefined}
+                    onChange={(file) => field.onChange(file)}
+                    {...(typeof field.value === "string" && {
+                      attachmentLabels: {
+                        icon: <RiCheckLine />,
+                        title: "Litepaper Uploaded",
+                        description: "The litepaper has been uploaded successfully",
+                      },
+                    })}
+                  />
+                )}
+              />
+              {litepaperUrl && typeof litepaperUrl === "string" && (
+                <Button
+                  iconRight={<RiDownloadLine />}
+                  caption={"Download File"}
+                  onClick={() => {
+                    window.open(litepaperUrl, "_blank");
+                  }}
                 />
               )}
-            />
+            </div>
           </div>
         );
 
@@ -504,15 +548,23 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
                 label="Project Name"
                 type="text"
                 placeholder="Project Name"
-                error={dirtyFields.name ? errors.name?.message : undefined}
+                error={errors.name?.message}
                 {...register("name")}
               />
               <TextInput
-                label="Email"
+                label="Contact Email"
                 type="text"
-                placeholder="Project email"
-                error={dirtyFields.email ? errors.email?.message : undefined}
+                placeholder="Contact Email"
+                error={errors.email?.message}
                 {...register("email")}
+              />
+              <TextInput
+                label="Project Slug"
+                type="text"
+                placeholder="Project Slug"
+                error={errors.slug?.message}
+                note={`${window.location.origin}/project/${slug}`}
+                {...register("slug")}
               />
             </div>
 
@@ -522,16 +574,6 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
               placeholder="Write an appropriate and detailed description of your project that is attractive and clear for users. Make sure to include objectives, main features, and any relevant information that may capture the interest of potential users."
               error={dirtyFields.description ? errors.description?.message : undefined}
             />
-
-            <div className={classNames(styles.grid, styles.two, styles.withPaddingTop)}>
-              <TextInput
-                label="Project Slug"
-                type="text"
-                placeholder="Project Slug"
-                error={dirtyFields.slug ? errors.slug?.message : undefined}
-                {...register("slug")}
-              />
-            </div>
           </div>
         );
 
@@ -562,7 +604,14 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
     }
 
     return (
-      <Button type={"submit"} isLoading={isLoading} variant={"solid"} color={"secondary"} caption={"Save Changes"} />
+      <Button
+        type={"submit"}
+        isLoading={isLoading}
+        variant={"solid"}
+        disabled={!isValid}
+        color={"secondary"}
+        caption={"Save Changes"}
+      />
     );
   };
 
@@ -606,6 +655,14 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
           onChange={setActiveTab}
         />
       </div>
+
+      {comments && (
+        <Fieldset title={"Review Comments"} variant={"warning"}>
+          <div className={styles.comments}>
+            <Typography size={"small"}>{comments}</Typography>
+          </div>
+        </Fieldset>
+      )}
 
       {/* Page Container */}
       <Fieldset title={ProjectTabLabels[activeTab]}>

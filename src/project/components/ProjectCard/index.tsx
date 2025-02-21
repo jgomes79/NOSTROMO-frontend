@@ -64,7 +64,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
    *                   - Project details route for all other states
    */
   const getProjectRoute = () => {
-    if (state === ProjectStates.DRAFT) {
+    if (state === ProjectStates.DRAFT || state === ProjectStates.REQUEST_MORE_INFO) {
       return getRoute(PROJECT_ROUTES.EDIT_PROJECT, { slug });
     }
     return getRoute(PROJECT_ROUTES.PROJECT_DETAILS, { slug, tabId: ProjectFormTabs.RAISING_FUNDS });

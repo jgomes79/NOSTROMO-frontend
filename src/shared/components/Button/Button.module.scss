@@ -11,6 +11,10 @@
     cursor: pointer;
   }
 
+  &[disabled] {
+    filter: grayscale(1) brightness(0.2);
+  }
+
   &.withLoader {
     .content {
       opacity: 0;
@@ -97,6 +101,11 @@
         color: $green-01;
         background: #bfc6ba;
       }
+    }
+
+    &[disabled] {
+      filter: grayscale(1) brightness(0.2);
+      color: $green-01;
     }
   }
 

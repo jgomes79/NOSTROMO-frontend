@@ -24,6 +24,7 @@ interface TextInputProps extends React.HTMLProps<HTMLInputElement> {
   readonly description?: string;
   readonly error?: string;
   readonly upperCase?: boolean;
+  readonly note?: string;
 }
 
 /**
@@ -34,7 +35,7 @@ interface TextInputProps extends React.HTMLProps<HTMLInputElement> {
  * @returns {JSX.Element} The rendered TextInput component.
  */
 export const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(
-  ({ label, icon, symbol, type, description, error, upperCase = false, ...props }, ref) => {
+  ({ label, icon, symbol, type, description, error, upperCase = false, note, ...props }, ref) => {
     /**
      * Handles the input event for the TextInput component.
      *
@@ -86,6 +87,7 @@ export const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(
             {...props}
           />
         </div>
+        {!error && note && <TagLabel text={note} color="green" />}
         {error && <TagLabel text={error} icon={<RiAlertLine />} color="red" />}
       </div>
     );

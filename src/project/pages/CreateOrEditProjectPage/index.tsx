@@ -130,6 +130,7 @@ export const CreateOrEditProjectPage: React.FC = () => {
         <ProjectForm
           isLoading={upsertProject.isPending || publishProject.isPending || project.isRefetching}
           defaultValues={project.data || undefined}
+          comments={project.data?.comments}
           onSubmit={handleClickSubmit}
         />
       </div>

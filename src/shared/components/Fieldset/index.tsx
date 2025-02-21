@@ -5,31 +5,26 @@ import { Typography } from "../Typography";
 
 /**
  * Props for the Fieldset component.
+ *
+ * @param title - The title of the fieldset.
+ * @param children - The children of the fieldset.
+ * @param className - The class name of the fieldset.
  */
 interface FieldsetProps {
-  /**
-   * The title of the fieldset.
-   */
   readonly title: string;
-  /**
-   * The children of the fieldset.
-   */
   readonly children: React.ReactNode;
-  /**
-   * The class name of the fieldset.
-   */
+  readonly variant?: "default" | "warning";
   readonly className?: string;
 }
 
 /**
  * Fieldset component for grouping related elements in a form.
  *
- * @param {FieldsetProps} props - The properties of the Fieldset component.
  * @returns {React.ReactElement} The rendered React element.
  */
-export const Fieldset: React.FC<FieldsetProps> = ({ title, children, className }) => {
+export const Fieldset: React.FC<FieldsetProps> = ({ title, children, className, variant = "default" }) => {
   return (
-    <fieldset className={classNames(styles.layout, className)}>
+    <fieldset className={classNames(styles.layout, className, styles[variant])}>
       <Typography as={"legend"} variant={"heading"} size={"medium"}>
         {title}
       </Typography>
