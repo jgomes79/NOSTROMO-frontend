@@ -21,8 +21,8 @@ import { TierImage } from "../TierImage";
  * @property {() => void} onSelectTier - Callback function triggered when a tier is selected
  */
 interface TierSelectorProps {
-  readonly focusLoadingId: Tier["id"] | null;
-  readonly isLoading: boolean;
+  readonly currentTierId?: Tier["id"];
+  readonly isLoading?: Tier["id"] | null;
   readonly onSelectTier: (tier: Tier) => void;
 }
 
@@ -32,7 +32,7 @@ interface TierSelectorProps {
  * @param {TierSelectorProps} props - Component props
  * @returns {React.ReactElement} Rendered TierSelector component
  */
-export const TierSelector: React.FC<TierSelectorProps> = ({ isLoading, focusLoadingId, onSelectTier }) => {
+export const TierSelector: React.FC<TierSelectorProps> = ({ currentTierId, isLoading, onSelectTier }) => {
   const { data, isLoading: isLoadingTiers } = useTiers();
   const { isMobile, isTabletVertical } = useResponsive();
 
@@ -44,8 +44,19 @@ export const TierSelector: React.FC<TierSelectorProps> = ({ isLoading, focusLoad
    * @returns {React.ReactElement} Rendered tier card
    */
   const renderTier = (tier: Tier) => (
-    <div className={classNames(styles.tier, styles[`tier_${tier.id}`])}>
-      <TierImage tier={tier.id} size={128} />
+    <div
+      className={classNames(styles.tier, styles[`tier_${tier.id}`], {
+        ...(currentTierId && { [styles.disabled]: tier.id < currentTierId }),
+      })}
+    >
+      <div className={styles.image}>
+        <TierImage tier={tier.id} size={128} />
+        {currentTierId && currentTierId === tier.id && (
+          <Typography variant={"body"} size={"xsmall"} className={styles.current} textAlign={"center"}>
+            Current Tier
+          </Typography>
+        )}
+      </div>
       <div className={styles.data}>
         <div className={classNames(styles.data, styles.title)}>
           <Typography variant={"heading"} size={"large"} textAlign={isMobileOrTabletVertical ? "center" : "left"}>
@@ -67,16 +78,18 @@ export const TierSelector: React.FC<TierSelectorProps> = ({ isLoading, focusLoad
           </Typography>
         </Fieldset>
 
-        <div className={styles.actions}>
-          <Button
-            variant={"solid"}
-            size={"medium"}
-            caption={`Stake ${formatPrice(tier.stakeAmount, "QUBIC", 0)}`}
-            className={styles.button}
-            isLoading={isLoading && focusLoadingId === tier.id}
-            onClick={() => onSelectTier(tier)}
-          />
-        </div>
+        {!currentTierId || (currentTierId && tier.id > currentTierId) ? (
+          <div className={styles.actions}>
+            <Button
+              variant={"solid"}
+              size={"medium"}
+              caption={`Stake ${formatPrice(tier.stakeAmount, "QUBIC", 0)}`}
+              className={styles.button}
+              isLoading={isLoading === tier.id}
+              onClick={() => onSelectTier(tier)}
+            />
+          </div>
+        ) : null}
       </div>
     </div>
   );

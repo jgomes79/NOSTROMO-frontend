@@ -9,13 +9,17 @@
 
   grid-template-columns: 0fr 1fr;
   gap: 32px;
-  background-color: #121312;
+  background: #121312;
   border-radius: 8px;
   border: 1px solid #212421;
   padding: 20px;
 
   transition: border-color 120ms linear;
   user-select: none;
+
+  &.disabled {
+    filter: grayscale(100%) brightness(0.4);
+  }
 
   @include respond-to(mobile) {
     grid-template-columns: 1fr;
@@ -41,6 +45,11 @@
     .description, .fieldset legend {
       color: #73c08c;
     }
+    
+    .current {
+      background-color: #456f52;
+      color: #fff;
+    }
   }
 
   &.tier_3 {
@@ -56,6 +65,11 @@
 
     .description, .fieldset legend {
       color: #cab6ff;
+    }
+
+    .current {
+      background-color: #4e3d5d;
+      color: #fff;
     }
   }
 
@@ -73,6 +87,11 @@
     .description, .fieldset legend {
       color: #dd9aff;
     }
+
+    .current {
+      background-color: #50165c;
+      color: #fff;
+    }
   }
 
   &.tier_5 {
@@ -88,6 +107,11 @@
 
     .description, .fieldset legend {
       color: #e87651;
+    }
+
+    .current {
+      background-color: #7c3017;
+      color: #fff;
     }
   }
 
@@ -105,6 +129,11 @@
 
     .description, .fieldset legend {
       color: #ff6161;
+    }
+
+    .current {
+      background-color: #6e1b1d;
+      color: #fff;
     }
   }
 }
@@ -171,4 +200,17 @@
     padding: 20px;
     padding-top: 10px;
   }
+}
+
+.image {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.current {
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-weight: bold;
+  white-space: nowrap;
 }

@@ -96,8 +96,8 @@ export const UserTier: React.FC<UserTierProps> = ({ wallet }) => {
           Select a tier to start investing in NOSTROMO Projects and unlock features
         </Typography>
         <TierSelector
-          focusLoadingId={setUserTier.currentTierSetting}
-          isLoading={setUserTier.isPending}
+          currentTierId={user?.tier.id}
+          isLoading={setUserTier.isPending ? setUserTier.currentTierSetting : undefined}
           onSelectTier={handleClickSetTier}
         />
       </div>

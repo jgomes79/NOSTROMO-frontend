@@ -8,6 +8,7 @@ import { NavigatorTitle } from "@/shared/components/NavigatorTitle";
 import { useAppTitle } from "@/shared/hooks/useAppTitle";
 import { TierSelector } from "@/tier/components/TierSelector";
 import { Tier } from "@/tier/tier.types";
+import { useUserByWallet } from "@/user/hooks/useUserByWallet";
 
 import { useSetUserTier } from "../../hooks/useSetUserTier";
 import { USER_ROUTES } from "../../user.constants";
@@ -20,9 +21,10 @@ import { UserSettingsTabs } from "../../user.types";
  * @returns {JSX.Element} The rendered ChangeUserTierPage component.
  */
 export const ChangeUserTierPage: React.FC = () => {
-  const setUserTier = useSetUserTier();
-  const { data: wallet } = useWalletClient();
-  const navigate = useNavigate();
+  const setUserTier = useSetUserTier(),
+    { data: wallet } = useWalletClient(),
+    { data: user } = useUserByWallet(wallet?.account.address),
+    navigate = useNavigate();
 
   useAppTitle("Upgrade Tier");
 
@@ -56,8 +58,8 @@ export const ChangeUserTierPage: React.FC = () => {
         backPath={getRoute(USER_ROUTES.SETTINGS, { tabId: UserSettingsTabs.MY_TIER })}
       />
       <TierSelector
-        focusLoadingId={setUserTier.currentTierSetting}
-        isLoading={setUserTier.isPending}
+        currentTierId={user?.tier.id}
+        isLoading={setUserTier.isPending ? setUserTier.currentTierSetting : undefined}
         onSelectTier={handleClickSetTier}
       />
     </>
