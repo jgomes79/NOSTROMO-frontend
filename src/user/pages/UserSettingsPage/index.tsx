@@ -4,7 +4,9 @@ import classNames from "clsx";
 import { useWalletClient } from "wagmi";
 
 import { getRoute } from "@/lib/router";
+import { ProjectsListByState } from "@/project/components/ProjectsListByState";
 import { ProjectsListByWallet } from "@/project/components/ProjectsListByWallet";
+import { ProjectStates } from "@/project/project.types";
 import { Loader } from "@/shared/components/Loader";
 import { Separator } from "@/shared/components/Separator";
 import { Tabs } from "@/shared/components/Tabs";
@@ -54,7 +56,7 @@ export const UserSettingsPage: React.FC = () => {
         return <ProjectsListByWallet walletAddress={wallet.account.address} limit={9} />;
 
       case UserSettingsTabs.CLAIM_TOKENS:
-        return <div>Claim Tokens</div>;
+        return <ProjectsListByState tabs={[]} initialState={ProjectStates.FUNDING_PHASE_3} />;
 
       default:
       case UserSettingsTabs.MY_TIER:

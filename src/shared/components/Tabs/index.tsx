@@ -28,7 +28,7 @@ interface TabsProps<T> {
   readonly size?: TypographyProps["size"];
 }
 
-interface Tab<T> {
+export interface Tab<T> {
   id: T;
   label: string;
   iconLeft?: React.ReactNode;

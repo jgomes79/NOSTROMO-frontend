@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import classNames from "clsx";
 import { RiSendPlaneLine } from "react-icons/ri";
 
+import { homeProjectTabs } from "@/home/home.constants";
 import { ProjectsListByState } from "@/project/components/ProjectsListByState";
 import { Banner } from "@/shared/components/Banner";
 import { SectionIndicator } from "@/shared/components/SectionIndicator";
@@ -104,7 +105,7 @@ export const HomePage: React.FC = () => {
       {/* Projects Section */}
       <section ref={(el) => (sectionRefs.current[2] = el)} className={styles.section}>
         <div className={classNames(styles.container, styles.withHeight)}>
-          <ProjectsListByState />
+          <ProjectsListByState tabs={homeProjectTabs} initialState={homeProjectTabs[0].id} />
         </div>
       </section>
 

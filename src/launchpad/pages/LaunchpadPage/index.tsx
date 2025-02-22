@@ -14,6 +14,7 @@ import { useAppTitle } from "@/shared/hooks/useAppTitle";
 
 import styles from "./LaunchpadPage.module.scss";
 import { HowToBoyIdoSection } from "../../components/HowToBoyIdoSection";
+import { launchpadProjectTabs } from "../../launchpad.constants";
 
 export const LaunchpadPage: React.FC = () => {
   const slider = useRef<SliderElement>();
@@ -105,7 +106,7 @@ export const LaunchpadPage: React.FC = () => {
 
       <section className={styles.section}>
         <div className={styles.container}>
-          <ProjectsListByState />
+          <ProjectsListByState tabs={launchpadProjectTabs} initialState={launchpadProjectTabs[0].id} />
         </div>
       </section>
     </div>

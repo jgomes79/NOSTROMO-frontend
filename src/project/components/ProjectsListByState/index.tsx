@@ -2,59 +2,74 @@ import { useEffect } from "react";
 
 import { RiArrowDownLine } from "react-icons/ri";
 
-import { useProjectsByState } from "@/project/hooks/useProjectsByState";
-import { ProjectStates } from "@/project/project.types";
 import { Button } from "@/shared/components/Button";
-import { Tabs } from "@/shared/components/Tabs";
+import { Tabs, Tab } from "@/shared/components/Tabs";
 
 import styles from "./ProjectsListByState.module.scss";
+import { useProjectsByState } from "../../hooks/useProjectsByState";
+import { ProjectStates } from "../../project.types";
 import { ProjectList } from "../ProjectList";
+/**
+ * Props for the ProjectsListByState component.
+ *
+ * @typedef {Object} ProjectsListByStateProps
+ * @property {ProjectStates} initialState - The initial state of the projects to display.
+ * @property {Tab<ProjectStates>[]} tabs - An array of tab objects representing the project states.
+ */
+
+interface ProjectsListByStateProps {
+  initialState?: ProjectStates;
+  tabs?: Tab<ProjectStates>[];
+}
 
 /**
- * Component that displays a list of all projects with filtering tabs
+ * Component that displays a list of all projects with filtering tabs.
  *
  * @component
- * @returns {JSX.Element} The rendered ProjectsListByState component
+ * @returns {JSX.Element} The rendered ProjectsListByState component.
  */
-export const ProjectsListByState = () => {
+export const ProjectsListByState: React.FC<ProjectsListByStateProps> = ({
+  initialState = ProjectStates.ALL,
+  tabs = [],
+}) => {
   const { page, isLoading, projects, total, state, fetchProjectsByState } = useProjectsByState();
 
   /**
    * Effect to fetch projects when state changes
    */
   useEffect(() => {
-    fetchProjectsByState(0, state);
-  }, [state]);
+    fetchProjectsByState(0, initialState);
+  }, []);
 
   /**
-   * Array of project states with their respective IDs and labels.
+   * Props to be passed to the ProjectList component.
    *
-   * @type {Array<{ id: ProjectStates, label: string }>}
+   * @typedef {Object} ProjectListProps
+   * @property {number} page - The current page number of the project list.
+   * @property {boolean} isLoading - Indicates whether the project list is currently loading.
+   * @property {Project[]} projects - The array of projects to be displayed.
+   * @property {number} total - The total number of projects available.
    */
-  const projectStates = [
-    {
-      id: ProjectStates.FUNDING_PHASE_1,
-      label: "Active",
-    },
-    {
-      id: ProjectStates.UPCOMING,
-      label: "Upcoming",
-    },
-    {
-      id: ProjectStates.CLOSED,
-      label: "Closed",
-    },
-  ];
+  const projectListProps = {
+    page,
+    isLoading,
+    projects,
+    total,
+  };
 
   return (
     <div className={styles.tabs}>
-      <Tabs<ProjectStates>
-        size={"large"}
-        activeId={state}
-        tabs={projectStates}
-        onRender={<ProjectList page={page} isLoading={isLoading} projects={projects} total={total} />}
-        onChange={(state) => fetchProjectsByState(1, state)}
-      />
+      {tabs && tabs.length > 0 ? (
+        <Tabs<ProjectStates>
+          size={"large"}
+          activeId={state}
+          tabs={tabs}
+          onRender={<ProjectList {...projectListProps} />}
+          onChange={(state) => fetchProjectsByState(1, state)}
+        />
+      ) : (
+        <ProjectList {...projectListProps} />
+      )}
 
       {total > 4 && (
         <div className={styles.actions}>
