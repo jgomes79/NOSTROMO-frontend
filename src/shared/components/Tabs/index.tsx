@@ -10,7 +10,7 @@ import { Typography, TypographyProps } from "../Typography";
  * Props for the Tabs component.
  *
  * @template T - The type of the tab ID.
- * @property {("green" | "yellow")} [color] - The color theme of the tabs. Default is "green".
+ * @property {("green" | "cyan")} [color] - The color theme of the tabs. Default is "green".
  * @property {Tab<T>[]} tabs - An array of tab objects.
  * @property {T} activeId - The ID of the active tab.
  * @property {(tabId: T) => void} [onChange] - Optional callback function that is called when a tab is changed.
@@ -19,7 +19,7 @@ import { Typography, TypographyProps } from "../Typography";
  * @property {TypographyProps["size"]} [size] - The size of the tabs. Default is "medium".
  */
 interface TabsProps<T> {
-  readonly color?: "green" | "yellow";
+  readonly color?: "green" | "cyan";
   readonly tabs: Tab<T>[];
   readonly activeId: T;
   readonly onChange?: (tabId: T) => void;

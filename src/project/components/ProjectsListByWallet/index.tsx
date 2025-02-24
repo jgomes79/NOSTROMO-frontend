@@ -78,7 +78,7 @@ export const ProjectsListByWallet: React.FC<ProjectsListByWalletProps> = ({ wall
   return (
     <div className={styles.tabs}>
       <Tabs<ProjectStates>
-        color={"yellow"}
+        color={"cyan"}
         activeId={state}
         size={"medium"}
         tabs={projectStates}

@@ -14,13 +14,9 @@ import { ProjectCard } from "../ProjectCard";
  * @property {number} total - The total number of projects available.
  */
 interface ProjectListProps {
-  /** The current page number. */
   readonly page: number;
-  /** Indicates if the component is in a loading state. */
   readonly isLoading: boolean;
-  /** An array of projects to display. */
   readonly projects: Project[];
-  /** The total number of projects available. */
   readonly total: number;
 }
 
@@ -32,9 +28,6 @@ interface ProjectListProps {
  * when no projects are available.
  *
  * @param {ProjectListProps} props - Component props
- * @param {number} props.page - Current page number
- * @param {boolean} props.isLoading - Loading state indicator
- * @param {Project[]} props.projects - Array of projects to display
  * @returns {JSX.Element} Rendered component
  */
 export const ProjectList: React.FC<ProjectListProps> = ({ isLoading, page, projects }) => {

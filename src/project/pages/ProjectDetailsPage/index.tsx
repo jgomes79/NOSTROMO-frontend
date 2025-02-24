@@ -16,6 +16,7 @@ import { DataLabel } from "@/shared/components/DataLabel";
 import { Loader } from "@/shared/components/Loader";
 import { Tabs } from "@/shared/components/Tabs";
 import { ErrorPage } from "@/shared/pages/ErrorPage";
+import { useUserByWallet } from "@/user/hooks/useUserByWallet";
 
 import styles from "./ProjectDetailsPage.module.scss";
 import { ProjectHeader } from "../../components/ProjectHeader";
@@ -49,6 +50,7 @@ type ProjectDetailsPageParams = {
 export const ProjectDetailsPage: React.FC = () => {
   const { slug, tabId } = useParams<ProjectDetailsPageParams>(),
     { data: wallet } = useWalletClient(),
+    { data: user } = useUserByWallet(wallet?.account.address),
     { data, ...project } = useProject(slug);
 
   const navigate = useNavigate();
@@ -91,7 +93,7 @@ export const ProjectDetailsPage: React.FC = () => {
    * - Returns null for any other project state
    */
   const renderActionCard = (): JSX.Element | null => {
-    if (!data || !wallet) return null;
+    if (!data || !wallet || !user) return null;
 
     switch (data.state) {
       case ProjectStates.UPCOMING:
@@ -103,15 +105,15 @@ export const ProjectDetailsPage: React.FC = () => {
             }}
             user={{
               tier: {
-                id: 6,
-                name: "Tier 1",
+                id: user.tier.id,
+                name: user.tier.name,
               },
               investment: {
-                value: 1000,
+                value: user.tier.stakeAmount,
                 max: {
-                  value: 1000,
+                  value: user.tier.poolWeight,
                   currency: {
-                    name: "USD",
+                    name: data.currency.name,
                   },
                 },
               },
@@ -148,7 +150,7 @@ export const ProjectDetailsPage: React.FC = () => {
         );
 
       case ProjectStates.REQUEST_MORE_INFO:
-        return <ProjectComments comments={data.comments || ""} />;
+        return <ProjectComments comments={data.comments ?? ""} />;
       default:
         return null;
     }
@@ -182,8 +184,8 @@ export const ProjectDetailsPage: React.FC = () => {
           </Card>
         );
 
-      default:
       case ProjectFormTabs.RAISING_FUNDS:
+      default:
         return (
           <Card className={classNames(styles.grid, styles.labels)}>
             <DataLabel label={"Currency"} value={data.currency.name} />

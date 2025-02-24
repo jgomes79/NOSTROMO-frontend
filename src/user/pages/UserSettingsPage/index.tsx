@@ -33,7 +33,7 @@ export const UserSettingsPage: React.FC = () => {
 
   useAppTitle("User settings");
 
-  if (!params || !params.tabId) {
+  if (!params?.tabId) {
     return <Navigate to={getRoute(USER_ROUTES.SETTINGS, { tabId: UserSettingsTabs.MY_TIER })} />;
   }
 
@@ -56,10 +56,10 @@ export const UserSettingsPage: React.FC = () => {
         return <ProjectsListByWallet walletAddress={wallet.account.address} limit={9} />;
 
       case UserSettingsTabs.CLAIM_TOKENS:
-        return <ProjectsListByState tabs={[]} initialState={ProjectStates.FUNDING_PHASE_3} />;
+        return <ProjectsListByState tabs={[]} initialState={ProjectStates.CLOSED} />;
 
-      default:
       case UserSettingsTabs.MY_TIER:
+      default:
         return <UserTier wallet={wallet.account.address} />;
     }
   };

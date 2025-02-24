@@ -6,6 +6,8 @@ import { formatPrice } from "@/lib/number";
 import { getRoute } from "@/lib/router";
 import { trimString } from "@/lib/string";
 import { Countdown } from "@/shared/components/Countdown";
+import { Image } from "@/shared/components/Image";
+import { Separator } from "@/shared/components/Separator";
 import { Typography } from "@/shared/components/Typography";
 
 import styles from "./ProjectCard.module.scss";
@@ -56,6 +58,21 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
   date,
   state,
 }) => {
+  const stateLabels = {
+    [ProjectStates.ALL]: { title: "", banner: "", footer: "" },
+    [ProjectStates.DRAFT]: { title: "Draft", banner: "", footer: "Edit Project" },
+    [ProjectStates.SENT_TO_REVIEW]: { title: "Sent to Review", banner: "", footer: "Review" },
+    [ProjectStates.REJECTED]: { title: "Rejected", banner: "", footer: "Project Rejected" },
+    [ProjectStates.CLOSED]: { title: "Closed", banner: "Claim tokens in", footer: "Claim tokens" },
+    [ProjectStates.FAILED]: { title: "Failed", banner: "", footer: "" },
+    [ProjectStates.FUNDING_PHASE_1]: { title: "Funding Phase 1", banner: "Phase 1 ends in", footer: "Invest" },
+    [ProjectStates.FUNDING_PHASE_2]: { title: "Funding Phase 2", banner: "Phase 2 ends in", footer: "Invest" },
+    [ProjectStates.FUNDING_PHASE_3]: { title: "Funding Phase 3", banner: "Phase 3 ends in", footer: "Invest" },
+    [ProjectStates.READY_TO_VOTE]: { title: "Ready to Vote", banner: "Voting ends in", footer: "Vote" },
+    [ProjectStates.REQUEST_MORE_INFO]: { title: "Needs more info", banner: "", footer: "Edit Project" },
+    [ProjectStates.UPCOMING]: { title: "Upcoming", banner: "Register ends in", footer: "Register" },
+  };
+
   /**
    * Determines the appropriate route for the project based on its state.
    *
@@ -82,83 +99,73 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
       <Typography variant={"body"} size={"small"}>
         {label}
       </Typography>
-      <Typography className={styles.value} variant={"body"} size={"small"}>
+      <Typography className={styles.value} variant={"body"} size={"small"} textAlign={"right"}>
         {value}
       </Typography>
     </div>
   );
 
-  const stateLabels = {
-    [ProjectStates.ALL]: { title: "", banner: "", footer: "" },
-    [ProjectStates.DRAFT]: { title: "Draft", banner: "", footer: "Edit" },
-    [ProjectStates.SENT_TO_REVIEW]: { title: "Sent to Review", banner: "", footer: "Review" },
-    [ProjectStates.REJECTED]: { title: "Rejected", banner: "", footer: "Project Rejected" },
-    [ProjectStates.CLOSED]: { title: "Closed", banner: "Claim tokens in", footer: "Project Closed" },
-    [ProjectStates.FAILED]: { title: "Failed", banner: "", footer: "" },
-    [ProjectStates.FUNDING_PHASE_1]: { title: "Funding Phase 1", banner: "Phase 1 ends in", footer: "Invest" },
-    [ProjectStates.FUNDING_PHASE_2]: { title: "Funding Phase 2", banner: "Phase 2 ends in", footer: "Invest" },
-    [ProjectStates.FUNDING_PHASE_3]: { title: "Funding Phase 3", banner: "Phase 3 ends in", footer: "Invest" },
-    [ProjectStates.READY_TO_VOTE]: { title: "Ready to Vote", banner: "Voting ends in", footer: "Vote" },
-    [ProjectStates.REQUEST_MORE_INFO]: { title: "More Info Requested", banner: "", footer: "Edit" },
-    [ProjectStates.UPCOMING]: { title: "Upcoming", banner: "Registration ends in", footer: "Register" },
+  const renderContent = () => {
+    switch (state) {
+      default:
+        return (
+          <div className={styles.content}>
+            <Typography variant={"body"} size={"small"} as={"p"}>
+              {trimString(description, 90)}
+            </Typography>
+
+            {renderField("Fundraising Goal", formatPrice(fundraisingGoal, currency))}
+            {renderField("Token Price", formatPrice(tokenPrice, currency))}
+          </div>
+        );
+    }
   };
 
   return (
     <Link className={styles.layout} to={getProjectRoute()}>
-      <div className={styles.body}>
-        {/* Banner */}
-        <img src={bannerUrl} className={styles.banner} width={"100%"} height={160} alt={"Project Banner"} />
+      <div className={styles.banner}>
+        <img src={bannerUrl} width={"100%"} alt={title} />
 
         <div className={classNames(styles.state, styles[PROJECT_STATE_STRING[state]])}>
-          <Typography variant={"label"} size={"small"}>
+          <Typography variant={"label"} size={"small"} as={"p"} textTransform={"uppercase"}>
             {stateLabels[state].title}
           </Typography>
         </div>
-
-        {/* Date */}
-        {stateLabels[state].banner !== "" && (
-          <div className={styles.date}>
-            <Typography variant={"body"} textTransform={"uppercase"} size={"xsmall"}>
-              {stateLabels[state].banner}
-            </Typography>
-            <Typography variant={"body"} size={"xsmall"}>
-              <Countdown date={date}>
-                {(timeLeft) => (
-                  <>
-                    {timeLeft.days}D {timeLeft.hours}H {timeLeft.minutes}M {timeLeft.seconds}S
-                  </>
-                )}
-              </Countdown>
-            </Typography>
-          </div>
-        )}
-
-        <div className={styles.container}>
-          {/* Header */}
-          <div className={styles.header}>
-            <img src={photoUrl} className={styles.image} width={"100%"} height={94} alt={"Project Photo"} />
-            <Typography as={"h3"} variant="heading" size="small">
+      </div>
+      {stateLabels[state].banner && (
+        <div className={styles.counter}>
+          <Countdown date={date}>
+            {({ days, hours, minutes, seconds }) => (
+              <Typography variant={"body"} size={"small"}>
+                {stateLabels[state].banner} {days}d {hours}h {minutes}m {seconds}s
+              </Typography>
+            )}
+          </Countdown>
+        </div>
+      )}
+      <div className={styles.body}>
+        <div className={styles.header}>
+          <Image url={photoUrl} alt={title} size={42} borderRadius={8} className={styles.avatar} />
+          <div className={styles.title}>
+            <Typography variant={"heading"} size={"small"}>
               {title}
             </Typography>
           </div>
-
-          {/* Description */}
-          <Typography variant={"body"} className={styles.description} size={"medium"} textAlign={"left"}>
-            {trimString(description, 90)}
-          </Typography>
-
-          {/* Fields */}
-          <div className={styles.field}>
-            {renderField("Fundraising Goal", formatPrice(fundraisingGoal, currency))}
-            {renderField("Token Price", formatPrice(tokenPrice, currency))}
-          </div>
         </div>
-        <div className={styles.footer}>
-          <Typography variant={"body"} size={"xsmall"} textTransform={"uppercase"}>
-            {stateLabels[state].footer}
-          </Typography>
-        </div>
+        <Separator />
+
+        {renderContent()}
       </div>
+      <Separator />
+      <Typography
+        variant={"label"}
+        size={"small"}
+        textAlign={"center"}
+        className={styles.footer}
+        textTransform={"uppercase"}
+      >
+        {stateLabels[state].footer}
+      </Typography>
     </Link>
   );
 };

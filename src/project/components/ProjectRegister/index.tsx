@@ -14,7 +14,7 @@ import { Separator } from "@/shared/components/Separator";
 import { Typography } from "@/shared/components/Typography";
 import useResponsive from "@/shared/hooks/useResponsive";
 import { TierImage } from "@/tier/components/TierImage";
-import { Tier } from "@/tier/tier.types";
+import { Tier, Tiers } from "@/tier/tier.types";
 import { USER_ROUTES } from "@/user/user.constants";
 
 import styles from "./ProjectRegister.module.scss";
@@ -76,6 +76,56 @@ export const ProjectRegister: React.FC<ProjectRegisterProps> = ({ registration, 
     navigate(getRoute(USER_ROUTES.CHANGE_TIER));
   };
 
+  /**
+   * Renders the user's tier information and actions based on their registration status.
+   *
+   * @returns {JSX.Element | null} The JSX code for the tier display, or null if the user has no tier.
+   */
+  const renderTier = () => {
+    if (user.tier.id === Tiers.TIER_NONE) return null;
+
+    return (
+      <>
+        <Separator />
+        <div className={classNames(styles.field, styles.welcome)}>
+          <TierImage tier={user.tier.id} size={86} />
+          <div className={styles.line}>
+            <Typography
+              as={"p"}
+              variant={"body"}
+              size={"medium"}
+              textAlign={isMobile ? "center" : "left"}
+              className={styles.description}
+            >
+              You have the “{user.tier.name}” Tier and can invest a max of{" "}
+              {formatPrice(user.investment.max.value, user.investment.max.currency.name)} in phase 1
+            </Typography>
+
+            {!user.isRegistered && (
+              <div className={styles.actions}>
+                <Button
+                  caption="Register"
+                  color={"primary"}
+                  size={"small"}
+                  onClick={onClick}
+                  isLoading={isLoading}
+                  iconLeft={<RiQuillPenFill size={24} />}
+                />
+                <Button
+                  caption="Upgrade Tier"
+                  color={"warning"}
+                  size={"small"}
+                  iconLeft={<RiArrowUpCircleFill size={24} />}
+                  onClick={handleClickUpgradeTier}
+                />
+              </div>
+            )}
+          </div>
+        </div>
+      </>
+    );
+  };
+
   return (
     <Fieldset title={"Register to Invest"} className={styles.section}>
       <div className={classNames(styles.inline, styles.data)}>
@@ -89,41 +139,7 @@ export const ProjectRegister: React.FC<ProjectRegisterProps> = ({ registration, 
           )}
         </Countdown>
       </div>
-      <Separator />
-      <div className={classNames(styles.field, styles.welcome)}>
-        <TierImage tier={user.tier.id} size={86} />
-        <div className={styles.line}>
-          <Typography
-            as={"p"}
-            variant={"body"}
-            size={"medium"}
-            textAlign={isMobile ? "center" : "left"}
-            className={styles.description}
-          >
-            You have the “{user.tier.name}” Tier and can invest a max of{" "}
-            {formatPrice(user.investment.max.value, user.investment.max.currency.name)} in phase 1
-          </Typography>
-          {!user.isRegistered && (
-            <div className={styles.actions}>
-              <Button
-                caption="Register"
-                color={"primary"}
-                size={"small"}
-                onClick={onClick}
-                isLoading={isLoading}
-                iconLeft={<RiQuillPenFill size={24} />}
-              />
-              <Button
-                caption="Upgrade Tier"
-                color={"warning"}
-                size={"small"}
-                iconLeft={<RiArrowUpCircleFill size={24} />}
-                onClick={handleClickUpgradeTier}
-              />
-            </div>
-          )}
-        </div>
-      </div>
+      {renderTier()}
     </Fieldset>
   );
 };
