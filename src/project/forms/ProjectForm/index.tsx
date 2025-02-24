@@ -558,14 +558,6 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
                 error={errors.email?.message}
                 {...register("email")}
               />
-              <TextInput
-                label="Project Slug"
-                type="text"
-                placeholder="Project Slug"
-                error={errors.slug?.message}
-                note={`${window.location.origin}/project/${slug}`}
-                {...register("slug")}
-              />
             </div>
 
             <TextArea
@@ -573,6 +565,15 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
               {...register("description")}
               placeholder="Write an appropriate and detailed description of your project that is attractive and clear for users. Make sure to include objectives, main features, and any relevant information that may capture the interest of potential users."
               error={dirtyFields.description ? errors.description?.message : undefined}
+            />
+
+            <TextInput
+              label="Project URL"
+              type="text"
+              placeholder="Project URLs"
+              error={errors.slug?.message}
+              note={`${window.location.origin}/project/${slug}`}
+              {...register("slug")}
             />
           </div>
         );
