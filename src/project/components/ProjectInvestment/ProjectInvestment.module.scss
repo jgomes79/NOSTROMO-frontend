@@ -2,3 +2,94 @@
   display: flex;
   flex-direction: column;
 }
+
+.grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: 1fr;
+  align-items: center;
+
+  &.three {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+  
+  &.two {
+    grid-template-columns: 1fr 0fr;
+  }
+
+  &.twoFill {
+    align-items: flex-start;
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  h2 {
+    color: $green-03;
+  }
+}
+
+.tier {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+
+  background: #050601;
+  border: 1px solid rgba(42, 53, 30, 0.8);
+  border-radius: 12px;
+  padding: 32px;
+  
+
+  .info {
+    display: flex;
+    flex-direction: row;
+    gap: 24px;
+    align-items: center;
+  }
+}
+
+.countdown {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+
+  .box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 18px;
+
+    background: linear-gradient(20deg, #0d1803 0%, rgba(0, 0, 0, 0.7) 100%);
+    border: 1px solid rgba(42, 53, 30, 0.8);
+    border-radius: 4px;
+
+    p {
+      padding: 0;
+      color: $green-04;
+    }
+  }
+}
+
+.progressLabel {
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+
+  .white {
+    color: $white;
+  }
+
+  .gray {
+    color: $green-04;
+  }
+
+  .green {
+    color: $green-03;
+  }
+}
+

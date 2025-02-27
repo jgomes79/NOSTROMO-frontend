@@ -84,7 +84,19 @@
     border-left-color: #ffcb4d;
   }
 
-  &.upcoming {
+  &.closed, &.failed {
+    color: #ff5c5c;
+    background: linear-gradient(to right, #632020 0%, rgba(0, 0, 0, 0) 100%);
+    border-left-color: #ff5c5c;
+  }
+
+  &.readytovote {
+    color: #61b8ff;
+    background: linear-gradient(to right, #123841 0%, rgba(0, 0, 0, 0) 100%);
+    border-left-color: #61b8ff;
+  }
+
+  &.upcoming, &.fundingphase1, &.fundingphase2, &.fundingphase3 {
     color: #8af827;
     background: linear-gradient(to right, #1e4112 0%, rgba(0, 0, 0, 0) 100%);
     border-left-color: #8af827;

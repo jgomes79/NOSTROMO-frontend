@@ -105,6 +105,15 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
     </div>
   );
 
+  /**
+   * Renders the content section of the project card.
+   *
+   * This function determines what content to display based on the project state.
+   * Currently, it has a default case that shows the project description,
+   * fundraising goal, and token price.
+   *
+   * @returns {JSX.Element} The rendered content component with project information
+   */
   const renderContent = () => {
     switch (state) {
       default:

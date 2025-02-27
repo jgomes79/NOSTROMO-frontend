@@ -56,16 +56,16 @@ export const ProjectList: React.FC<ProjectListProps> = ({ isLoading, page, proje
       {projects.map((project, index) => (
         <ProjectCard
           key={`project-${project.slug}-${index}`}
-          bannerUrl={project.bannerUrl}
-          currency={project.currency.name}
+          slug={project.slug}
+          state={project.state}
           date={project.startDate}
+          title={project.name}
+          photoUrl={project.photoUrl}
+          currency={project.currency.name}
+          bannerUrl={project.bannerUrl}
+          tokenPrice={project.tokenPrice}
           description={project.description}
           fundraisingGoal={project.amountToRaise}
-          photoUrl={project.photoUrl}
-          slug={project.slug}
-          title={project.name}
-          tokenPrice={project.tokenPrice}
-          state={project.state}
         />
       ))}
     </div>

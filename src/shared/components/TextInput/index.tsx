@@ -40,23 +40,15 @@ export const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(
      * Handles the input event for the TextInput component.
      *
      * If the input type is "number", it sanitizes the input value by removing
-     * non-numeric characters except for commas and converts it to a number.
+     * all characters except for digits and commas.
      *
      * @param {React.ChangeEvent<HTMLInputElement>} event - The input change event.
      */
     const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
       if (type === "number") {
         const value = event.target.value;
-        const sanitizedValue = value.replace(/[^0-9.]/g, ""); // Remove non-numeric characters except comma
+        const sanitizedValue = value.replace(/[^0-9.]/g, ""); // Remove all characters except digits and commas
         event.target.value = sanitizedValue;
-
-        if (sanitizedValue) {
-          const numericValue = parseFloat(sanitizedValue);
-
-          if (!isNaN(numericValue)) {
-            event.target.value = numericValue.toString();
-          }
-        }
       }
       if (upperCase) {
         event.target.value = event.target.value.toUpperCase();
@@ -83,7 +75,7 @@ export const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(
             className={classNames(styles.input, icon && styles.withIcon, error && styles.withError)}
             onInput={handleInput}
             ref={ref}
-            type={type}
+            type={"text"}
             {...props}
           />
         </div>

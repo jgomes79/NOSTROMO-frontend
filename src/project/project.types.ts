@@ -4,67 +4,32 @@ import { ProjectSchema } from "@/project/project.schema";
 
 /**
  * Enum representing the various states a project can be in.
+ *
+ * - ALL: Represents all project states combined, used for filtering purposes
+ * - DRAFT: The project is in draft state
+ * - SENT_TO_REVIEW: The project has been sent for review
+ * - REQUEST_MORE_INFO: The project requires more information
+ * - READY_TO_VOTE: The project is ready to be voted on
+ * - REJECTED: The project has been rejected
+ * - UPCOMING: The project is upcoming
+ * - FUNDING_PHASE_1: The project is in the first phase of funding
+ * - FUNDING_PHASE_2: The project is in the second phase of funding
+ * - FUNDING_PHASE_3: The project is in the third phase of funding
+ * - CLOSED: The project is closed
+ * - FAILED: The project has failed
  */
 export enum ProjectStates {
-  /**
-   * Represents all project states combined.
-   * Used for filtering purposes when all states should be included.
-   */
   ALL = "all",
-
-  /**
-   * The project is in draft state.
-   */
   DRAFT = 0,
-
-  /**
-   * Sent to review
-   */
   SENT_TO_REVIEW = 1,
-
-  /**
-   * The project requires more information.
-   */
   REQUEST_MORE_INFO = 2,
-
-  /**
-   * The project is ready to be voted on.
-   */
   READY_TO_VOTE = 3,
-
-  /**
-   * The project has been rejected.
-   */
   REJECTED = 4,
-
-  /**
-   * The project is upcoming.
-   */
   UPCOMING = 5,
-
-  /**
-   * The project is in the first phase of funding.
-   */
   FUNDING_PHASE_1 = 6,
-
-  /**
-   * The project is in the second phase of funding.
-   */
   FUNDING_PHASE_2 = 7,
-
-  /**
-   * The project is in the third phase of funding.
-   */
   FUNDING_PHASE_3 = 8,
-
-  /**
-   * The project is closed.
-   */
   CLOSED = 9,
-
-  /**
-   * The project has failed.
-   */
   FAILED = 10,
 }
 

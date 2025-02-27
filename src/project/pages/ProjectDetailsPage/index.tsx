@@ -2,6 +2,7 @@ import React from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 
 import classNames from "clsx";
+import { addDays } from "date-fns/addDays";
 import { format } from "date-fns/format";
 import { useWalletClient } from "wagmi";
 
@@ -9,6 +10,7 @@ import { formatPrice } from "@/lib/number";
 import { getRoute } from "@/lib/router";
 import { ProjectComments } from "@/project/components/ProjectComments";
 import { ProjectEvaluation } from "@/project/components/ProjectEvaluation";
+import { ProjectInvestment } from "@/project/components/ProjectInvestment";
 import { ProjectVoting } from "@/project/components/ProjectVoting";
 import { Button } from "@/shared/components/Button";
 import { Card } from "@/shared/components/Card";
@@ -96,6 +98,37 @@ export const ProjectDetailsPage: React.FC = () => {
     if (!data || !wallet || !user) return null;
 
     switch (data.state) {
+      case ProjectStates.FUNDING_PHASE_1:
+      case ProjectStates.FUNDING_PHASE_2:
+      case ProjectStates.FUNDING_PHASE_3:
+        return (
+          <ProjectInvestment
+            state={data.state}
+            investment={{
+              current: 14550,
+              limitDate: addDays(new Date(), 10),
+              max: 50000,
+              threshold: 5,
+              token: {
+                price: 0.34,
+                currency: {
+                  id: data.currency.id,
+                  name: data.currency.name,
+                },
+              },
+            }}
+            user={{
+              tier: {
+                id: user.tier.id,
+                name: user.tier.name,
+              },
+              maxInvestment: 2000,
+            }}
+            onInvest={() => {}}
+            onUpgradeTier={() => {}}
+          />
+        );
+
       case ProjectStates.UPCOMING:
         return (
           <ProjectRegister
