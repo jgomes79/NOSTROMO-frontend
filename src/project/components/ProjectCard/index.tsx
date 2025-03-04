@@ -12,33 +12,7 @@ import { Typography } from "@/shared/components/Typography";
 
 import styles from "./ProjectCard.module.scss";
 import { PROJECT_ROUTES, PROJECT_STATE_STRING } from "../../project.constants";
-import { ProjectFormTabs, ProjectStates } from "../../project.types";
-
-/**
- * Props for the ProjectCard component.
- * @property {string} slug - The unique identifier for the project.
- * @property {string} title - The title of the project.
- * @property {string} description - A brief description of the project.
- * @property {string} photoUrl - The URL of the project's photo.
- * @property {string} bannerUrl - The URL of the project's banner image.
- * @property {number} fundraisingGoal - The fundraising goal for the project.
- * @property {number} tokenPrice - The price of the token associated with the project.
- * @property {string} currency - The currency in which the fundraising goal is set.
- * @property {Date} date - The date when the project is scheduled to start or has started.
- * @property {ProjectStates} state - The current state of the project.
- */
-interface ProjectCardProps {
-  readonly slug: string;
-  readonly title: string;
-  readonly description: string;
-  readonly photoUrl: string;
-  readonly bannerUrl: string;
-  readonly fundraisingGoal: number;
-  readonly tokenPrice: number;
-  readonly currency: string;
-  readonly date: Date;
-  readonly state: ProjectStates;
-}
+import { Project, ProjectFormTabs, ProjectStates } from "../../project.types";
 
 /**
  * A card component that displays information about a project.
@@ -46,16 +20,16 @@ interface ProjectCardProps {
  * @param {ProjectCardProps} props - The props for the component.
  * @returns {JSX.Element} The rendered ProjectCard component.
  */
-export const ProjectCard: React.FC<ProjectCardProps> = ({
+export const ProjectCard: React.FC<Project> = ({
   slug,
-  title,
+  name,
   description,
   photoUrl,
   bannerUrl,
-  fundraisingGoal,
+  amountToRaise,
   tokenPrice,
+  startDate,
   currency,
-  date,
   state,
 }) => {
   const stateLabels = {
@@ -109,31 +83,38 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
    * Renders the content section of the project card.
    *
    * This function determines what content to display based on the project state.
-   * Currently, it has a default case that shows the project description,
-   * fundraising goal, and token price.
+   * Currently, it handles the CLOSED state separately, with a default display
+   * for all other states.
    *
    * @returns {JSX.Element} The rendered content component with project information
    */
   const renderContent = () => {
-    switch (state) {
-      default:
-        return (
-          <div className={styles.content}>
-            <Typography variant={"body"} size={"small"} as={"p"}>
-              {trimString(description, 90)}
-            </Typography>
-
-            {renderField("Fundraising Goal", formatPrice(fundraisingGoal, currency))}
-            {renderField("Token Price", formatPrice(tokenPrice, currency))}
-          </div>
-        );
+    if (state === ProjectStates.CLOSED) {
+      return (
+        <div className={styles.content}>
+          {renderField("Available to claim", formatPrice(amountToRaise, currency.name))}
+          {renderField("Pending to claim", formatPrice(tokenPrice, currency.name))}
+          {renderField("Total claimed", formatPrice(tokenPrice, currency.name))}
+        </div>
+      );
     }
+
+    return (
+      <div className={styles.content}>
+        <Typography variant={"body"} size={"small"} as={"p"}>
+          {trimString(description, 90)}
+        </Typography>
+
+        {renderField("Fundraising Goal", formatPrice(amountToRaise, currency.name))}
+        {renderField("Token Price", formatPrice(tokenPrice, currency.name))}
+      </div>
+    );
   };
 
   return (
     <Link className={styles.layout} to={getProjectRoute()}>
       <div className={styles.banner}>
-        <img src={bannerUrl} width={"100%"} alt={title} />
+        <img src={bannerUrl} width={"100%"} alt={name} />
 
         <div className={classNames(styles.state, styles[PROJECT_STATE_STRING[state]])}>
           <Typography variant={"label"} size={"small"} as={"p"} textTransform={"uppercase"}>
@@ -143,7 +124,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
       </div>
       {stateLabels[state].banner && (
         <div className={styles.counter}>
-          <Countdown date={date}>
+          <Countdown date={startDate}>
             {({ days, hours, minutes, seconds }) => (
               <Typography variant={"body"} size={"small"}>
                 {stateLabels[state].banner} {days}d {hours}h {minutes}m {seconds}s
@@ -154,10 +135,10 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
       )}
       <div className={styles.body}>
         <div className={styles.header}>
-          <Image url={photoUrl} alt={title} size={42} borderRadius={8} className={styles.avatar} />
+          <Image url={photoUrl} alt={name} size={42} borderRadius={8} className={styles.avatar} />
           <div className={styles.title}>
             <Typography variant={"heading"} size={"small"}>
-              {title}
+              {name}
             </Typography>
           </div>
         </div>
