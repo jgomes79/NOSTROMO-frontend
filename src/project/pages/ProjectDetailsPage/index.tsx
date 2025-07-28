@@ -4,7 +4,6 @@ import { Navigate, useNavigate, useParams } from "react-router-dom";
 import classNames from "clsx";
 import { addDays } from "date-fns/addDays";
 import { format } from "date-fns/format";
-import { useWalletClient } from "wagmi";
 
 import { formatPrice } from "@/lib/number";
 import { getRoute } from "@/lib/router";
@@ -19,6 +18,7 @@ import { Loader } from "@/shared/components/Loader";
 import { Tabs } from "@/shared/components/Tabs";
 import { ErrorPage } from "@/shared/pages/ErrorPage";
 import { useUserByWallet } from "@/user/hooks/useUserByWallet";
+import { useQubicConnect } from "@/wallet/qubic/QubicConnectContext";
 
 import styles from "./ProjectDetailsPage.module.scss";
 import { ProjectHeader } from "../../components/ProjectHeader";
@@ -50,9 +50,9 @@ type ProjectDetailsPageParams = {
  * @returns {JSX.Element} The rendered ProjectDetailsPage component
  */
 export const ProjectDetailsPage: React.FC = () => {
-  const { slug, tabId } = useParams<ProjectDetailsPageParams>(),
-    { data: wallet } = useWalletClient(),
-    { data: user } = useUserByWallet(wallet?.account.address),
+  const { slug, tabId } = useParams<ProjectDetailsPageParams>();
+  const { wallet } = useQubicConnect(),
+    { data: user } = useUserByWallet(wallet?.publicKey),
     { data, ...project } = useProject(slug);
 
   const navigate = useNavigate();
@@ -177,7 +177,7 @@ export const ProjectDetailsPage: React.FC = () => {
           <ProjectEvaluation
             projectId={data.id}
             admin={{
-              wallet: wallet.account.address,
+              wallet: wallet.publicKey,
             }}
           />
         );

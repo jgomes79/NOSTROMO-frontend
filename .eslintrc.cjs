@@ -23,11 +23,12 @@ module.exports = {
   ignorePatterns: ["dist"],
   plugins: [...imports.plugins, ...typescript.plugins, ...react.plugins, "react-refresh"],
   rules: {
-    "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
     ...imports.rules,
     ...typescript.rules,
     ...react.rules,
     "react-hooks/exhaustive-deps": "off",
+    "@typescript-eslint/naming-convention": "off",
+    "react-refresh/only-export-components": "off"
   },
   settings: {
     ...react.settings,

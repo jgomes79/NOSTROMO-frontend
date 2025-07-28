@@ -2,7 +2,6 @@ import { useNavigate } from "react-router-dom";
 
 import { useMutation } from "@tanstack/react-query";
 import { addDays } from "date-fns";
-import { useWalletClient } from "wagmi";
 
 import { ToastIds, useToast } from "@/core/toasts/hooks/useToast";
 import { getRoute } from "@/lib/router";
@@ -10,14 +9,15 @@ import { ProjectFormValues } from "@/project/forms/ProjectForm";
 import { upsertProject } from "@/project/project.service";
 import { USER_ROUTES } from "@/user/user.constants";
 import { UserSettingsTabs } from "@/user/user.types";
+import { useQubicConnect } from "@/wallet/qubic/QubicConnectContext";
 
 /**
  * Custom hook to create a new project using a mutation.
  */
 export const useUpsertProject = () => {
-  const wallet = useWalletClient(),
-    navigate = useNavigate(),
-    { createToast } = useToast();
+  const { wallet } = useQubicConnect();
+  const navigate = useNavigate();
+  const { createToast } = useToast();
 
   return useMutation({
     mutationFn: async (data: ProjectFormValues) => {
@@ -25,7 +25,7 @@ export const useUpsertProject = () => {
 
       const projectId = data.id ?? undefined;
 
-      if (!wallet || !wallet.data?.account) {
+      if (!wallet || !wallet?.publicKey) {
         return new Error("Wallet not connected");
       }
 
@@ -89,7 +89,7 @@ export const useUpsertProject = () => {
       formData.append("vestingDays", String(data.vestingDays));
 
       // Account
-      formData.append("walletAddress", wallet.data.account.address);
+      formData.append("walletAddress", wallet.publicKey);
 
       return upsertProject(projectId, formData);
     },

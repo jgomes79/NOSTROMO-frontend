@@ -21,6 +21,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
+    "allowJs": true,
     "jsx": "react-jsx",
 
     /* Linting */
@@ -29,9 +30,9 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
 
-    "types": ["node", "vitest/globals", "@testing-library/jest-dom/vitest"],
+    "types": ["node", "vite/client", "vitest/globals", "@testing-library/jest-dom/vitest"],
   },
-  "include": ["src/**/*", "@types", "test", "vitest.setup.ts"],
+  "include": ["src/**/*.{ts,tsx,js,jsx}", "@types", "test", "vitest.setup.ts"],
   "exclude": ["node_modules/**"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

@@ -1,7 +1,6 @@
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 
 import classNames from "clsx";
-import { useWalletClient } from "wagmi";
 
 import { getRoute } from "@/lib/router";
 import { ProjectsListByState } from "@/project/components/ProjectsListByState";
@@ -11,6 +10,7 @@ import { Loader } from "@/shared/components/Loader";
 import { Separator } from "@/shared/components/Separator";
 import { Tabs } from "@/shared/components/Tabs";
 import { useAppTitle } from "@/shared/hooks/useAppTitle";
+import { useQubicConnect } from "@/wallet/qubic/QubicConnectContext";
 
 import styles from "./UserSettingsPage.module.scss";
 import { UserTier } from "../../components/UserTier";
@@ -27,7 +27,7 @@ export type UserSettingsPageParams = {
 };
 
 export const UserSettingsPage: React.FC = () => {
-  const { data: wallet } = useWalletClient();
+  const { wallet } = useQubicConnect();
   const params = useParams<UserSettingsPageParams>();
   const navigate = useNavigate();
 
@@ -37,7 +37,7 @@ export const UserSettingsPage: React.FC = () => {
     return <Navigate to={getRoute(USER_ROUTES.SETTINGS, { tabId: UserSettingsTabs.MY_TIER })} />;
   }
 
-  if (!wallet || !params.tabId) {
+  if (!wallet?.publicKey || !params.tabId) {
     return (
       <div className={classNames(styles.container, styles.center)}>
         <Loader size={42} className={styles.loader} />
@@ -53,14 +53,14 @@ export const UserSettingsPage: React.FC = () => {
   const renderTab = () => {
     switch (params.tabId) {
       case UserSettingsTabs.MY_PROJECTS:
-        return <ProjectsListByWallet walletAddress={wallet.account.address} limit={9} />;
+        return <ProjectsListByWallet walletAddress={wallet.publicKey} limit={9} />;
 
       case UserSettingsTabs.CLAIM_TOKENS:
         return <ProjectsListByState tabs={[]} initialState={ProjectStates.CLOSED} />;
 
       case UserSettingsTabs.MY_TIER:
       default:
-        return <UserTier wallet={wallet.account.address} />;
+        return <UserTier wallet={wallet.publicKey} />;
     }
   };
 

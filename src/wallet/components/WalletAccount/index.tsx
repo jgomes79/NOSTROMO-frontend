@@ -1,8 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
-import { WalletButton } from "@rainbow-me/rainbowkit";
 import { RiAliensFill, RiLogoutBoxLine, RiWallet2Line } from "react-icons/ri";
-import { useWalletClient, useDisconnect } from "wagmi";
 
 import { HOME_ROUTES } from "@/home/home.constants";
 import { getRoute } from "@/lib/router";
@@ -11,6 +9,8 @@ import { IconButton } from "@/shared/components/IconButton";
 import useResponsive from "@/shared/hooks/useResponsive";
 import { USER_ROUTES } from "@/user/user.constants";
 import { UserSettingsTabs } from "@/user/user.types";
+import { useQubicConnect } from "@/wallet/qubic/QubicConnectContext";
+import { connectSnap, getSnap } from "@/wallet/qubic/utils";
 
 import styles from "./WalletAccount.module.scss";
 import { shortHex } from "../../wallet.helpers";
@@ -21,9 +21,8 @@ import { shortHex } from "../../wallet.helpers";
  * @returns {JSX.Element} The WalletAccount component.
  */
 export const WalletAccount: React.FC = () => {
-  const { data } = useWalletClient();
-  const { disconnect } = useDisconnect();
   const navigate = useNavigate();
+  const { config, connected, wallet, connect, getMetaMaskPublicId, disconnect } = useQubicConnect();
   const { isMobile, isTabletVertical } = useResponsive();
 
   const isMobileOrTabletVertical = isMobile || isTabletVertical;
@@ -37,6 +36,28 @@ export const WalletAccount: React.FC = () => {
   };
 
   /**
+   * Handles the click event for the connect button.
+   * Connects the wallet using MetaMask and navigates to the home page.
+   */
+  const handleClickConnect = async () => {
+    try {
+      const snapId = config?.snapOrigin;
+      await connectSnap(snapId);
+      await getSnap();
+
+      // get publicId from snap
+      const publicKey = await getMetaMaskPublicId(0);
+      const wallet = {
+        connectType: "mmSnap",
+        publicKey,
+      };
+      connect(wallet);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  /**
    * Handles the click event for the disconnect button.
    * Disconnects the wallet and navigates to the home page.
    */
@@ -47,43 +68,32 @@ export const WalletAccount: React.FC = () => {
 
   return (
     <div className={styles.layout}>
-      <WalletButton.Custom wallet="metamask">
-        {({ connected, connect }) => (
-          <>
-            {connected && data ? (
-              <div className={styles.actions}>
-                {isMobileOrTabletVertical ? (
-                  <IconButton size={"medium"} variant={"ghost"} icon={<RiAliensFill />} onClick={handleClickAccount} />
-                ) : (
-                  <Button
-                    size={"medium"}
-                    variant={"ghost"}
-                    iconRight={<RiAliensFill />}
-                    caption={shortHex(data.account.address, 5)}
-                    onClick={handleClickAccount}
-                  />
-                )}
+      {connected && wallet ? (
+        <div className={styles.actions}>
+          {isMobileOrTabletVertical ? (
+            <IconButton size={"medium"} variant={"ghost"} icon={<RiAliensFill />} onClick={handleClickAccount} />
+          ) : (
+            <Button
+              size={"medium"}
+              variant={"ghost"}
+              iconRight={<RiAliensFill />}
+              caption={shortHex(wallet.publicKey, 5)}
+              onClick={handleClickAccount}
+            />
+          )}
 
-                <IconButton
-                  size={"medium"}
-                  variant={"ghost"}
-                  icon={<RiLogoutBoxLine />}
-                  onClick={handleClickDisconnect}
-                />
-              </div>
-            ) : (
-              <Button
-                variant={"solid"}
-                color={"primary"}
-                size={"medium"}
-                caption={"Connect Wallet"}
-                onClick={connect}
-                iconLeft={<RiWallet2Line />}
-              />
-            )}
-          </>
-        )}
-      </WalletButton.Custom>
+          <IconButton size={"medium"} variant={"ghost"} icon={<RiLogoutBoxLine />} onClick={handleClickDisconnect} />
+        </div>
+      ) : (
+        <Button
+          variant={"solid"}
+          color={"primary"}
+          size={"medium"}
+          caption={"Connect Wallet"}
+          onClick={handleClickConnect}
+          iconLeft={<RiWallet2Line />}
+        />
+      )}
     </div>
   );
 };

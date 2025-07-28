@@ -25,7 +25,6 @@ export function TestApp({ initialEntries }: { readonly initialEntries?: string[]
   );
 }
 
-// eslint-disable-next-line react-refresh/only-export-components
 export function renderWithTestProviders(ui: React.ReactElement, options?: RenderOptions) {
   return render(ui, { wrapper: TestProviders, ...options });
 }

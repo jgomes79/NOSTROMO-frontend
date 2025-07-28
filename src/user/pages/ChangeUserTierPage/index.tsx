@@ -1,14 +1,13 @@
 import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { useWalletClient } from "wagmi";
-
 import { getRoute } from "@/lib/router";
 import { NavigatorTitle } from "@/shared/components/NavigatorTitle";
 import { useAppTitle } from "@/shared/hooks/useAppTitle";
 import { TierSelector } from "@/tier/components/TierSelector";
 import { Tier } from "@/tier/tier.types";
 import { useUserByWallet } from "@/user/hooks/useUserByWallet";
+import { useQubicConnect } from "@/wallet/qubic/QubicConnectContext";
 
 import { useSetUserTier } from "../../hooks/useSetUserTier";
 import { USER_ROUTES } from "../../user.constants";
@@ -22,8 +21,8 @@ import { UserSettingsTabs } from "../../user.types";
  */
 export const ChangeUserTierPage: React.FC = () => {
   const setUserTier = useSetUserTier(),
-    { data: wallet } = useWalletClient(),
-    { data: user } = useUserByWallet(wallet?.account.address),
+    { wallet } = useQubicConnect(),
+    { data: user } = useUserByWallet(wallet?.publicKey),
     navigate = useNavigate();
 
   useAppTitle("Upgrade Tier");
@@ -39,7 +38,7 @@ export const ChangeUserTierPage: React.FC = () => {
     async (tier: Tier) => {
       if (wallet) {
         await setUserTier.mutateAsync(
-          { wallet: wallet.account.address, tierId: tier.id },
+          { wallet: wallet.publicKey, tierId: tier.id },
           {
             onSuccess: () => {
               navigate(getRoute(USER_ROUTES.SETTINGS, { tabId: UserSettingsTabs.MY_TIER }));

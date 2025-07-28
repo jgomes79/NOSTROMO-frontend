@@ -2,11 +2,11 @@ import React, { useEffect } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 
 import { RiCloseFill } from "react-icons/ri";
-import { useWalletClient } from "wagmi";
 
 import { getRoute } from "@/lib/router";
 import { navigationMenu } from "@/shared/shared.constants";
 import { USER_ROUTES } from "@/user/user.constants";
+import { useQubicConnect } from "@/wallet/qubic/QubicConnectContext";
 
 import styles from "./MobileMenu.module.scss";
 import logo from "../../assets/images/logotype.png";
@@ -28,7 +28,7 @@ interface MobileMenuProps {
  */
 export const MobileMenu: React.FC<MobileMenuProps> = ({ onClose }) => {
   const location = useLocation();
-  const { data } = useWalletClient();
+  const { wallet } = useQubicConnect();
   const initialLocation = React.useRef(location);
 
   /**
@@ -40,7 +40,7 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({ onClose }) => {
    */
   const navigationItems = [
     ...navigationMenu,
-    ...(data?.account?.address
+    ...(wallet?.publicKey
       ? [
           {
             title: "User Settings",

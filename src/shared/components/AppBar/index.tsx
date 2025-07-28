@@ -5,13 +5,13 @@ import { useLockBodyScroll, useWindowScroll } from "react-use";
 import classNames from "clsx";
 import { motion } from "framer-motion";
 import { RiMenuFill } from "react-icons/ri";
-import { useWalletClient } from "wagmi";
 
 import { getRoute } from "@/lib/router";
 import useResponsive from "@/shared/hooks/useResponsive";
 import { navigationMenu, socialNetworks } from "@/shared/shared.constants";
 import { USER_ROUTES } from "@/user/user.constants";
 import { WalletAccount } from "@/wallet/components/WalletAccount";
+import { useQubicConnect } from "@/wallet/qubic/QubicConnectContext";
 
 import styles from "./AppBar.module.scss";
 import isotype from "../../assets/images/isotype.png";
@@ -22,7 +22,7 @@ import { MobileMenu } from "../MobileMenu";
 
 export const AppBar: React.FC = () => {
   const { isMobile, isTabletVertical } = useResponsive();
-  const { data } = useWalletClient();
+  const { wallet } = useQubicConnect();
   const { y: scrollY } = useWindowScroll();
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const headerHeight = scrollY > 5 ? "70px" : "90px";
@@ -40,7 +40,7 @@ export const AppBar: React.FC = () => {
    */
   const navigationItems = [
     ...navigationMenu,
-    ...(data?.account?.address
+    ...(wallet?.publicKey
       ? [
           {
             title: "User Settings",

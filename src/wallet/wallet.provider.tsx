@@ -1,10 +1,8 @@
 import React from "react";
 
 import "@rainbow-me/rainbowkit/styles.css";
-import { RainbowKitProvider } from "@rainbow-me/rainbowkit";
-import { WagmiProvider } from "wagmi";
 
-import { walletConfig } from "./wallet.constants";
+import { QubicConnectProvider } from "./qubic/QubicConnectContext";
 
 /**
  * Interface for WalletProvider component props
@@ -24,7 +22,5 @@ interface WalletProviderProps {
  * @returns {React.ReactElement} The rendered WalletProvider component.
  */
 export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => (
-  <WagmiProvider config={walletConfig}>
-    <RainbowKitProvider>{children}</RainbowKitProvider>
-  </WagmiProvider>
+  <QubicConnectProvider>{children}</QubicConnectProvider>
 );

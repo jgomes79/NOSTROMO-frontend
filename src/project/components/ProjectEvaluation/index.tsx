@@ -3,7 +3,6 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
 import { RiSearchEyeLine } from "react-icons/ri";
-import { useWalletClient } from "wagmi";
 
 import { useModal } from "@/core/modals/hooks/useModal";
 import { ModalsIds } from "@/core/modals/modals.types";
@@ -18,6 +17,7 @@ import { Typography } from "@/shared/components/Typography";
 import { useUserByWallet } from "@/user/hooks/useUserByWallet";
 import { USER_ROUTES } from "@/user/user.constants";
 import { User, UserSettingsTabs } from "@/user/user.types";
+import { useQubicConnect } from "@/wallet/qubic/QubicConnectContext";
 
 import { confirmationLabels, confirmationVariants, mainLiterals, toastLabels } from "./ProjectEvaluation.constants";
 import styles from "./ProjectEvaluation.module.scss";
@@ -36,8 +36,8 @@ interface ProjectEvaluationProps {
  */
 export const ProjectEvaluation: React.FC<ProjectEvaluationProps> = ({ projectId, admin }) => {
   const reviewProject = useReviewProject();
-  const { data } = useWalletClient();
-  const { data: user } = useUserByWallet(data?.account.address);
+  const { wallet } = useQubicConnect();
+  const { data: user } = useUserByWallet(wallet?.publicKey);
   const { openModal, closeModal } = useModal();
   const { createToast } = useToast();
   const navigate = useNavigate();

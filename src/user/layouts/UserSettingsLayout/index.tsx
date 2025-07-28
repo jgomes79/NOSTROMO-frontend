@@ -3,13 +3,13 @@ import { Outlet } from "react-router-dom";
 import { WalletButton } from "@rainbow-me/rainbowkit";
 import classNames from "clsx";
 import { RiAliensFill, RiWallet2Fill, RiWallet2Line } from "react-icons/ri";
-import { useWalletClient } from "wagmi";
 
 import { Button } from "@/shared/components/Button";
 import { Loader } from "@/shared/components/Loader";
 import { Typography } from "@/shared/components/Typography";
 import useResponsive from "@/shared/hooks/useResponsive";
 import { ErrorPage } from "@/shared/pages/ErrorPage";
+import { useQubicConnect } from "@/wallet/qubic/QubicConnectContext";
 import { shortHex } from "@/wallet/wallet.helpers";
 
 import styles from "./UserSettingsLayout.module.scss";
@@ -24,10 +24,10 @@ import styles from "./UserSettingsLayout.module.scss";
  * @throws {Navigate} Redirects to tier settings tab if no tab is selected
  */
 export const UserSettingsLayout: React.FC = () => {
-  const { data: wallet, isLoading: isLoadingWallet } = useWalletClient();
+  const { wallet } = useQubicConnect();
   const { isMobile, isTabletVertical } = useResponsive();
 
-  if (isLoadingWallet) {
+  if (wallet?.publicKey) {
     return (
       <div className={styles.container}>
         <Loader size={42} className={styles.loader} />
@@ -35,7 +35,7 @@ export const UserSettingsLayout: React.FC = () => {
     );
   }
 
-  if (!wallet || !wallet.account.address) {
+  if (!wallet || !wallet.publicKey) {
     return (
       <div className={styles.container}>
         <ErrorPage
@@ -79,7 +79,7 @@ export const UserSettingsLayout: React.FC = () => {
               <div className={classNames(styles.inline, styles.label)}>
                 <RiWallet2Fill size={18} />
                 <Typography variant={"label"} size={"medium"}>
-                  {shortHex(wallet.account.address, isMobile || isTabletVertical ? 6 : 34)}
+                  {shortHex(wallet.publicKey, isMobile || isTabletVertical ? 6 : 34)}
                 </Typography>
               </div>
             </div>

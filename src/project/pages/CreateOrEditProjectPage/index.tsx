@@ -3,11 +3,11 @@ import { useParams, useNavigate } from "react-router-dom";
 
 import { WalletButton } from "@rainbow-me/rainbowkit";
 import { RiAliensFill, RiWallet2Line } from "react-icons/ri";
-import { useWalletClient } from "wagmi";
 
 import { Button } from "@/shared/components/Button";
 import { Loader } from "@/shared/components/Loader";
 import { ErrorPage } from "@/shared/pages/ErrorPage";
+import { useQubicConnect } from "@/wallet/qubic/QubicConnectContext";
 
 import styles from "./CreateOrEditProjectPage.module.scss";
 import { ProjectForm } from "../../forms/ProjectForm";
@@ -41,7 +41,7 @@ export const CreateOrEditProjectPage: React.FC = () => {
 
   const params = useParams<CreateOrEditProjectPageParams>();
 
-  const { data: wallet, isLoading: isLoadingWallet } = useWalletClient(),
+  const { wallet } = useQubicConnect(),
     project = useProject(params.slug);
 
   /**
@@ -68,7 +68,7 @@ export const CreateOrEditProjectPage: React.FC = () => {
    *
    * @returns {JSX.Element} The loader component.
    */
-  if (project.isLoading || isLoadingWallet) {
+  if (project.isLoading || !wallet?.publicKey) {
     return <Loader variant={"full"} size={52} />;
   }
 
@@ -77,7 +77,7 @@ export const CreateOrEditProjectPage: React.FC = () => {
    *
    * @returns {JSX.Element} The error page component prompting the user to connect their wallet.
    */
-  if (!wallet || !wallet?.account) {
+  if (!wallet || !wallet?.publicKey) {
     return (
       <ErrorPage
         code={<RiAliensFill className={styles.alien} />}

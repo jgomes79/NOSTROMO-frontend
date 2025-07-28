@@ -6,3 +6,11 @@ interface ImportMetaEnv {
 interface ImportMeta {
   readonly env: ImportMetaEnv;
 }
+
+interface EthereumProvider {
+  isMetaMask?: boolean; // True if the provider is MetaMask
+  detected?: Array<unknown>; // Array of detected providers
+  request: (request: { method: string; params?: unknown }) => Promise<unknown>;
+  setProvider: (provider: string) => void; // Add this line
+  providers: Array<unknown>; // Array of providers
+}

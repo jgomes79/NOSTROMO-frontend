@@ -1,5 +1,3 @@
-import { useWalletClient } from "wagmi";
-
 import { useUserByWallet } from "./useUserByWallet";
 
 /**
@@ -12,10 +10,10 @@ import { useUserByWallet } from "./useUserByWallet";
  * @returns {User | null} The user data if available, otherwise null.
  */
 export const useAuth = () => {
-  const wallet = useWalletClient(),
-    user = useUserByWallet(wallet.data?.account.address);
+  const { wallet } = useQubicConnect(),
+    user = useUserByWallet(wallet.publicKey);
 
-  if (!wallet || !user.data) return null;
+  if (!wallet?.publicKey || !user.data) return null;
 
   return user;
 };
