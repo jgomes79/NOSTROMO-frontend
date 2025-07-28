@@ -9,10 +9,15 @@ import { getSnapOrigin } from "../config";
  * @param provider - The MetaMask inpage provider.
  * @returns The snaps installed in MetaMask.
  */
-export const getSnaps = async (provider?: MetaMaskInpageProvider): Promise<GetSnapsResponse> =>
-  (await (provider ?? window.ethereum).request({
+export const getSnaps = async (provider?: MetaMaskInpageProvider): Promise<GetSnapsResponse> => {
+  const ethereumProvider = provider ?? window.ethereum;
+  if (!ethereumProvider) {
+    throw new Error("No Ethereum provider available");
+  }
+  return (await ethereumProvider.request({
     method: "wallet_getSnaps",
   })) as unknown as GetSnapsResponse;
+};
 
 /**
  * Connect a snap to MetaMask.
@@ -28,6 +33,9 @@ export const connectSnap = async (snapId: string | undefined, params: Record<"ve
     return;
   }
   try {
+    if (!window.ethereum) {
+      throw new Error("MetaMask not available");
+    }
     await window.ethereum.request({
       method: "wallet_requestSnaps",
       params: {

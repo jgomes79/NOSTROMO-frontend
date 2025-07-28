@@ -1,5 +1,7 @@
 /// <reference types="vite-plugin-svgr/client" />
 
+import type { MetaMaskInpageProvider } from "@metamask/providers";
+
 declare module "*.md";
 declare module "*.jpg";
 declare module "*.png";
@@ -15,4 +17,17 @@ declare module "*?.raw";
 declare module "*.scss" {
   const content: Record<string, string>;
   export default content;
+}
+
+// MetaMask ethereum provider
+interface EthereumProvider extends MetaMaskInpageProvider {
+  detected?: EthereumProvider[];
+  providers?: EthereumProvider[];
+  setProvider?: (provider: EthereumProvider) => void;
+}
+
+declare global {
+  interface Window {
+    ethereum?: EthereumProvider;
+  }
 }

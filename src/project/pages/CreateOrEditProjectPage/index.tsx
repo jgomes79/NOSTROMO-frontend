@@ -1,8 +1,7 @@
 import React, { useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
-import { WalletButton } from "@rainbow-me/rainbowkit";
-import { RiAliensFill, RiWallet2Line } from "react-icons/ri";
+import { RiAliensFill } from "react-icons/ri";
 
 import { Button } from "@/shared/components/Button";
 import { Loader } from "@/shared/components/Loader";
@@ -83,24 +82,26 @@ export const CreateOrEditProjectPage: React.FC = () => {
         code={<RiAliensFill className={styles.alien} />}
         title={"No Signal"}
         description={"To create a project, you need to be connected to a wallet."}
-        actions={[
-          <WalletButton.Custom wallet="metamask" key={"connect"}>
-            {({ connected, connect }) => (
-              <>
-                {!connected && (
-                  <Button
-                    variant={"solid"}
-                    color={"secondary"}
-                    size={"small"}
-                    caption={"Connect Wallet"}
-                    onClick={connect}
-                    iconLeft={<RiWallet2Line />}
-                  />
-                )}
-              </>
-            )}
-          </WalletButton.Custom>,
-        ]}
+        actions={
+          [
+            // <WalletButton.Custom wallet="metamask" key={"connect"}>
+            //   {({ connected, connect }) => (
+            //     <>
+            //       {!connected && (
+            //         <Button
+            //           variant={"solid"}
+            //           color={"secondary"}
+            //           size={"small"}
+            //           caption={"Connect Wallet"}
+            //           onClick={connect}
+            //           iconLeft={<RiWallet2Line />}
+            //         />
+            //       )}
+            //     </>
+            //   )}
+            // </WalletButton.Custom>,
+          ]
+        }
       />
     );
   }

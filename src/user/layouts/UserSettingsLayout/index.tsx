@@ -1,10 +1,8 @@
 import { Outlet } from "react-router-dom";
 
-import { WalletButton } from "@rainbow-me/rainbowkit";
 import classNames from "clsx";
-import { RiAliensFill, RiWallet2Fill, RiWallet2Line } from "react-icons/ri";
+import { RiAliensFill, RiWallet2Fill } from "react-icons/ri";
 
-import { Button } from "@/shared/components/Button";
 import { Loader } from "@/shared/components/Loader";
 import { Typography } from "@/shared/components/Typography";
 import useResponsive from "@/shared/hooks/useResponsive";
@@ -42,24 +40,26 @@ export const UserSettingsLayout: React.FC = () => {
           code={<RiAliensFill className={styles.alien} />}
           title={"No Signal"}
           description={"To create a project, you need to be connected to a wallet."}
-          actions={[
-            <WalletButton.Custom wallet="metamask" key={"connect"}>
-              {({ connected, connect }) => (
-                <>
-                  {!connected && (
-                    <Button
-                      variant={"solid"}
-                      color={"secondary"}
-                      size={"small"}
-                      caption={"Connect Wallet"}
-                      onClick={connect}
-                      iconLeft={<RiWallet2Line />}
-                    />
-                  )}
-                </>
-              )}
-            </WalletButton.Custom>,
-          ]}
+          actions={
+            [
+              // <WalletButton.Custom wallet="metamask" key={"connect"}>
+              //   {({ connected, connect }) => (
+              //     <>
+              //       {!connected && (
+              //         <Button
+              //           variant={"solid"}
+              //           color={"secondary"}
+              //           size={"small"}
+              //           caption={"Connect Wallet"}
+              //           onClick={connect}
+              //           iconLeft={<RiWallet2Line />}
+              //         />
+              //       )}
+              //     </>
+              //   )}
+              // </WalletButton.Custom>,
+            ]
+          }
         />
       </div>
     );

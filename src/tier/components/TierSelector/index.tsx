@@ -94,11 +94,13 @@ export const TierSelector: React.FC<TierSelectorProps> = ({ currentTierId, isLoa
     </div>
   );
 
+  const renderItem = (tier: Tier, index: number) => (
+    <React.Fragment key={index}>{index >= 1 && renderTier(tier)}</React.Fragment>
+  );
+
   return (
     <Skeleton count={5} orientation={"vertical"} gap={22} height={128} width={"full"} isLoading={isLoadingTiers}>
-      <div className={styles.layout}>
-        {data?.map((tier, index) => <React.Fragment key={index}>{index >= 1 && renderTier(tier)}</React.Fragment>)}
-      </div>
+      <div className={styles.layout}>{data?.map((tier, index) => renderItem(tier, index))}</div>
     </Skeleton>
   );
 };

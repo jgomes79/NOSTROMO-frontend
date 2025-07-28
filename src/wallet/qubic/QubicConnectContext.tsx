@@ -97,7 +97,10 @@ export function QubicConnectProvider({ children, config }: QubicConnectProviderP
   }
 
   const getMetaMaskPublicId = async (accountIdx = 0, confirm = false): Promise<string> => {
-    return await window.ethereum.request({
+    if (!window.ethereum) {
+      throw new Error("MetaMask not available");
+    }
+    return (await window.ethereum.request({
       method: "wallet_invokeSnap",
       params: {
         snapId: getSnapOrigin(config?.snapOrigin),
@@ -109,14 +112,18 @@ export function QubicConnectProvider({ children, config }: QubicConnectProviderP
           },
         },
       },
-    });
+    })) as string;
   };
 
   const getMetaMaskSignedTx = async (tx: Uint8Array, offset: number) => {
     // Convert the binary buffer to a base64 string
     const base64Tx = btoa(String.fromCharCode(...tx));
 
-    return await window.ethereum.request({
+    if (!window.ethereum) {
+      throw new Error("MetaMask not available");
+    }
+
+    return (await window.ethereum.request({
       method: "wallet_invokeSnap",
       params: {
         snapId: getSnapOrigin(config?.snapOrigin),
@@ -129,7 +136,7 @@ export function QubicConnectProvider({ children, config }: QubicConnectProviderP
           },
         },
       },
-    });
+    })) as { signedTx: string };
   };
 
   const getTickInfo = async () => {
