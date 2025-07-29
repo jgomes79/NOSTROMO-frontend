@@ -28,6 +28,7 @@ export interface ModalState<T extends ModalsIds> {
  */
 export enum ModalsIds {
   CONFIRMATION = "confirmation-modal",
+  CONNECT = "connect-modal",
 }
 
 /**
@@ -35,4 +36,5 @@ export enum ModalsIds {
  */
 export type ModalData = {
   [ModalsIds.CONFIRMATION]: ConfirmationModalProps;
+  [ModalsIds.CONNECT]: unknown;
 };

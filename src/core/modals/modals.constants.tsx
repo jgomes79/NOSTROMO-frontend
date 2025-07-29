@@ -1,4 +1,5 @@
 import { ConfirmationModal } from "@/shared/modals/ConfirmationModal";
+import { ConnectModal } from "@/wallet/modals/ConnectModal";
 
 import { BaseModalProps, ModalData, ModalsIds } from "./modals.types";
 
@@ -12,4 +13,5 @@ import { BaseModalProps, ModalData, ModalsIds } from "./modals.types";
  */
 export const modals: { [K in ModalsIds]: React.FC<BaseModalProps<ModalData[K]>> } = {
   [ModalsIds.CONFIRMATION]: ConfirmationModal,
+  [ModalsIds.CONNECT]: ConnectModal,
 };

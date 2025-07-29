@@ -2,6 +2,8 @@ import { useNavigate } from "react-router-dom";
 
 import { RiAliensFill, RiLogoutBoxLine, RiWallet2Line } from "react-icons/ri";
 
+import { useModal } from "@/core/modals/hooks/useModal";
+import { ModalsIds } from "@/core/modals/modals.types";
 import { HOME_ROUTES } from "@/home/home.constants";
 import { getRoute } from "@/lib/router";
 import { Button } from "@/shared/components/Button";
@@ -10,7 +12,6 @@ import useResponsive from "@/shared/hooks/useResponsive";
 import { USER_ROUTES } from "@/user/user.constants";
 import { UserSettingsTabs } from "@/user/user.types";
 import { useQubicConnect } from "@/wallet/qubic/QubicConnectContext";
-import { connectSnap, getSnap } from "@/wallet/qubic/utils";
 
 import styles from "./WalletAccount.module.scss";
 import { shortHex } from "../../wallet.helpers";
@@ -22,8 +23,9 @@ import { shortHex } from "../../wallet.helpers";
  */
 export const WalletAccount: React.FC = () => {
   const navigate = useNavigate();
-  const { config, connected, wallet, connect, getMetaMaskPublicId, disconnect } = useQubicConnect();
+  const { connected, wallet, disconnect } = useQubicConnect();
   const { isMobile, isTabletVertical } = useResponsive();
+  const { openModal } = useModal();
 
   const isMobileOrTabletVertical = isMobile || isTabletVertical;
 
@@ -40,21 +42,7 @@ export const WalletAccount: React.FC = () => {
    * Connects the wallet using MetaMask and navigates to the home page.
    */
   const handleClickConnect = async () => {
-    try {
-      const snapId = config?.snapOrigin;
-      await connectSnap(snapId);
-      await getSnap();
-
-      // get publicId from snap
-      const publicKey = await getMetaMaskPublicId(0);
-      const wallet = {
-        connectType: "mmSnap",
-        publicKey,
-      };
-      connect(wallet);
-    } catch (error) {
-      console.error(error);
-    }
+    openModal(ModalsIds.CONNECT);
   };
 
   /**
