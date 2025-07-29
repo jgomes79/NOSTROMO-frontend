@@ -7,6 +7,7 @@ import { useAppTitle } from "@/shared/hooks/useAppTitle";
 import { TierSelector } from "@/tier/components/TierSelector";
 import { Tier } from "@/tier/tier.types";
 import { useUserByWallet } from "@/user/hooks/useUserByWallet";
+import { useRegisterTier } from "@/wallet/hooks/useRegisterTier";
 import { useQubicConnect } from "@/wallet/qubic/QubicConnectContext";
 
 import { useSetUserTier } from "../../hooks/useSetUserTier";
@@ -24,6 +25,7 @@ export const ChangeUserTierPage: React.FC = () => {
   const { wallet } = useQubicConnect();
   const { data: user } = useUserByWallet(wallet?.publicKey);
   const navigate = useNavigate();
+  const { mutate: registerInTier } = useRegisterTier();
 
   useAppTitle("Upgrade Tier");
 
@@ -45,6 +47,7 @@ export const ChangeUserTierPage: React.FC = () => {
             },
           },
         );
+        await registerInTier(tier.id);
       }
     },
     [wallet, setUserTier],

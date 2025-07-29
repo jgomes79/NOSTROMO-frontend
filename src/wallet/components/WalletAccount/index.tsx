@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { RiAliensFill, RiLogoutBoxLine, RiWallet2Line } from "react-icons/ri";
@@ -23,9 +24,17 @@ import { shortHex } from "../../wallet.helpers";
  */
 export const WalletAccount: React.FC = () => {
   const navigate = useNavigate();
-  const { connected, wallet, disconnect } = useQubicConnect();
+  const { connected, wallet, getBalance, disconnect } = useQubicConnect();
   const { isMobile, isTabletVertical } = useResponsive();
   const { openModal } = useModal();
+
+  useEffect(() => {
+    if (connected && wallet) {
+      getBalance(wallet.publicKey).then((res) => {
+        console.log({ res });
+      });
+    }
+  }, [connected, wallet]);
 
   const isMobileOrTabletVertical = isMobile || isTabletVertical;
 

@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 
 import classNames from "clsx";
@@ -10,6 +11,7 @@ import { Loader } from "@/shared/components/Loader";
 import { Separator } from "@/shared/components/Separator";
 import { Tabs } from "@/shared/components/Tabs";
 import { useAppTitle } from "@/shared/hooks/useAppTitle";
+import { useContractTier } from "@/wallet/hooks/useContractTier";
 import { useQubicConnect } from "@/wallet/qubic/QubicConnectContext";
 
 import styles from "./UserSettingsPage.module.scss";
@@ -30,14 +32,22 @@ export const UserSettingsPage: React.FC = () => {
   const { wallet } = useQubicConnect();
   const params = useParams<UserSettingsPageParams>();
   const navigate = useNavigate();
+  const { mutate: getCurrentTier } = useContractTier();
 
   useAppTitle("User settings");
+
+  useEffect(() => {
+    const fetchCurrentTier = async () => {
+      const result = await getCurrentTier();
+      console.log([result]);
+    };
+
+    fetchCurrentTier();
+  }, []);
 
   if (!params?.tabId) {
     return <Navigate to={getRoute(USER_ROUTES.SETTINGS, { tabId: UserSettingsTabs.MY_TIER })} />;
   }
-
-  console.log(wallet);
 
   if (!wallet?.publicKey || !params.tabId) {
     return (
