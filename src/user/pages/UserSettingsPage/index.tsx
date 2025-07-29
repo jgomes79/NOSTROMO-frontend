@@ -37,6 +37,8 @@ export const UserSettingsPage: React.FC = () => {
     return <Navigate to={getRoute(USER_ROUTES.SETTINGS, { tabId: UserSettingsTabs.MY_TIER })} />;
   }
 
+  console.log(wallet);
+
   if (!wallet?.publicKey || !params.tabId) {
     return (
       <div className={classNames(styles.container, styles.center)}>

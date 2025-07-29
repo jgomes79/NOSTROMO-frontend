@@ -20,10 +20,10 @@ import { UserSettingsTabs } from "../../user.types";
  * @returns {JSX.Element} The rendered ChangeUserTierPage component.
  */
 export const ChangeUserTierPage: React.FC = () => {
-  const setUserTier = useSetUserTier(),
-    { wallet } = useQubicConnect(),
-    { data: user } = useUserByWallet(wallet?.publicKey),
-    navigate = useNavigate();
+  const setUserTier = useSetUserTier();
+  const { wallet } = useQubicConnect();
+  const { data: user } = useUserByWallet(wallet?.publicKey);
+  const navigate = useNavigate();
 
   useAppTitle("Upgrade Tier");
 

@@ -25,7 +25,7 @@ export const UserSettingsLayout: React.FC = () => {
   const { wallet } = useQubicConnect();
   const { isMobile, isTabletVertical } = useResponsive();
 
-  if (wallet?.publicKey) {
+  if (!wallet?.publicKey) {
     return (
       <div className={styles.container}>
         <Loader size={42} className={styles.loader} />
