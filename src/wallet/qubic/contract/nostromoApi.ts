@@ -192,6 +192,7 @@ const NOSTROMO_CONTRACT_INDEX: number = 13;
 
 // NOSTROMO CONSTANTS
 export const NOSTROMO_TIERS: NostromoTiers = {
+  0: { name: "NONE", stake: 0, poolWeight: 0, unstakeFee: 0 },
   1: { name: "FACEHUGGER", stake: 20000000, poolWeight: 55, unstakeFee: 5 },
   2: { name: "CHESTBURST", stake: 100000000, poolWeight: 300, unstakeFee: 4 }, // 100M base units
   3: { name: "DOG", stake: 200000000, poolWeight: 750, unstakeFee: 3 },

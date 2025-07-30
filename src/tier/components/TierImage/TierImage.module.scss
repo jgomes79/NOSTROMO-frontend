@@ -26,7 +26,7 @@
 
 $shadowStyle: 0 10px 54px -12px;
 
-.tier_2 {
+.tier_1 {
   background: radial-gradient(circle at top, #111c14 0%, #3f5446 100%);
   box-shadow: $shadowStyle rgba(111, 138, 97, 0.5);
 
@@ -39,7 +39,7 @@ $shadowStyle: 0 10px 54px -12px;
   }
 }
 
-.tier_3 {
+.tier_2 {
   background: radial-gradient(circle at top, #12101b 0%, #252032 100%);
   box-shadow: $shadowStyle rgba(76, 69, 104, 0.5);
 
@@ -52,7 +52,7 @@ $shadowStyle: 0 10px 54px -12px;
   }
 }
 
-.tier_4 {
+.tier_3 {
   background: radial-gradient(circle at bottom, rgb(115 32 132) 0%, rgb(36 6 41) 100%);
   box-shadow: $shadowStyle rgba(125, 60, 180, 0.5);
 
@@ -65,7 +65,7 @@ $shadowStyle: 0 10px 54px -12px;
   }
 }
 
-.tier_5 {
+.tier_4 {
   background: radial-gradient(circle at top, #4a1e13 0%, #913c1e 100%);
   box-shadow: $shadowStyle rgba(201, 93, 52, 0.5);
 
@@ -78,7 +78,7 @@ $shadowStyle: 0 10px 54px -12px;
   }
 }
 
-.tier_6 {
+.tier_5 {
   background: radial-gradient(circle at top, #300304 0%, #650b09 100%);
   box-shadow: $shadowStyle rgba(187, 36, 38, 0.5);
 

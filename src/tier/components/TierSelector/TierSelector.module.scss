@@ -31,7 +31,7 @@
     justify-items: center; 
   }
 
-  &.tier_2 {
+  &.tier_1 {
     background: radial-gradient(circle at right, rgb(29, 35, 31) 0%, rgb(8, 17, 11) 55%, rgb(7, 9, 8) 100%);
     
     &, .fieldset {
@@ -52,7 +52,7 @@
     }
   }
 
-  &.tier_3 {
+  &.tier_2 {
     background: radial-gradient(circle at right, rgb(39 34 53) 0%, rgb(6 5 9) 55%, rgb(9 7 15) 100%);
 
     &, .fieldset {
@@ -73,7 +73,7 @@
     }
   }
 
-  &.tier_4 {
+  &.tier_3 {
     background: radial-gradient(circle at right, rgb(49 12 57) 0%, rgb(5 1 6) 100%);
 
     &, .fieldset {
@@ -94,7 +94,7 @@
     }
   }
 
-  &.tier_5 {
+  &.tier_4 {
     background: radial-gradient(circle at right, rgb(47 18 7) 0%, rgb(37, 12, 5) 55%, rgb(9, 3, 0) 100%);
 
     &, .fieldset {
@@ -115,7 +115,7 @@
     }
   }
 
-  &.tier_6 {
+  &.tier_5 {
     background: radial-gradient(circle at right, #2a0101 0%, rgb(30, 2, 2) 55%, rgb(3, 0, 0) 100%);
     border-color: #571416;
 

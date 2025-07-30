@@ -13,12 +13,12 @@ import { Loader } from "@/shared/components/Loader";
 import { Typography } from "@/shared/components/Typography";
 import { TierImage } from "@/tier/components/TierImage";
 import { TierSelector } from "@/tier/components/TierSelector";
-import { Tier, Tiers } from "@/tier/tier.types";
+import { Tier, Tiers, TiersData } from "@/tier/tier.types";
 import { USER_ROUTES } from "@/user/user.constants";
+import { useRegisterTier } from "@/wallet/hooks/useRegisterTier";
+import { useRemoveTier } from "@/wallet/hooks/useRemoveTier";
 
 import styles from "./UserTier.module.scss";
-import { useSetUserTier } from "../../hooks/useSetUserTier";
-import { useUnstakeTokens } from "../../hooks/useUnstakeTokens";
 import { useUserByWallet } from "../../hooks/useUserByWallet";
 import { User } from "../../user.types";
 
@@ -29,6 +29,7 @@ import { User } from "../../user.types";
  */
 interface UserTierProps {
   wallet: User["wallet"];
+  userTier: number;
 }
 
 /**
@@ -37,12 +38,12 @@ interface UserTierProps {
  * @param {UserTierProps} props - Component props
  * @returns {JSX.Element} Rendered component
  */
-export const UserTier: React.FC<UserTierProps> = ({ wallet }) => {
+export const UserTier: React.FC<UserTierProps> = ({ wallet, userTier }) => {
   const navigate = useNavigate();
-  const setUserTier = useSetUserTier();
-  const unstakeTokens = useUnstakeTokens();
 
   const { data: user, isLoading: isLoadingUser, refetch: refetchUserbyWallet } = useUserByWallet(wallet);
+  const { mutate: registerInTier, isLoading: isLoadingRegisterInTier } = useRegisterTier();
+  const { mutate: removeTier, isLoading: isLoadingRemoveTier } = useRemoveTier();
 
   /**
    * Handles the click event for upgrading the user's tier
@@ -60,10 +61,10 @@ export const UserTier: React.FC<UserTierProps> = ({ wallet }) => {
    */
   const handleClickUnstakeTokens = useCallback(async () => {
     if (wallet) {
-      await unstakeTokens.mutateAsync({ wallet });
-      refetchUserbyWallet();
+      await removeTier();
+      //window.location.reload();
     }
-  }, [wallet, unstakeTokens, refetchUserbyWallet]);
+  }, [wallet, removeTier, refetchUserbyWallet]);
 
   /**
    * Handles the tier selection and updates the user's tier
@@ -74,14 +75,14 @@ export const UserTier: React.FC<UserTierProps> = ({ wallet }) => {
   const handleClickSetTier = useCallback(
     async (tier: Tier) => {
       if (wallet) {
-        await setUserTier.mutateAsync({ wallet, tierId: tier.id });
-        refetchUserbyWallet();
+        await registerInTier(tier.id);
+        //window.location.reload();
       }
     },
-    [wallet, setUserTier, refetchUserbyWallet],
+    [wallet, registerInTier],
   );
 
-  if (!user || isLoadingUser) {
+  if (!user || isLoadingUser || isLoadingRegisterInTier || isLoadingRemoveTier) {
     return (
       <div className={classNames(styles.grid, styles.center)}>
         <Loader size={42} className={styles.loader} />
@@ -89,17 +90,13 @@ export const UserTier: React.FC<UserTierProps> = ({ wallet }) => {
     );
   }
 
-  if (user.tier.id === Tiers.TIER_NONE) {
+  if (userTier === Tiers.TIER_NONE) {
     return (
       <div className={classNames(styles.grid, styles.spacing)}>
         <Typography variant={"body"} size={"xlarge"} className={styles.title} textAlign={"center"}>
           Select a tier to start investing in NOSTROMO Projects and unlock features
         </Typography>
-        <TierSelector
-          currentTierId={user?.tier.id}
-          isLoading={setUserTier.isPending ? setUserTier.currentTierSetting : undefined}
-          onSelectTier={handleClickSetTier}
-        />
+        <TierSelector currentTierId={userTier} isLoading={isLoadingRegisterInTier} onSelectTier={handleClickSetTier} />
       </div>
     );
   }
@@ -108,7 +105,7 @@ export const UserTier: React.FC<UserTierProps> = ({ wallet }) => {
     <div className={classNames(styles.grid, styles.two)}>
       <div className={styles.grid}>
         <div className={styles.tier}>
-          <TierImage tier={user.tier.id} size={256} />
+          <TierImage tier={userTier} size={256} />
         </div>
         <div className={styles.actions}>
           <Button
@@ -129,13 +126,16 @@ export const UserTier: React.FC<UserTierProps> = ({ wallet }) => {
       </div>
       <div className={styles.grid}>
         <div className={classNames(styles.grid, styles.two, styles.labels)}>
-          <DataLabel label={"Your tier"} value={user.tier.name} />
-          <DataLabel label={"Staked $QUBIC"} value={formatPrice(user.tier.stakeAmount, "QUBIC", 0)} />
+          <DataLabel label={"Your tier"} value={TiersData[userTier as keyof typeof TiersData]?.name} />
+          <DataLabel
+            label={"Staked $QUBIC"}
+            value={formatPrice(TiersData[userTier as keyof typeof TiersData]?.stakeAmount, "QUBIC", 0)}
+          />
         </div>
 
         <Fieldset title={"Benefits"}>
           <Typography variant={"body"} size={"small"}>
-            <p dangerouslySetInnerHTML={{ __html: user.tier.benefits }} />
+            <p dangerouslySetInnerHTML={{ __html: TiersData[userTier as keyof typeof TiersData]?.benefits }} />
           </Typography>
         </Fieldset>
       </div>

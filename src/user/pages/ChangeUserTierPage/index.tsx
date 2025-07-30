@@ -1,16 +1,15 @@
-import { useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { getRoute } from "@/lib/router";
 import { NavigatorTitle } from "@/shared/components/NavigatorTitle";
 import { useAppTitle } from "@/shared/hooks/useAppTitle";
 import { TierSelector } from "@/tier/components/TierSelector";
-import { Tier } from "@/tier/tier.types";
-import { useUserByWallet } from "@/user/hooks/useUserByWallet";
-import { useRegisterTier } from "@/wallet/hooks/useRegisterTier";
+import { Tier, Tiers } from "@/tier/tier.types";
+import { useChangeTier } from "@/wallet/hooks/useChangeTier";
+import { useContractTier } from "@/wallet/hooks/useContractTier";
 import { useQubicConnect } from "@/wallet/qubic/QubicConnectContext";
 
-import { useSetUserTier } from "../../hooks/useSetUserTier";
 import { USER_ROUTES } from "../../user.constants";
 import { UserSettingsTabs } from "../../user.types";
 
@@ -21,13 +20,22 @@ import { UserSettingsTabs } from "../../user.types";
  * @returns {JSX.Element} The rendered ChangeUserTierPage component.
  */
 export const ChangeUserTierPage: React.FC = () => {
-  const setUserTier = useSetUserTier();
+  const { mutate: changeTier, isLoading: isLoadingChangeTier } = useChangeTier();
+  const { mutate: getCurrentTier } = useContractTier();
+  const [userTier, setUserTier] = useState<number>(Tiers.TIER_NONE);
   const { wallet } = useQubicConnect();
-  const { data: user } = useUserByWallet(wallet?.publicKey);
   const navigate = useNavigate();
-  const { mutate: registerInTier } = useRegisterTier();
 
   useAppTitle("Upgrade Tier");
+
+  useEffect(() => {
+    const fetchCurrentTier = async () => {
+      const tier = await getCurrentTier();
+      setUserTier(tier);
+    };
+
+    fetchCurrentTier();
+  }, [wallet?.publicKey]);
 
   /**
    * Handles the tier selection and updates the user's tier.
@@ -39,18 +47,11 @@ export const ChangeUserTierPage: React.FC = () => {
   const handleClickSetTier = useCallback(
     async (tier: Tier) => {
       if (wallet) {
-        await setUserTier.mutateAsync(
-          { wallet: wallet.publicKey, tierId: tier.id },
-          {
-            onSuccess: () => {
-              navigate(getRoute(USER_ROUTES.SETTINGS, { tabId: UserSettingsTabs.MY_TIER }));
-            },
-          },
-        );
-        await registerInTier(tier.id);
+        await changeTier(tier.id);
+        navigate(getRoute(USER_ROUTES.SETTINGS, { tabId: UserSettingsTabs.MY_TIER }));
       }
     },
-    [wallet, setUserTier],
+    [changeTier],
   );
 
   return (
@@ -59,11 +60,7 @@ export const ChangeUserTierPage: React.FC = () => {
         text="Upgrade Tier"
         backPath={getRoute(USER_ROUTES.SETTINGS, { tabId: UserSettingsTabs.MY_TIER })}
       />
-      <TierSelector
-        currentTierId={user?.tier.id}
-        isLoading={setUserTier.isPending ? setUserTier.currentTierSetting : undefined}
-        onSelectTier={handleClickSetTier}
-      />
+      <TierSelector currentTierId={userTier} isLoading={isLoadingChangeTier} onSelectTier={handleClickSetTier} />
     </>
   );
 };

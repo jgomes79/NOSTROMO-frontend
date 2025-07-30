@@ -14,14 +14,16 @@ export const useContractTier = () => {
   const [isLoading, setLoading] = useState<boolean>(false);
   const { httpEndpoint, wallet, qHelper } = useQubicConnect();
 
-  const mutate = async () => {
+  const mutate = async (): Promise<number> => {
     if (!httpEndpoint || !wallet?.publicKey) {
       return;
     }
 
     setLoading(true);
-    await getTierLevelByUser(httpEndpoint, wallet.publicKey, qHelper);
+    const result = await getTierLevelByUser(httpEndpoint, wallet.publicKey, qHelper);
     setLoading(false);
+
+    return result.decodedFields?.tierLevel;
   };
 
   return {

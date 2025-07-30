@@ -10,8 +10,7 @@ import { Typography } from "@/shared/components/Typography";
 import useResponsive from "@/shared/hooks/useResponsive";
 
 import styles from "./TierSelector.module.scss";
-import { useTiers } from "../../hooks/useTiers";
-import { Tier } from "../../tier.types";
+import { Tier, Tiers, TiersDataArray } from "../../tier.types";
 import { TierImage } from "../TierImage";
 
 /**
@@ -22,7 +21,7 @@ import { TierImage } from "../TierImage";
  */
 interface TierSelectorProps {
   readonly currentTierId?: Tier["id"];
-  readonly isLoading?: Tier["id"] | null;
+  readonly isLoading?: boolean;
   readonly onSelectTier: (tier: Tier) => void;
 }
 
@@ -33,7 +32,6 @@ interface TierSelectorProps {
  * @returns {React.ReactElement} Rendered TierSelector component
  */
 export const TierSelector: React.FC<TierSelectorProps> = ({ currentTierId, isLoading, onSelectTier }) => {
-  const { data, isLoading: isLoadingTiers } = useTiers();
   const { isMobile, isTabletVertical } = useResponsive();
 
   const isMobileOrTabletVertical = isMobile || isTabletVertical;
@@ -51,7 +49,7 @@ export const TierSelector: React.FC<TierSelectorProps> = ({ currentTierId, isLoa
     >
       <div className={styles.image}>
         <TierImage tier={tier.id} size={128} />
-        {currentTierId && currentTierId === tier.id && (
+        {currentTierId === tier.id && (
           <Typography variant={"body"} size={"xsmall"} className={styles.current} textAlign={"center"}>
             Current Tier
           </Typography>
@@ -85,7 +83,7 @@ export const TierSelector: React.FC<TierSelectorProps> = ({ currentTierId, isLoa
               size={"medium"}
               caption={`Stake ${formatPrice(tier.stakeAmount, "QUBIC", 0)}`}
               className={styles.button}
-              isLoading={isLoading === tier.id}
+              isLoading={isLoading}
               onClick={() => onSelectTier(tier)}
             />
           </div>
@@ -95,12 +93,12 @@ export const TierSelector: React.FC<TierSelectorProps> = ({ currentTierId, isLoa
   );
 
   const renderItem = (tier: Tier, index: number) => (
-    <React.Fragment key={index}>{index >= 1 && renderTier(tier)}</React.Fragment>
+    <React.Fragment key={index}>{index > Tiers.TIER_NONE && renderTier(tier)}</React.Fragment>
   );
 
   return (
-    <Skeleton count={5} orientation={"vertical"} gap={22} height={128} width={"full"} isLoading={isLoadingTiers}>
-      <div className={styles.layout}>{data?.map((tier, index) => renderItem(tier, index))}</div>
+    <Skeleton count={5} orientation={"vertical"} gap={22} height={128} width={"full"} isLoading={false}>
+      <div className={styles.layout}>{TiersDataArray?.map((tier, index) => renderItem(tier, index))}</div>
     </Skeleton>
   );
 };

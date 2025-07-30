@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 
 import classNames from "clsx";
@@ -17,7 +17,8 @@ import { DataLabel } from "@/shared/components/DataLabel";
 import { Loader } from "@/shared/components/Loader";
 import { Tabs } from "@/shared/components/Tabs";
 import { ErrorPage } from "@/shared/pages/ErrorPage";
-import { useUserByWallet } from "@/user/hooks/useUserByWallet";
+import { Tiers, TiersData } from "@/tier/tier.types";
+import { useContractTier } from "@/wallet/hooks/useContractTier";
 import { useQubicConnect } from "@/wallet/qubic/QubicConnectContext";
 
 import styles from "./ProjectDetailsPage.module.scss";
@@ -51,11 +52,21 @@ type ProjectDetailsPageParams = {
  */
 export const ProjectDetailsPage: React.FC = () => {
   const { slug, tabId } = useParams<ProjectDetailsPageParams>();
-  const { wallet } = useQubicConnect(),
-    { data: user } = useUserByWallet(wallet?.publicKey),
-    { data, ...project } = useProject(slug);
+  const { wallet } = useQubicConnect();
+  const { mutate: getCurrentTier } = useContractTier();
+  const [userTier, setUserTier] = useState<number>(Tiers.TIER_NONE);
+  const { data, ...project } = useProject(slug);
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchCurrentTier = async () => {
+      const tier = await getCurrentTier();
+      setUserTier(tier);
+    };
+
+    fetchCurrentTier();
+  }, [wallet?.publicKey]);
 
   /**
    * Array of tabs to be excluded from the project details view.
@@ -95,7 +106,7 @@ export const ProjectDetailsPage: React.FC = () => {
    * - Returns null for any other project state
    */
   const renderActionCard = (): JSX.Element | null => {
-    if (!data || !wallet || !user) return null;
+    if (!data || !wallet) return null;
 
     switch (data.state) {
       case ProjectStates.FUNDING_PHASE_1:
@@ -119,8 +130,8 @@ export const ProjectDetailsPage: React.FC = () => {
             }}
             user={{
               tier: {
-                id: user.tier.id,
-                name: user.tier.name,
+                id: userTier,
+                name: TiersData[userTier as keyof typeof TiersData]?.name,
               },
               maxInvestment: 2000,
             }}
@@ -138,13 +149,13 @@ export const ProjectDetailsPage: React.FC = () => {
             }}
             user={{
               tier: {
-                id: user.tier.id,
-                name: user.tier.name,
+                id: userTier,
+                name: TiersData[userTier as keyof typeof TiersData]?.name,
               },
               investment: {
-                value: user.tier.stakeAmount,
+                value: TiersData[userTier as keyof typeof TiersData]?.stakeAmount,
                 max: {
-                  value: user.tier.poolWeight,
+                  value: TiersData[userTier as keyof typeof TiersData]?.poolWeight,
                   currency: {
                     name: data.currency.name,
                   },
