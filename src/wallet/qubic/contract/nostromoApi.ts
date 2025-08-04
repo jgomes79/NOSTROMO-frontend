@@ -900,3 +900,24 @@ export function calculatePoolShare(tierLevel: number, totalPoolWeight: number): 
   if (!tier || !totalPoolWeight) return 0;
   return (tier.poolWeight / totalPoolWeight) * 100;
 }
+
+export function waitForTxReceipt(httpEndpoint: string, txHash: string): Promise<unknown> {
+  return new Promise((resolve, reject) => {
+    const interval = setInterval(() => {
+      checkTransactionStatus(httpEndpoint, txHash)
+        .then((data) => {
+          if (data && typeof data === "object" && data !== null && "transaction" in data) {
+            const transactionData = data as { transaction?: { executed?: boolean } };
+            if (transactionData.transaction && transactionData.transaction.executed) {
+              clearInterval(interval);
+              resolve(data);
+            }
+          }
+        })
+        .catch((error) => {
+          clearInterval(interval);
+          reject(error);
+        });
+    }, 1000);
+  });
+}

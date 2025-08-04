@@ -17,6 +17,7 @@ import { Typography } from "@/shared/components/Typography";
 import { useUserByWallet } from "@/user/hooks/useUserByWallet";
 import { USER_ROUTES } from "@/user/user.constants";
 import { User, UserSettingsTabs } from "@/user/user.types";
+// import { useCreateProject } from "@/wallet/hooks/useCreateProject";
 import { useQubicConnect } from "@/wallet/qubic/QubicConnectContext";
 
 import { confirmationLabels, confirmationVariants, mainLiterals, toastLabels } from "./ProjectEvaluation.constants";
@@ -36,6 +37,7 @@ interface ProjectEvaluationProps {
  */
 export const ProjectEvaluation: React.FC<ProjectEvaluationProps> = ({ projectId, admin }) => {
   const reviewProject = useReviewProject();
+  // const { mutate: createProject, isError, errorMessage, txHash } = useCreateProject();
   const { wallet } = useQubicConnect();
   const { data: user } = useUserByWallet(wallet?.publicKey);
   const { openModal, closeModal } = useModal();
