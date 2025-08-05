@@ -3,16 +3,16 @@
 
 import { useState } from "react";
 
-import { upgradeTier } from "../qubic/contract/nostromoApi";
+import { registerInTier } from "../qubic/contract/nostromoApi";
 import { useQubicConnect } from "../qubic/QubicConnectContext";
-import { waitForTxReceipt } from "../qubic/contract/nostromoApi";
 import { TransactionResult } from "../qubic/contract/contractApi";
+import { waitForTxReceipt } from "../qubic/contract/nostromoApi";
 
 /**
  *
  * @returns
  */
-export const useChangeTier = () => {
+export const useRegisterInProject = () => {
   const [isLoading, setLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
@@ -21,10 +21,10 @@ export const useChangeTier = () => {
 
   const mutate = async (tierLevel: number) => {
     setLoading(true);
-    const result: TransactionResult = await upgradeTier(qubic as any, tierLevel);
+    const result: TransactionResult = await registerInTier(qubic as any, tierLevel);
     if (result.success) {
-      setTxHash(result.txHash);
-      await waitForTxReceipt(qubic.httpEndpoint, result.txHash);
+        setTxHash(result.txHash);
+        await waitForTxReceipt(qubic.httpEndpoint, result.txHash);
     } else {
       setIsError(true);
       setErrorMessage(result.error);

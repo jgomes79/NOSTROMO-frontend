@@ -818,6 +818,7 @@ export async function checkTransactionStatus(httpEndpoint: string, transactionId
   try {
     const endpoint = formatEndpoint(httpEndpoint);
     const response = await fetch(`${endpoint}/v1/transactions/${transactionId}`);
+    console.log("checkTransactionStatus", response);
 
     if (response.ok) {
       const data = await response.json();
@@ -907,8 +908,8 @@ export function waitForTxReceipt(httpEndpoint: string, txHash: string): Promise<
       checkTransactionStatus(httpEndpoint, txHash)
         .then((data) => {
           if (data && typeof data === "object" && data !== null && "transaction" in data) {
-            const transactionData = data as { transaction?: { executed?: boolean } };
-            if (transactionData.transaction && transactionData.transaction.executed) {
+            const transactionData = data as { transaction?: { tickNumber?: number; txId?: string } };
+            if (transactionData.transaction && transactionData.transaction.txId) {
               clearInterval(interval);
               resolve(data);
             }

@@ -34,10 +34,12 @@ export interface QubicConnectContext {
 }
 
 export interface BroadcastResult {
-  txHash?: string;
-  transactionId?: string;
-  success?: boolean;
-  message?: string;
+  status: number;
+  result: {
+    encodedTransaction: string;
+    peersBroadcasted: number;
+    transactionId: string;
+  };
   [key: string]: unknown; // Allow additional properties
 }
 
@@ -216,7 +218,7 @@ export async function executeTransactionWithWallet({
   // --- 4. Broadcast Transaction ---
   console.log("Broadcasting signed transaction...");
   const broadcastResult = await broadcastTx(signedTx);
-  if (!broadcastResult) {
+  if (!broadcastResult || broadcastResult.status >= 400) {
     // broadcastTx in context should throw on network error
     throw new Error("Broadcasting failed. No result returned.");
   }
@@ -224,7 +226,7 @@ export async function executeTransactionWithWallet({
   console.log("Broadcast API Result:", broadcastResult);
 
   // --- 5. Format and Return Result ---
-  const txHash = broadcastResult.txHash || broadcastResult.transactionId; // Check both possible fields
+  const txHash = broadcastResult.result.transactionId; // Check both possible fields
 
   // Determine Explorer URL based on RPC endpoint
   const isTestnet = httpEndpoint && httpEndpoint.toLowerCase().includes("testnet");
@@ -377,7 +379,7 @@ export async function sendQubicTransaction({
   }
 
   // --- 5. Format and Return Result ---
-  const txHash = broadcastResult.txHash || broadcastResult.transactionId;
+  const txHash: string = broadcastResult.result.transactionId as string;
 
   // Determine Explorer URL based on RPC endpoint
   const isTestnet = httpEndpoint && httpEndpoint.toLowerCase().includes("testnet");

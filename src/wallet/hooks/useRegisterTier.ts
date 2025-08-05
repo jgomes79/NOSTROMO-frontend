@@ -6,7 +6,7 @@ import { useState } from "react";
 import { registerInTier } from "../qubic/contract/nostromoApi";
 import { useQubicConnect } from "../qubic/QubicConnectContext";
 import { TransactionResult } from "../qubic/contract/contractApi";
-// import { waitForTxReceipt } from "../qubic/contract/nostromoApi";
+import { waitForTxReceipt } from "../qubic/contract/nostromoApi";
 
 /**
  *
@@ -22,9 +22,9 @@ export const useRegisterTier = () => {
   const mutate = async (tierLevel: number) => {
     setLoading(true);
     const result: TransactionResult = await registerInTier(qubic as any, tierLevel);
-    if (result.result.success) {
-      setTxHash(result.result.transactionId);
-      // await waitForTxReceipt(qubic.httpEndpoint, result.result.transactionId);
+    if (result.success) {
+      setTxHash(result.txHash);
+      await waitForTxReceipt(qubic.httpEndpoint, result.txHash);
     } else {
       setIsError(true);
       setErrorMessage(result.error);

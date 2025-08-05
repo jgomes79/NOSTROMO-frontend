@@ -6,7 +6,7 @@ import { useState } from "react";
 import { logoutFromTier } from "../qubic/contract/nostromoApi";
 import { useQubicConnect } from "../qubic/QubicConnectContext";
 import { TransactionResult } from "../qubic/contract/contractApi";
-// import { waitForTxReceipt } from "../qubic/contract/nostromoApi";
+import { waitForTxReceipt } from "../qubic/contract/nostromoApi";
 
 /**
  *
@@ -22,9 +22,9 @@ export const useRemoveTier = () => {
   const mutate = async () => {
     setLoading(true);
     const result: TransactionResult = await logoutFromTier(qubic as any);
-    if (result.result.transactionId) {
-      setTxHash(result.result.transactionId);
-      // await waitForTxReceipt(qubic.httpEndpoint, result.result.transactionId);
+    if (result.transactionId) {
+      setTxHash(result.txHash);
+      await waitForTxReceipt(qubic.httpEndpoint, result.txHash);
     } else {
       setIsError(true);
       setErrorMessage(result.error);

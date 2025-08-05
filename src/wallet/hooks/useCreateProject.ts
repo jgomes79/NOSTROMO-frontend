@@ -7,7 +7,7 @@ import { createProject } from "../qubic/contract/nostromoApi";
 import { TransactionResult } from "../qubic/contract/contractApi";
 import { useQubicConnect } from "../qubic/QubicConnectContext";
 import { ProjectData } from "../qubic/contract/nostromoApi";
-// import { waitForTxReceipt } from "../qubic/contract/nostromoApi";
+import { waitForTxReceipt } from "../qubic/contract/nostromoApi";
 
 /**
  *
@@ -23,9 +23,9 @@ export const useCreateProject = () => {
   const mutate = async (projectData: ProjectData) => {
     setLoading(true);
     const result: TransactionResult = await createProject(qubic as any, projectData);
-    if (result.result.success) {
-      setTxHash(result.result.transactionId);
-      // await waitForTxReceipt(qubic.httpEndpoint, result.result.transactionId);
+    if (result.success) {
+      setTxHash(result.txHash);
+      await waitForTxReceipt(qubic.httpEndpoint, result.txHash);
     } else {
       setIsError(true);
       setErrorMessage(result.error);
