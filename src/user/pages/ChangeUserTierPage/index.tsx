@@ -1,11 +1,14 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { useModal } from "@/core/modals/hooks/useModal";
+import { ModalsIds } from "@/core/modals/modals.types";
+import { ToastIds, useToast } from "@/core/toasts/hooks/useToast";
 import { getRoute } from "@/lib/router";
 import { NavigatorTitle } from "@/shared/components/NavigatorTitle";
 import { useAppTitle } from "@/shared/hooks/useAppTitle";
 import { TierSelector } from "@/tier/components/TierSelector";
-import { Tier, Tiers } from "@/tier/tier.types";
+import { Tier } from "@/tier/tier.types";
 import { useChangeTier } from "@/wallet/hooks/useChangeTier";
 import { useContractTier } from "@/wallet/hooks/useContractTier";
 import { useQubicConnect } from "@/wallet/qubic/QubicConnectContext";
@@ -20,18 +23,18 @@ import { UserSettingsTabs } from "../../user.types";
  * @returns {JSX.Element} The rendered ChangeUserTierPage component.
  */
 export const ChangeUserTierPage: React.FC = () => {
-  const { mutate: changeTier, isLoading: isLoadingChangeTier } = useChangeTier();
-  const { mutate: getCurrentTier } = useContractTier();
-  const [userTier, setUserTier] = useState<number>(Tiers.TIER_NONE);
+  const { mutate: changeTier } = useChangeTier();
+  const { data, refetch: refetchTier, isLoading: isLoadingGetCurrentTier } = useContractTier();
   const { wallet } = useQubicConnect();
+  const { openModal, closeModal } = useModal();
+  const { createToast } = useToast();
   const navigate = useNavigate();
 
   useAppTitle("Upgrade Tier");
 
   useEffect(() => {
     const fetchCurrentTier = async () => {
-      const tier = await getCurrentTier();
-      setUserTier(tier);
+      await refetchTier();
     };
 
     fetchCurrentTier();
@@ -47,11 +50,33 @@ export const ChangeUserTierPage: React.FC = () => {
   const handleClickSetTier = useCallback(
     async (tier: Tier) => {
       if (wallet) {
-        await changeTier(tier.id);
-        navigate(getRoute(USER_ROUTES.SETTINGS, { tabId: UserSettingsTabs.MY_TIER }));
+        openModal(ModalsIds.CONFIRMATION, {
+          title: "Change tier?",
+          description: "Are you sure you want to change your tier?",
+          type: "info",
+          onConfirm: {
+            caption: "Change Tier",
+            action: async (setLoading) => {
+              setLoading(true);
+              await changeTier(tier.id);
+              createToast(ToastIds.CONFIRMATION, {
+                title: "Tier changed",
+                type: "success",
+              });
+              closeModal();
+              navigate(getRoute(USER_ROUTES.SETTINGS, { tabId: UserSettingsTabs.MY_TIER }));
+            },
+          },
+          onDecline: {
+            caption: "Cancel",
+            action: () => {
+              closeModal();
+            },
+          },
+        });
       }
     },
-    [changeTier],
+    [changeTier, openModal, createToast],
   );
 
   return (
@@ -60,7 +85,11 @@ export const ChangeUserTierPage: React.FC = () => {
         text="Upgrade Tier"
         backPath={getRoute(USER_ROUTES.SETTINGS, { tabId: UserSettingsTabs.MY_TIER })}
       />
-      <TierSelector currentTierId={userTier} isLoading={isLoadingChangeTier} onSelectTier={handleClickSetTier} />
+      <TierSelector
+        currentTierId={data.tierLevel}
+        isLoading={isLoadingGetCurrentTier}
+        onSelectTier={handleClickSetTier}
+      />
     </>
   );
 };

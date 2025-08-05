@@ -4,6 +4,9 @@ import { useNavigate } from "react-router-dom";
 import classNames from "clsx";
 import { RiArrowUpCircleLine, RiHandCoinLine } from "react-icons/ri";
 
+import { useModal } from "@/core/modals/hooks/useModal";
+import { ModalsIds } from "@/core/modals/modals.types";
+import { ToastIds, useToast } from "@/core/toasts/hooks/useToast";
 import { formatPrice } from "@/lib/number";
 import { getRoute } from "@/lib/router";
 import { Button } from "@/shared/components/Button";
@@ -44,6 +47,8 @@ export const UserTier: React.FC<UserTierProps> = ({ wallet, userTier }) => {
   const { data: user, isLoading: isLoadingUser, refetch: refetchUserbyWallet } = useUserByWallet(wallet);
   const { mutate: registerInTier, isLoading: isLoadingRegisterInTier } = useRegisterTier();
   const { mutate: removeTier, isLoading: isLoadingRemoveTier } = useRemoveTier();
+  const { openModal, closeModal } = useModal();
+  const { createToast } = useToast();
 
   /**
    * Handles the click event for upgrading the user's tier
@@ -75,8 +80,30 @@ export const UserTier: React.FC<UserTierProps> = ({ wallet, userTier }) => {
   const handleClickSetTier = useCallback(
     async (tier: Tier) => {
       if (wallet) {
-        await registerInTier(tier.id);
-        //window.location.reload();
+        openModal(ModalsIds.CONFIRMATION, {
+          title: "Stake QUBIC to upgrade",
+          description: "Are you sure you want to upgrade your tier?",
+          type: "info",
+          onConfirm: {
+            caption: "Upgrade Tier",
+            action: async (setLoading) => {
+              setLoading(true);
+              await registerInTier(tier.id);
+              await refetchUserbyWallet();
+              createToast(ToastIds.CONFIRMATION, {
+                title: "Tier Upgraded",
+                type: "success",
+              });
+              closeModal();
+            },
+          },
+          onDecline: {
+            caption: "Cancel",
+            action: () => {
+              closeModal();
+            },
+          },
+        });
       }
     },
     [wallet, registerInTier],

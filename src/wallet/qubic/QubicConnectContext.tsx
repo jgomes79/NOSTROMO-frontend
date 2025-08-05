@@ -10,6 +10,7 @@ import { connectTypes, getSnapOrigin, tickOffset } from "./config";
 import { MetaMaskProvider } from "./MetamaskContext";
 import { QubicConnectProviderProps, TickInfoType, Transaction } from "./types";
 import { getSnap } from "./utils";
+import { QHelper } from "./contract/nostromoApi";
 
 // Constants from QubicHelper
 const PUBLIC_KEY_LENGTH = 32;
@@ -51,7 +52,7 @@ interface QubicConnectContextValue {
     tx: Uint8Array;
     offset: number;
   }>;
-  qHelper: QubicHelper;
+  qHelper: QHelper;
   httpEndpoint: string;
   signTransaction: () => any;
 }

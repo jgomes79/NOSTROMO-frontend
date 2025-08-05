@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 
 import classNames from "clsx";
@@ -11,7 +11,6 @@ import { Loader } from "@/shared/components/Loader";
 import { Separator } from "@/shared/components/Separator";
 import { Tabs } from "@/shared/components/Tabs";
 import { useAppTitle } from "@/shared/hooks/useAppTitle";
-import { Tiers } from "@/tier/tier.types";
 import { useContractTier } from "@/wallet/hooks/useContractTier";
 import { useQubicConnect } from "@/wallet/qubic/QubicConnectContext";
 
@@ -33,15 +32,13 @@ export const UserSettingsPage: React.FC = () => {
   const { wallet } = useQubicConnect();
   const params = useParams<UserSettingsPageParams>();
   const navigate = useNavigate();
-  const { mutate: getCurrentTier } = useContractTier();
-  const [userTier, setUserTier] = useState<number>(Tiers.TIER_NONE);
+  const { data, refetch, isLoading: isLoadingTier } = useContractTier();
 
   useAppTitle("User settings");
 
   useEffect(() => {
     const fetchCurrentTier = async () => {
-      const tier = await getCurrentTier();
-      setUserTier(tier);
+      await refetch();
     };
 
     fetchCurrentTier();
@@ -51,7 +48,7 @@ export const UserSettingsPage: React.FC = () => {
     return <Navigate to={getRoute(USER_ROUTES.SETTINGS, { tabId: UserSettingsTabs.MY_TIER })} />;
   }
 
-  if (!wallet?.publicKey || !params.tabId) {
+  if (!wallet?.publicKey || !params.tabId || isLoadingTier) {
     return (
       <div className={classNames(styles.container, styles.center)}>
         <Loader size={42} className={styles.loader} />
@@ -74,7 +71,7 @@ export const UserSettingsPage: React.FC = () => {
 
       case UserSettingsTabs.MY_TIER:
       default:
-        return <UserTier wallet={wallet.publicKey} userTier={userTier} />;
+        return <UserTier wallet={wallet.publicKey} userTier={data.tierLevel} />;
     }
   };
 
