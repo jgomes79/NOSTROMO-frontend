@@ -3,6 +3,8 @@ import { useParams, useNavigate } from "react-router-dom";
 
 import { RiAliensFill } from "react-icons/ri";
 
+import { useModal } from "@/core/modals/hooks/useModal";
+import { ModalsIds } from "@/core/modals/modals.types";
 import { Button } from "@/shared/components/Button";
 import { Loader } from "@/shared/components/Loader";
 import { ErrorPage } from "@/shared/pages/ErrorPage";
@@ -38,6 +40,8 @@ export const CreateOrEditProjectPage: React.FC = () => {
   const upsertProject = useUpsertProject(),
     publishProject = usePublishProject();
 
+  const { openModal, closeModal } = useModal();
+
   const params = useParams<CreateOrEditProjectPageParams>();
 
   const { wallet } = useQubicConnect(),
@@ -53,7 +57,27 @@ export const CreateOrEditProjectPage: React.FC = () => {
   const handleClickSubmit = useCallback(
     async (isPublishing: boolean, values: ProjectFormValues) => {
       if (isPublishing && project.data) {
-        await publishProject.mutateAsync(project.data.id);
+        openModal(ModalsIds.CONFIRMATION, {
+          title: "Publish Project",
+          description: "Are you sure you want to publish this project?",
+          type: "info",
+          onConfirm: {
+            caption: "Publish",
+            action: async (setLoading) => {
+              if (!project.data) return false;
+              setLoading(true);
+              await publishProject.mutateAsync(project.data.id);
+              await project.refetch();
+              closeModal();
+            },
+          },
+          onDecline: {
+            caption: "Cancel",
+            action: () => {
+              closeModal();
+            },
+          },
+        });
       } else {
         await upsertProject.mutateAsync(values);
       }

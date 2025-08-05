@@ -20,7 +20,6 @@ export const OptionalFormSchema = z.object({
   amountToRaise: ProjectSchema.shape.amountToRaise.optional().or(z.literal("")),
   startDate: ProjectSchema.shape.startDate.optional(),
   tokenName: ProjectSchema.shape.tokenName.optional().or(z.literal("")),
-  tokenDecimals: ProjectSchema.shape.tokenDecimals.optional().or(z.literal("")),
   tokensForSale: ProjectSchema.shape.tokensForSale.optional().or(z.literal("")),
 
   // Vesting and distribution parameters
@@ -56,6 +55,17 @@ export const OptionalFormSchema = z.object({
   }).optional(),
 });
 
+export const EntryFormSchema = z.object({
+  name: ProjectSchema.shape.name,
+  slug: ProjectSchema.shape.slug,
+  email: ProjectSchema.shape.email,
+  description: ProjectSchema.shape.description,
+  currency: CurrencySchema.pick({
+    id: true,
+    name: true,
+  }).optional(),
+});
+
 /**
  * Extended schema with all fields required except social media
  */
@@ -65,7 +75,6 @@ export const ProjectFormSchema = OptionalFormSchema.extend({
   amountToRaise: ProjectSchema.shape.amountToRaise,
   startDate: ProjectSchema.shape.startDate,
   tokenName: ProjectSchema.shape.tokenName,
-  tokenDecimals: ProjectSchema.shape.tokenDecimals,
   tokensForSale: ProjectSchema.shape.tokensForSale,
   threshold: ProjectSchema.shape.threshold,
   cliff: ProjectSchema.shape.cliff,

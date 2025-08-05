@@ -22,7 +22,7 @@ export const useRemoveTier = () => {
   const mutate = async () => {
     setLoading(true);
     const result: TransactionResult = await logoutFromTier(qubic as any);
-    if (result.transactionId) {
+    if (result.success) {
       setTxHash(result.txHash);
       await waitForTxReceipt(qubic.httpEndpoint, result.txHash);
     } else {

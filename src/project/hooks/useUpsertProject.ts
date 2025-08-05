@@ -51,7 +51,6 @@ export const useUpsertProject = () => {
       }
 
       formData.append("tokensSupply", String(data.tokensSupply));
-      formData.append("tokenDecimals", String(data.tokenDecimals));
 
       // Raising Info
       formData.append("startDate", String(data.startDate));

@@ -5,6 +5,7 @@ import classNames from "clsx";
 
 import { getFileIcon, formatSize } from "@/lib/file";
 import { Typography } from "@/shared/components/Typography";
+import { shortHex } from "@/wallet/wallet.helpers";
 
 import styles from "./FileUpload.module.scss";
 
@@ -85,6 +86,8 @@ const acceptedFormats: Record<Required<FileUploadProps>["accept"], Accept> = {
     "image/png": [".png"],
     "image/jpeg": [".jpg", ".jpeg"],
     "image/gif": [".gif"],
+    "image/webp": [".webp"],
+    "image/avif": [".avif"],
   },
   documents: {
     "application/pdf": [".pdf"],
@@ -175,7 +178,7 @@ export const FileUpload = React.forwardRef<HTMLDivElement, FileUploadProps>(
         <div className={styles.icon}>{icon}</div>
         <div className={styles.container}>
           <Typography variant={"heading"} as={"h3"} size={"medium"} textAlign={"center"}>
-            {title}
+            {shortHex(title, 10)}
           </Typography>
           {description && (
             <Typography as={"p"} variant={"body"} size={"small"} textAlign={"center"} className={styles.description}>

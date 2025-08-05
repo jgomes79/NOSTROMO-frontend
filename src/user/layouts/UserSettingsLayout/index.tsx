@@ -1,12 +1,15 @@
+import { useEffect } from "react";
 import { Outlet } from "react-router-dom";
 
 import classNames from "clsx";
-import { RiAliensFill, RiWallet2Fill } from "react-icons/ri";
+import { RiAliensFill, RiCoinFill, RiWallet2Fill } from "react-icons/ri";
 
+import { formatNumber } from "@/lib/number";
 import { Loader } from "@/shared/components/Loader";
 import { Typography } from "@/shared/components/Typography";
 import useResponsive from "@/shared/hooks/useResponsive";
 import { ErrorPage } from "@/shared/pages/ErrorPage";
+import { useBalance } from "@/wallet/hooks/useBalance";
 import { useQubicConnect } from "@/wallet/qubic/QubicConnectContext";
 import { shortHex } from "@/wallet/wallet.helpers";
 
@@ -23,7 +26,19 @@ import styles from "./UserSettingsLayout.module.scss";
  */
 export const UserSettingsLayout: React.FC = () => {
   const { wallet } = useQubicConnect();
+  const {
+    data: { balance },
+    isLoading: isLoadingBalance,
+    refetch,
+  } = useBalance();
   const { isMobile, isTabletVertical } = useResponsive();
+
+  useEffect(() => {
+    async function getBalance() {
+      await refetch();
+    }
+    getBalance().then();
+  }, [wallet]);
 
   if (!wallet?.publicKey) {
     return (
@@ -76,11 +91,23 @@ export const UserSettingsLayout: React.FC = () => {
               <Typography variant={"heading"} size={"xlarge"}>
                 User Settings
               </Typography>
-              <div className={classNames(styles.inline, styles.label)}>
-                <RiWallet2Fill size={18} />
-                <Typography variant={"label"} size={"medium"}>
-                  {shortHex(wallet.publicKey, isMobile || isTabletVertical ? 6 : 34)}
-                </Typography>
+              <div className={styles.inline}>
+                <div className={classNames(styles.inline, styles.label)}>
+                  <RiWallet2Fill size={18} />
+                  <Typography variant={"label"} size={"medium"}>
+                    {shortHex(wallet.publicKey, isMobile || isTabletVertical ? 6 : 9)}
+                  </Typography>
+                </div>
+                <div className={classNames(styles.inline, styles.label)}>
+                  <RiCoinFill size={18} />
+                  {isLoadingBalance ? (
+                    <Loader size={20} />
+                  ) : (
+                    <Typography variant={"label"} size={"medium"}>
+                      {formatNumber(balance)} QUBIC
+                    </Typography>
+                  )}
+                </div>
               </div>
             </div>
           </div>

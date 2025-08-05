@@ -35,7 +35,7 @@ import { Typography } from "@/shared/components/Typography";
 
 import { getDefaultProjectFormValues } from "./ProjectForm.helpers";
 import styles from "./ProjectForm.module.scss";
-import { OptionalFormSchema, ProjectFormSchema } from "./ProjectForm.schema";
+import { EntryFormSchema, OptionalFormSchema, ProjectFormSchema } from "./ProjectForm.schema";
 import { ProjectFormValues, ProjectFormProps } from "./ProjectForm.types";
 import { ProjectTabLabels } from "../../../project/project.constants";
 import { ProjectFormTabs } from "../../../project/project.types";
@@ -62,7 +62,7 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
     formState: { isDirty, isValid, errors, dirtyFields },
   } = useForm<ProjectFormValues>({
     defaultValues: defaultValues ?? getDefaultProjectFormValues(),
-    resolver: zodResolver(OptionalFormSchema),
+    resolver: zodResolver(defaultValues?.id ? OptionalFormSchema : EntryFormSchema),
     reValidateMode: "onChange",
     mode: "all",
   });
@@ -213,16 +213,6 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
                   disabled={!tokenName}
                   error={dirtyFields.tokensSupply ? errors.tokensSupply?.message : undefined}
                   {...register("tokensSupply", { valueAsNumber: true })}
-                />
-
-                <TextInput
-                  label="Tokens Decimals"
-                  type="number"
-                  placeholder="Tokens Decimals"
-                  maxLength={2}
-                  disabled={!tokenName}
-                  error={dirtyFields.tokenDecimals ? errors.tokenDecimals?.message : undefined}
-                  {...register("tokenDecimals", { valueAsNumber: true })}
                 />
               </div>
             </div>

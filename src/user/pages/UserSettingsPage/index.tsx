@@ -32,7 +32,7 @@ export const UserSettingsPage: React.FC = () => {
   const { wallet } = useQubicConnect();
   const params = useParams<UserSettingsPageParams>();
   const navigate = useNavigate();
-  const { data, refetch, isLoading: isLoadingTier } = useContractTier();
+  const { data, isLoading: isLoadingTier, refetch } = useContractTier();
 
   useAppTitle("User settings");
 

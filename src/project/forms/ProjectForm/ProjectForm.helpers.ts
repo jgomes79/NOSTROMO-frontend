@@ -20,7 +20,6 @@ export const getDefaultProjectFormValues = () => ({
   tokenName: "",
   tokenImageUrl: undefined,
   tokensSupply: 0,
-  tokenDecimals: 0,
   amountToRaise: 0,
   threshold: 15,
   tokensForSale: 0,

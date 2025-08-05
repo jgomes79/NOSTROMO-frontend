@@ -12,12 +12,12 @@ import { getRoute } from "@/lib/router";
 import { Button } from "@/shared/components/Button";
 import { DataLabel } from "@/shared/components/DataLabel";
 import { Fieldset } from "@/shared/components/Fieldset";
-import { Loader } from "@/shared/components/Loader";
 import { Typography } from "@/shared/components/Typography";
 import { TierImage } from "@/tier/components/TierImage";
 import { TierSelector } from "@/tier/components/TierSelector";
 import { Tier, Tiers, TiersData } from "@/tier/tier.types";
 import { USER_ROUTES } from "@/user/user.constants";
+import { useContractTier } from "@/wallet/hooks/useContractTier";
 import { useRegisterTier } from "@/wallet/hooks/useRegisterTier";
 import { useRemoveTier } from "@/wallet/hooks/useRemoveTier";
 
@@ -44,9 +44,10 @@ interface UserTierProps {
 export const UserTier: React.FC<UserTierProps> = ({ wallet, userTier }) => {
   const navigate = useNavigate();
 
-  const { data: user, isLoading: isLoadingUser, refetch: refetchUserbyWallet } = useUserByWallet(wallet);
+  const { refetch: refetchUserbyWallet } = useUserByWallet(wallet);
+  const { refetch: refetchTier } = useContractTier();
   const { mutate: registerInTier, isLoading: isLoadingRegisterInTier } = useRegisterTier();
-  const { mutate: removeTier, isLoading: isLoadingRemoveTier } = useRemoveTier();
+  const { mutate: removeTier } = useRemoveTier();
   const { openModal, closeModal } = useModal();
   const { createToast } = useToast();
 
@@ -66,8 +67,31 @@ export const UserTier: React.FC<UserTierProps> = ({ wallet, userTier }) => {
    */
   const handleClickUnstakeTokens = useCallback(async () => {
     if (wallet) {
-      await removeTier();
-      //window.location.reload();
+      openModal(ModalsIds.CONFIRMATION, {
+        title: "Unstake Tokens",
+        description: "Are you sure you want to unstake your tokens?",
+        type: "info",
+        onConfirm: {
+          caption: "Unstake Tokens",
+          action: async (setLoading) => {
+            setLoading(true);
+            await removeTier();
+            await refetchUserbyWallet();
+            await refetchTier();
+            createToast(ToastIds.CONFIRMATION, {
+              title: "Tokens Unstaked",
+              type: "success",
+            });
+            closeModal();
+          },
+        },
+        onDecline: {
+          caption: "Cancel",
+          action: () => {
+            closeModal();
+          },
+        },
+      });
     }
   }, [wallet, removeTier, refetchUserbyWallet]);
 
@@ -90,6 +114,7 @@ export const UserTier: React.FC<UserTierProps> = ({ wallet, userTier }) => {
               setLoading(true);
               await registerInTier(tier.id);
               await refetchUserbyWallet();
+              await refetchTier();
               createToast(ToastIds.CONFIRMATION, {
                 title: "Tier Upgraded",
                 type: "success",
@@ -108,14 +133,6 @@ export const UserTier: React.FC<UserTierProps> = ({ wallet, userTier }) => {
     },
     [wallet, registerInTier],
   );
-
-  if (!user || isLoadingUser || isLoadingRegisterInTier || isLoadingRemoveTier) {
-    return (
-      <div className={classNames(styles.grid, styles.center)}>
-        <Loader size={42} className={styles.loader} />
-      </div>
-    );
-  }
 
   if (userTier === Tiers.TIER_NONE) {
     return (

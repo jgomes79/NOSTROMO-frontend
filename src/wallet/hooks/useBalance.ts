@@ -1,13 +1,12 @@
 import { create } from "zustand";
 
-import { getTierLevelByUser } from "../qubic/contract/nostromoApi";
 import { useQubicConnect } from "../qubic/QubicConnectContext";
 
 interface Store {
   isLoading: boolean;
   setLoading: (isLoading: boolean) => void;
-  tierLevel: number;
-  setTierLevel: (tierLevel: number) => void;
+  balance: number;
+  setBalance: (tierLevel: number) => void;
 }
 
 /**
@@ -23,21 +22,21 @@ const store = create<Store>((set) => ({
   setLoading: (isLoading: boolean) => set({ isLoading }),
 
   /** Current tier level */
-  tierLevel: 0,
+  balance: 0,
 
   /** Function to update tier level
-   * @param tierLevel - New tier level value
+   * @param balance - New tier level value
    */
-  setTierLevel: (tierLevel: number) => set({ tierLevel }),
+  setBalance: (balance: number) => set({ balance }),
 }));
 
 /**
  * Hook for interacting with contract tier functionality
  * @returns Object containing loading state, fetch function and tier level data
  */
-export const useContractTier = () => {
-  const { httpEndpoint, wallet, qHelper } = useQubicConnect();
-  const { isLoading, setLoading, tierLevel, setTierLevel } = store();
+export const useBalance = () => {
+  const { getBalance, wallet } = useQubicConnect();
+  const { isLoading, setLoading, balance, setBalance } = store();
 
   /**
    * Fetches the current tier level for the connected wallet
@@ -45,17 +44,18 @@ export const useContractTier = () => {
    * @throws Will not fetch if httpEndpoint or wallet public key is missing
    */
   const refetch = async () => {
-    if (!httpEndpoint || !wallet?.publicKey) {
+    if (!wallet || !wallet?.publicKey) {
       return;
     }
 
     setLoading(true);
     try {
-      const result = await getTierLevelByUser(httpEndpoint, wallet.publicKey, qHelper);
-      const tierLevel = result.decodedFields?.tierLevel as number | undefined;
-      setTierLevel(tierLevel ?? 0);
+      const {
+        balance: { balance },
+      } = await getBalance(wallet.publicKey);
+      setBalance(balance);
     } catch (error) {
-      console.error("Error fetching tier level:", error);
+      console.error("Error fetching balance:", error);
     } finally {
       setLoading(false);
     }
@@ -65,7 +65,7 @@ export const useContractTier = () => {
     isLoading,
     refetch,
     data: {
-      tierLevel,
+      balance,
     },
   };
 };
