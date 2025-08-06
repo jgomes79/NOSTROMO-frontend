@@ -38,8 +38,9 @@ export const useCreateProject = () => {
     };
 
     setLoading(true);
-    const result: TransactionResult = await createProject(qubic, projectData);
+    const result = await createProject(qubic, projectData);
     if (result.success) {
+      console.log("result", result);
       setTxHash(result.txHash);
       await waitForTxReceipt(qubic.httpEndpoint, result.txHash);
     } else {

@@ -907,6 +907,7 @@ export function waitForTxReceipt(httpEndpoint: string, txHash: string): Promise<
     const interval = setInterval(() => {
       checkTransactionStatus(httpEndpoint, txHash)
         .then((data) => {
+          console.log("waitForTxReceipt", data);
           if (data && typeof data === "object" && data !== null && "transaction" in data) {
             const transactionData = data as { transaction?: { tickNumber?: number; txId?: string } };
             if (transactionData.transaction && transactionData.transaction.txId) {
@@ -919,6 +920,6 @@ export function waitForTxReceipt(httpEndpoint: string, txHash: string): Promise<
           clearInterval(interval);
           reject(error);
         });
-    }, 1000);
+    }, 2000);
   });
 }
