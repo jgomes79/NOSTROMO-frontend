@@ -21,6 +21,7 @@ interface ProgressBarProps {
   readonly max: number;
   readonly label?: React.ReactNode;
   readonly color: BarColor;
+  readonly disabled?: boolean;
 }
 
 /**
@@ -32,11 +33,11 @@ interface ProgressBarProps {
  * @component
  * @returns {JSX.Element} A rendered progress bar with percentage display
  */
-export const ProgressBar: React.FC<ProgressBarProps> = ({ value, max, color, label }) => {
+export const ProgressBar: React.FC<ProgressBarProps> = ({ value, max, color, label, disabled }) => {
   const percentage = (value / max) * 100;
 
   return (
-    <div className={classNames(styles.content, styles[color])}>
+    <div className={classNames(styles.content, styles[color], disabled && styles.disabled)}>
       <div className={styles.bar}>
         <div className={styles.inner} style={{ width: `${percentage}%` }} />
       </div>

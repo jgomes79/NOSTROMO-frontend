@@ -158,8 +158,6 @@ export const ProjectDetailsPage: React.FC = () => {
       label: ProjectTabLabels[tab],
     }));
 
-  console.log("projectContract", projectContract);
-
   /**
    * Renders an action card based on the current state of the project.
    *
@@ -235,15 +233,14 @@ export const ProjectDetailsPage: React.FC = () => {
       case ProjectStates.READY_TO_VOTE:
         return (
           <ProjectVoting
-            vote={{
+            config={{
               limitDate: data.startDate,
               count: [projectContract?.numberOfYes ?? 0, projectContract?.numberOfNo ?? 0],
             }}
-            user={{
-              vote: undefined,
-            }}
-            onClick={handleClickVote}
+            myVote={undefined}
+            hasOwnership={true} //user?.id === data.owner?.id
             isLoading={isLoadingUserVotes}
+            onClick={handleClickVote}
           />
         );
 

@@ -35,26 +35,32 @@
   button {
     flex: 1;
   }
+
+  &.center {
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  }
 }
 
 .line {
   display: flex;
   flex-direction: column;
   gap: 4px;
-
-  h2 {
-    color: $green-03;
-  }
-
-  p {
-    color: $green-04;
-  }
 }
 
-
-.welcome {
-  color: $green-03;
+.green {
+  color: $green-03 !important;
 }
+
+.red {
+  color: $red-03 !important;
+}
+
+.lightgreen {
+  color: $green-04 !important;
+}
+
 
 .inline {
   display: grid;
@@ -81,3 +87,4 @@
     }
   }
 }
+

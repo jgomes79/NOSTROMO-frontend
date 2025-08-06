@@ -41,3 +41,21 @@
     color: #ffd723;
   }
 }
+
+.error {
+  background: linear-gradient(20deg, #180303 0%, rgba(0, 0, 0, 0.7) 100%);
+  border: 1px solid rgba(108, 51, 51, 0.8);
+
+  legend {
+    color: $red-03;
+  }
+}
+
+.white {
+  background: linear-gradient(20deg, #141414 0%, rgba(0, 0, 0, 0.7) 100%);
+  border: 1px solid rgba(49, 49, 49, 0.8);
+
+  legend {
+    color: $white;
+  }
+}

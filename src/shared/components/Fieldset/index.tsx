@@ -13,7 +13,7 @@ import { Typography } from "../Typography";
 interface FieldsetProps {
   readonly title: string;
   readonly children: React.ReactNode;
-  readonly variant?: "default" | "warning";
+  readonly variant?: "default" | "warning" | "error" | "white";
   readonly className?: string;
 }
 
