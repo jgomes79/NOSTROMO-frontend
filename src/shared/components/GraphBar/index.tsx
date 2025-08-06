@@ -21,7 +21,12 @@ export const GraphBar: React.FC<GraphBarProps> = ({ colors, data }) => {
   return (
     <div className={classNames(styles.layout)}>
       {data.map((value, index) => (
-        <ProgressBar key={`--graph-bar-${index.toString()}`} color={colors[index]} value={value} max={totalValue} />
+        <ProgressBar
+          key={`--graph-bar-${index.toString()}`}
+          color={colors[index]}
+          value={value}
+          max={totalValue || 1}
+        />
       ))}
     </div>
   );

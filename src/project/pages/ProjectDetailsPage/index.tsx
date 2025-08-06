@@ -21,7 +21,9 @@ import { Loader } from "@/shared/components/Loader";
 import { Tabs } from "@/shared/components/Tabs";
 import { ErrorPage } from "@/shared/pages/ErrorPage";
 import { TiersData } from "@/tier/tier.types";
+import { useContractProjectByIndex } from "@/wallet/hooks/useContractProjectByIndex";
 import { useContractTier } from "@/wallet/hooks/useContractTier";
+import { useContractUserVotes } from "@/wallet/hooks/useContractUserVotes";
 import { useVote } from "@/wallet/hooks/useVote";
 import { useQubicConnect } from "@/wallet/qubic/QubicConnectContext";
 
@@ -66,11 +68,18 @@ export const ProjectDetailsPage: React.FC = () => {
   const { openModal, closeModal } = useModal();
   const { createToast } = useToast();
 
+  const { refetch: refetchUserVotes, isLoading: isLoadingUserVotes } = useContractUserVotes();
+  const {
+    data: { project: projectContract },
+    isLoading: isLoadingProjectByIndex,
+  } = useContractProjectByIndex(data?.smartContractId);
+
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCurrentTier = async () => {
       await refetchUserTier();
+      await refetchUserVotes();
     };
 
     fetchCurrentTier();
@@ -99,7 +108,7 @@ export const ProjectDetailsPage: React.FC = () => {
             setLoading(true);
             try {
               if (data.smartContractId) {
-                await voteOnProject(data.smartContractId, isYes);
+                await voteOnProject(0, isYes);
                 closeModal();
               } else {
                 createToast(ToastIds.CONFIRMATION, {
@@ -148,6 +157,8 @@ export const ProjectDetailsPage: React.FC = () => {
       id: tab,
       label: ProjectTabLabels[tab],
     }));
+
+  console.log("projectContract", projectContract);
 
   /**
    * Renders an action card based on the current state of the project.
@@ -226,13 +237,13 @@ export const ProjectDetailsPage: React.FC = () => {
           <ProjectVoting
             vote={{
               limitDate: data.startDate,
-              count: [5000, 5533],
+              count: [projectContract?.numberOfYes ?? 0, projectContract?.numberOfNo ?? 0],
             }}
             user={{
               vote: undefined,
             }}
             onClick={handleClickVote}
-            isLoading={undefined}
+            isLoading={isLoadingUserVotes}
           />
         );
 
@@ -313,7 +324,7 @@ export const ProjectDetailsPage: React.FC = () => {
    *
    * @returns {JSX.Element} The loader component.
    */
-  if (project.isLoading && !data) {
+  if ((project.isLoading && !data) || isLoadingProjectByIndex) {
     return <Loader variant={"full"} size={42} />;
   }
 

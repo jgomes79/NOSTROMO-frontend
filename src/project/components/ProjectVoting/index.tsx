@@ -33,7 +33,7 @@ interface ProjectVotingProps {
   readonly user: {
     readonly vote?: Vote;
   };
-  readonly isLoading?: Vote;
+  readonly isLoading?: boolean;
   readonly onClick?: (vote: Vote) => void;
 }
 
@@ -62,6 +62,10 @@ export const ProjectVoting: React.FC<ProjectVotingProps> = ({ vote, user, isLoad
 
   const currentVote = user.vote ? literals[user.vote] : defaultVote;
 
+  if (isLoading) {
+    return null;
+  }
+
   return (
     <Fieldset title={"Voting Phase"} className={styles.section}>
       <div className={classNames(styles.field, styles.welcome)}>
@@ -80,7 +84,6 @@ export const ProjectVoting: React.FC<ProjectVotingProps> = ({ vote, user, isLoad
               caption="Yes"
               color={"primary"}
               onClick={() => onClick?.("yes")}
-              isLoading={isLoading === "yes"}
               disabled={!!isLoading}
               iconLeft={<RiEmotionHappyFill size={24} />}
             />
@@ -88,7 +91,6 @@ export const ProjectVoting: React.FC<ProjectVotingProps> = ({ vote, user, isLoad
               caption="No"
               color={"error"}
               onClick={() => onClick?.("no")}
-              isLoading={isLoading === "no"}
               disabled={!!isLoading}
               iconLeft={<RiEmotionNormalFill size={24} />}
             />
