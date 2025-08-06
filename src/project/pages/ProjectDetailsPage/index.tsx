@@ -5,12 +5,15 @@ import classNames from "clsx";
 import { addDays } from "date-fns/addDays";
 import { format } from "date-fns/format";
 
+import { useModal } from "@/core/modals/hooks/useModal";
+import { ModalsIds } from "@/core/modals/modals.types";
+import { ToastIds, useToast } from "@/core/toasts/hooks/useToast";
 import { formatPrice } from "@/lib/number";
 import { getRoute } from "@/lib/router";
 import { ProjectComments } from "@/project/components/ProjectComments";
 import { ProjectEvaluation } from "@/project/components/ProjectEvaluation";
 import { ProjectInvestment } from "@/project/components/ProjectInvestment";
-import { ProjectVoting } from "@/project/components/ProjectVoting";
+import { ProjectVoting, Vote } from "@/project/components/ProjectVoting";
 import { Button } from "@/shared/components/Button";
 import { Card } from "@/shared/components/Card";
 import { DataLabel } from "@/shared/components/DataLabel";
@@ -19,6 +22,7 @@ import { Tabs } from "@/shared/components/Tabs";
 import { ErrorPage } from "@/shared/pages/ErrorPage";
 import { TiersData } from "@/tier/tier.types";
 import { useContractTier } from "@/wallet/hooks/useContractTier";
+import { useVote } from "@/wallet/hooks/useVote";
 import { useQubicConnect } from "@/wallet/qubic/QubicConnectContext";
 
 import styles from "./ProjectDetailsPage.module.scss";
@@ -58,6 +62,9 @@ export const ProjectDetailsPage: React.FC = () => {
     data: { tierLevel },
   } = useContractTier();
   const { data, ...project } = useProject(slug);
+  const { mutate: voteOnProject } = useVote();
+  const { openModal, closeModal } = useModal();
+  const { createToast } = useToast();
 
   const navigate = useNavigate();
 
@@ -68,6 +75,51 @@ export const ProjectDetailsPage: React.FC = () => {
 
     fetchCurrentTier();
   }, [wallet?.publicKey]);
+
+  /**
+   * Handles the click event for voting on a project.
+   *
+   * @param {Vote} vote - The vote to be cast.
+   * @returns {void}
+   */
+  const handleClickVote = async (vote: Vote) => {
+    const isYes = vote === "yes";
+    if (data) {
+      const voteType = isYes ? "in favor of" : "against";
+      const confirmationTitle = `Vote ${voteType} this project`;
+      const confirmationDescription = `Are you sure you want to vote ${voteType} this project?`;
+
+      openModal(ModalsIds.CONFIRMATION, {
+        type: isYes ? "success" : "error",
+        title: confirmationTitle,
+        description: confirmationDescription,
+        onConfirm: {
+          caption: isYes ? "Vote in favor" : "Vote against",
+          action: async (setLoading) => {
+            setLoading(true);
+            try {
+              if (data.smartContractId) {
+                await voteOnProject(data.smartContractId, isYes);
+                closeModal();
+              } else {
+                createToast(ToastIds.CONFIRMATION, {
+                  type: "error",
+                  title: "Invalid operation",
+                  description: "This project is not published and cannot be voted on",
+                });
+              }
+            } finally {
+              setLoading(false);
+            }
+          },
+        },
+        onDecline: {
+          caption: "Cancel",
+          action: closeModal,
+        },
+      });
+    }
+  };
 
   /**
    * Array of tabs to be excluded from the project details view.
@@ -172,14 +224,14 @@ export const ProjectDetailsPage: React.FC = () => {
       case ProjectStates.READY_TO_VOTE:
         return (
           <ProjectVoting
-            votation={{
+            vote={{
               limitDate: data.startDate,
               count: [5000, 5533],
             }}
             user={{
               vote: undefined,
             }}
-            onClick={() => {}}
+            onClick={handleClickVote}
             isLoading={undefined}
           />
         );

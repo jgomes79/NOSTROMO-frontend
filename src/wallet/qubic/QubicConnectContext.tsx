@@ -418,7 +418,7 @@ export function QubicConnectProvider({ children, config }: QubicConnectProviderP
   );
 }
 
-export function useQubicConnect(): QubicConnectContextValue {
+export function useQubicConnect(): QubicConnectContext {
   const context = useContext(QubicConnectContext);
   if (context === undefined) {
     throw new Error("useQubicConnect() hook must be used within a <QubicConnectProvider>");

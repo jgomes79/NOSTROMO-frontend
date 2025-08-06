@@ -11,6 +11,8 @@ import { ProjectStates } from "./project.types";
 export const ProjectSchema = z.object({
   id: z.number().nonnegative("ID must be a non-negative number"),
 
+  smartContractId: z.number().optional(),
+
   state: z.nativeEnum(ProjectStates),
 
   name: z.string().min(1, { message: "Name is required" }),

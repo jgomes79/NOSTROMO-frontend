@@ -13,20 +13,20 @@ import { Typography } from "@/shared/components/Typography";
 
 import styles from "./ProjectVoting.module.scss";
 
-type Vote = "yes" | "no";
+export type Vote = "yes" | "no";
 
 /**
  * Props for the ProjectVoting component.
- * @property {Object} votation - The voting details for the project.
- * @property {Date} votation.limitDate - The date by which the voting must be completed.
- * @property {number[]} votation.count - An array of votes, where the first element represents "yes" votes and the second represents "no" votes.
+ * @property {Object} vote - The voting details for the project.
+ * @property {Date} vote.limitDate - The date by which the voting must be completed.
+ * @property {number[]} vote.count - An array of votes, where the first element represents "yes" votes and the second represents "no" votes.
  * @property {Object} user - The user details related to voting.
  * @property {Vote} [user.vote] - The user's vote.
  * @property {Vote} [isLoading] - The loading state of the user's vote.
  * @property {(vote: Vote) => void} [onClick] - The callback function that is called when a vote is clicked.
  */
 interface ProjectVotingProps {
-  readonly votation: {
+  readonly vote: {
     readonly limitDate: Date;
     readonly count: number[];
   };
@@ -43,7 +43,7 @@ interface ProjectVotingProps {
  * @param {ProjectVotingProps} props - The props for the component.
  * @returns {JSX.Element} The JSX code for the ProjectVoting component.
  */
-export const ProjectVoting: React.FC<ProjectVotingProps> = ({ votation, user, isLoading, onClick }) => {
+export const ProjectVoting: React.FC<ProjectVotingProps> = ({ vote, user, isLoading, onClick }) => {
   const literals: Record<Vote, { title: string; color?: string; description: string }> = {
     yes: {
       title: "You have voted in favor of this project",
@@ -57,7 +57,7 @@ export const ProjectVoting: React.FC<ProjectVotingProps> = ({ votation, user, is
 
   const defaultVote = {
     title: "This project is in the voting process",
-    description: `You have until ${format(votation.limitDate, "MMMM do, yyyy 'at' h:mm a")} to vote on this project`,
+    description: `You have until ${format(vote.limitDate, "MMMM do, yyyy 'at' h:mm a")} to vote on this project`,
   };
 
   const currentVote = user.vote ? literals[user.vote] : defaultVote;
@@ -101,11 +101,11 @@ export const ProjectVoting: React.FC<ProjectVotingProps> = ({ votation, user, is
         <DataLabel
           label={"Total Votes"}
           value={formatNumber(
-            votation.count.reduce((acc, vote) => acc + vote, 0),
+            vote.count.reduce((acc, vote) => acc + vote, 0),
             0,
           )}
         />
-        <Countdown date={votation.limitDate}>
+        <Countdown date={vote.limitDate}>
           {(timeLeft) => (
             <DataLabel
               label={"Time left"}
@@ -116,7 +116,7 @@ export const ProjectVoting: React.FC<ProjectVotingProps> = ({ votation, user, is
       </div>
 
       <div className={styles.inline}>
-        <GraphBar colors={["green", "red"]} data={votation.count} />
+        <GraphBar colors={["green", "red"]} data={vote.count} />
       </div>
     </Fieldset>
   );
