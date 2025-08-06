@@ -610,7 +610,7 @@ export async function createProject(
     procedureIndex: NOSTROMO_CREATE_PROJECT,
     params: projectData as Record<string, unknown>,
     inputFields: [
-      { name: "tokenName", type: "uint64" },
+      { name: "tokenName", type: "string" },
       { name: "supply", type: "uint64" },
       { name: "startYear", type: "uint32" },
       { name: "startMonth", type: "uint32" },

@@ -16,17 +16,13 @@ $avatar-size: 128px;
 .banner {
   position: relative;
   z-index: 4;
-
-  &:after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(180deg, rgb(8 13 4) 0%, rgba(0, 0, 0, 0.6) 50%, rgba(0, 0, 0, 0) 100%);
-    z-index: 1;
-  }
+  @include pageMargin();
   
+  padding-top: 90px !important;
+
   img {
-    object-fit: cover;
+    object-fit: contain;
+    object-position: center;
   }
 }
 
@@ -121,12 +117,13 @@ $avatar-size: 128px;
   }
 }
 
-.description {
-  color: $green-04;
-
-  @include respond-to(mobile) {
-    padding: 22px 0;
-  }
+.toBottom {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  gap: 12px;
+  flex: 1;
+  height: 100%;
 }
 
 .actions {

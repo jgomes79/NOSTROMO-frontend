@@ -42,6 +42,7 @@ export const useUpsertProject = () => {
       formData.append("slug", data.slug);
       formData.append("description", data.description ?? "");
       formData.append("email", data.email);
+      formData.append("websiteUrl", data.websiteUrl);
 
       // Token Info
       formData.append("tokenName", data.tokenName ?? "");

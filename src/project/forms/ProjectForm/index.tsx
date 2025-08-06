@@ -55,7 +55,6 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
     watch,
     reset,
     control,
-    register,
     setValue,
     getValues,
     handleSubmit,
@@ -143,35 +142,56 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
                 />
               )}
             />
-            <TextInput
-              label="Tokens Unlocked at TGE"
-              type="number"
-              placeholder="Tokens Unlocked at TGE"
-              description={"Specify the percentage of tokens to be unlocked on the listing date."}
-              maxLength={2}
-              symbol={"%"}
-              error={dirtyFields.unlockTokensTGE ? errors.unlockTokensTGE?.message : undefined}
-              {...register("unlockTokensTGE", { valueAsNumber: true })}
+            <Controller
+              name="unlockTokensTGE"
+              control={control}
+              render={({ field }) => (
+                <TextInput
+                  {...field}
+                  label="Tokens Unlocked at TGE"
+                  type="number"
+                  placeholder="Tokens Unlocked at TGE"
+                  description={"Specify the percentage of tokens to be unlocked on the listing date."}
+                  maxLength={2}
+                  symbol={"%"}
+                  error={dirtyFields.unlockTokensTGE ? errors.unlockTokensTGE?.message : undefined}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => field.onChange(Number(e.target.value))}
+                />
+              )}
             />
-            <TextInput
-              label="Cliff Period"
-              type="number"
-              placeholder="Cliff Period"
-              description={"Enter the number of days required before tokens can be released."}
-              maxLength={2}
-              disabled={!tokenName}
-              error={dirtyFields.cliff ? errors.cliff?.message : undefined}
-              {...register("cliff", { valueAsNumber: true })}
+            <Controller
+              name="cliff"
+              control={control}
+              render={({ field }) => (
+                <TextInput
+                  {...field}
+                  label="Cliff Period"
+                  type="number"
+                  placeholder="Cliff Period"
+                  description={"Enter the number of days required before tokens can be released."}
+                  maxLength={2}
+                  disabled={!tokenName}
+                  error={dirtyFields.cliff ? errors.cliff?.message : undefined}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => field.onChange(Number(e.target.value))}
+                />
+              )}
             />
-            <TextInput
-              label="Vesting Duration"
-              type="number"
-              placeholder="Vesting Duration"
-              maxLength={2}
-              description={"Specify the number of days over which the token vesting will occur."}
-              disabled={!tokenName}
-              error={dirtyFields.vestingDays ? errors.vestingDays?.message : undefined}
-              {...register("vestingDays", { valueAsNumber: true })}
+            <Controller
+              name="vestingDays"
+              control={control}
+              render={({ field }) => (
+                <TextInput
+                  {...field}
+                  label="Vesting Duration"
+                  type="number"
+                  placeholder="Vesting Duration"
+                  maxLength={2}
+                  description={"Specify the number of days over which the token vesting will occur."}
+                  disabled={!tokenName}
+                  error={dirtyFields.vestingDays ? errors.vestingDays?.message : undefined}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => field.onChange(Number(e.target.value))}
+                />
+              )}
             />
           </div>
         );
@@ -202,17 +222,30 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
             />
             <div className={classNames(styles.grid, styles.one)}>
               <div className={classNames(styles.grid, styles.two)}>
-                <TextInput label="Token Name" placeholder="Tokens Name" upperCase={true} {...register("tokenName")} />
+                <Controller
+                  name="tokenName"
+                  control={control}
+                  render={({ field }) => (
+                    <TextInput {...field} label="Token Name" placeholder="Tokens Name" upperCase={true} />
+                  )}
+                />
               </div>
               <div className={classNames(styles.grid, styles.two, !tokenName && styles.disabled)}>
-                <TextInput
-                  label="Total Supply"
-                  type="number"
-                  placeholder={formatPrice(500000)}
-                  symbol={tokenName ?? ""}
-                  disabled={!tokenName}
-                  error={dirtyFields.tokensSupply ? errors.tokensSupply?.message : undefined}
-                  {...register("tokensSupply", { valueAsNumber: true })}
+                <Controller
+                  name="tokensSupply"
+                  control={control}
+                  render={({ field }) => (
+                    <TextInput
+                      {...field}
+                      label="Total Supply"
+                      type="number"
+                      placeholder={formatPrice(500000)}
+                      symbol={tokenName ?? ""}
+                      disabled={!tokenName}
+                      error={dirtyFields.tokensSupply ? errors.tokensSupply?.message : undefined}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => field.onChange(Number(e.target.value))}
+                    />
+                  )}
                 />
               </div>
             </div>
@@ -248,16 +281,23 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
                 {isCurrenciesLoading ? (
                   <Loader />
                 ) : (
-                  <TextInput
-                    label="Amount to Raise"
-                    type="number"
-                    placeholder="Amount to Raise"
-                    symbol={currency?.name ?? ""}
-                    description={
-                      "Indicate the amount of funds you need to raise to make your project work. These will be expressed in the currency you select"
-                    }
-                    error={dirtyFields.amountToRaise ? errors.amountToRaise?.message : undefined}
-                    {...register("amountToRaise", { valueAsNumber: true })}
+                  <Controller
+                    name="amountToRaise"
+                    control={control}
+                    render={({ field }) => (
+                      <TextInput
+                        {...field}
+                        label="Amount to Raise"
+                        type="number"
+                        placeholder="Amount to Raise"
+                        symbol={currency?.name ?? ""}
+                        description={
+                          "Indicate the amount of funds you need to raise to make your project work. These will be expressed in the currency you select"
+                        }
+                        error={dirtyFields.amountToRaise ? errors.amountToRaise?.message : undefined}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => field.onChange(Number(e.target.value))}
+                      />
+                    )}
                   />
                 )}
               </div>
@@ -289,16 +329,23 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
               </div>
             </div>
             <div className={classNames(styles.grid, styles.two)}>
-              <TextInput
-                label="Token For Sale"
-                type="number"
-                placeholder={formatPrice(500000, undefined, 0)}
-                symbol={tokenName ?? ""}
-                description={
-                  "Indicate the amount of funds you need to raise to make your project work. These will be expressed in the currency you select"
-                }
-                error={dirtyFields.tokensForSale ? errors.tokensForSale?.message : undefined}
-                {...register("tokensForSale", { valueAsNumber: true })}
+              <Controller
+                name="tokensForSale"
+                control={control}
+                render={({ field }) => (
+                  <TextInput
+                    {...field}
+                    label="Token For Sale"
+                    type="number"
+                    placeholder={formatPrice(500000, undefined, 0)}
+                    symbol={tokenName ?? ""}
+                    description={
+                      "Indicate the amount of funds you need to raise to make your project work. These will be expressed in the currency you select"
+                    }
+                    error={dirtyFields.tokensForSale ? errors.tokensForSale?.message : undefined}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => field.onChange(Number(e.target.value))}
+                  />
+                )}
               />
               <Controller
                 name={"startDate"}
@@ -438,45 +485,75 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
       case ProjectFormTabs.SOCIAL_NETWORKS:
         return (
           <div className={classNames(styles.grid, styles.two)}>
-            <TextInput
-              label="Discord URL"
-              type="text"
-              {...register("social.discordUrl")}
-              placeholder="https://discord.com/invite..."
-              icon={<RiDiscordFill />}
-              error={dirtyFields.social?.discordUrl ? errors.social?.discordUrl?.message : undefined}
+            <Controller
+              name="social.discordUrl"
+              control={control}
+              render={({ field }) => (
+                <TextInput
+                  {...field}
+                  label="Discord URL"
+                  type="text"
+                  placeholder="https://discord.com/invite..."
+                  icon={<RiDiscordFill />}
+                  error={dirtyFields.social?.discordUrl ? errors.social?.discordUrl?.message : undefined}
+                />
+              )}
             />
-            <TextInput
-              label="Instagram URL"
-              type="text"
-              {...register("social.instagramUrl")}
-              placeholder="https://www.instagram.com/..."
-              icon={<RiInstagramFill />}
-              error={dirtyFields.social?.instagramUrl ? errors.social?.instagramUrl?.message : undefined}
+            <Controller
+              name="social.instagramUrl"
+              control={control}
+              render={({ field }) => (
+                <TextInput
+                  {...field}
+                  label="Instagram URL"
+                  type="text"
+                  placeholder="https://www.instagram.com/..."
+                  icon={<RiInstagramFill />}
+                  error={dirtyFields.social?.instagramUrl ? errors.social?.instagramUrl?.message : undefined}
+                />
+              )}
             />
-            <TextInput
-              label="Medium URL"
-              type="text"
-              {...register("social.mediumUrl")}
-              placeholder="https://medium.com/@..."
-              icon={<RiMediumFill />}
-              error={dirtyFields.social?.mediumUrl ? errors.social?.mediumUrl?.message : undefined}
+            <Controller
+              name="social.mediumUrl"
+              control={control}
+              render={({ field }) => (
+                <TextInput
+                  {...field}
+                  label="Medium URL"
+                  type="text"
+                  placeholder="https://medium.com/@..."
+                  icon={<RiMediumFill />}
+                  error={dirtyFields.social?.mediumUrl ? errors.social?.mediumUrl?.message : undefined}
+                />
+              )}
             />
-            <TextInput
-              label="X URL"
-              type="text"
-              {...register("social.xUrl")}
-              placeholder="https://x.com/..."
-              icon={<RiTwitterXFill />}
-              error={dirtyFields.social?.xUrl ? errors.social?.xUrl?.message : undefined}
+            <Controller
+              name="social.xUrl"
+              control={control}
+              render={({ field }) => (
+                <TextInput
+                  {...field}
+                  label="X URL"
+                  type="text"
+                  placeholder="https://x.com/..."
+                  icon={<RiTwitterXFill />}
+                  error={dirtyFields.social?.xUrl ? errors.social?.xUrl?.message : undefined}
+                />
+              )}
             />
-            <TextInput
-              label="Telegram URL"
-              type="text"
-              {...register("social.telegramUrl")}
-              placeholder="https://t.me/..."
-              icon={<RiTelegramFill />}
-              error={dirtyFields.social?.telegramUrl ? errors.social?.telegramUrl?.message : undefined}
+            <Controller
+              name="social.telegramUrl"
+              control={control}
+              render={({ field }) => (
+                <TextInput
+                  {...field}
+                  label="Telegram URL"
+                  type="text"
+                  placeholder="https://t.me/..."
+                  icon={<RiTelegramFill />}
+                  error={dirtyFields.social?.telegramUrl ? errors.social?.telegramUrl?.message : undefined}
+                />
+              )}
             />
           </div>
         );
@@ -534,36 +611,75 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
               </div>
             </div>
             <div className={classNames(styles.grid, styles.two, styles.withPaddingTop)}>
-              <TextInput
-                label="Project Name"
-                type="text"
-                placeholder="Project Name"
-                error={errors.name?.message}
-                {...register("name")}
+              <Controller
+                name="name"
+                control={control}
+                render={({ field }) => (
+                  <TextInput
+                    {...field}
+                    label="Project Name"
+                    type="text"
+                    placeholder="Project Name"
+                    error={errors.name?.message}
+                  />
+                )}
               />
-              <TextInput
-                label="Contact Email"
-                type="text"
-                placeholder="Contact Email"
-                error={errors.email?.message}
-                {...register("email")}
+              <Controller
+                name="email"
+                control={control}
+                render={({ field }) => (
+                  <TextInput
+                    {...field}
+                    label="Contact Email"
+                    type="text"
+                    placeholder="Contact Email"
+                    error={errors.email?.message}
+                  />
+                )}
               />
             </div>
 
-            <TextArea
-              label="Project Description"
-              {...register("description")}
-              placeholder="Write an appropriate and detailed description of your project that is attractive and clear for users. Make sure to include objectives, main features, and any relevant information that may capture the interest of potential users."
-              error={dirtyFields.description ? errors.description?.message : undefined}
-            />
+            <div className={classNames(styles.grid, styles.two)}>
+              <Controller
+                name="slug"
+                control={control}
+                render={({ field }) => (
+                  <TextInput
+                    {...field}
+                    label="Project Slug"
+                    type="text"
+                    placeholder="Project URLs"
+                    error={errors.slug?.message}
+                    note={`${window.location.origin}/project/${slug}`}
+                  />
+                )}
+              />
+              <Controller
+                name="websiteUrl"
+                control={control}
+                render={({ field }) => (
+                  <TextInput
+                    {...field}
+                    label="Project Website URL"
+                    type="text"
+                    placeholder="Project Website URL"
+                    error={errors.websiteUrl?.message}
+                  />
+                )}
+              />
+            </div>
 
-            <TextInput
-              label="Project URL"
-              type="text"
-              placeholder="Project URLs"
-              error={errors.slug?.message}
-              note={`${window.location.origin}/project/${slug}`}
-              {...register("slug")}
+            <Controller
+              name="description"
+              control={control}
+              render={({ field }) => (
+                <TextArea
+                  {...field}
+                  label="Project Description"
+                  placeholder="Write an appropriate and detailed description of your project that is attractive and clear for users. Make sure to include objectives, main features, and any relevant information that may capture the interest of potential users."
+                  error={dirtyFields.description ? errors.description?.message : undefined}
+                />
+              )}
             />
           </div>
         );
@@ -637,6 +753,14 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
 
   return (
     <form onSubmit={handleSubmit(onSubmitHandler)} className={styles.form}>
+      {comments && (
+        <Fieldset title={"Review Comments"} variant={"warning"}>
+          <div className={styles.comments}>
+            <Typography size={"small"}>{comments}</Typography>
+          </div>
+        </Fieldset>
+      )}
+
       {/* Tabs */}
       <div className={styles.tabs}>
         <Tabs<ProjectFormTabs>
@@ -646,14 +770,6 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
           onChange={setActiveTab}
         />
       </div>
-
-      {comments && (
-        <Fieldset title={"Review Comments"} variant={"warning"}>
-          <div className={styles.comments}>
-            <Typography size={"small"}>{comments}</Typography>
-          </div>
-        </Fieldset>
-      )}
 
       {/* Page Container */}
       <Fieldset title={ProjectTabLabels[activeTab]}>

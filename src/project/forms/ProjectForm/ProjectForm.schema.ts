@@ -28,6 +28,7 @@ export const OptionalFormSchema = z.object({
   TGEDate: ProjectSchema.shape.TGEDate.optional(),
   unlockTokensTGE: ProjectSchema.shape.unlockTokensTGE.optional().or(z.literal("")),
   vestingDays: ProjectSchema.shape.vestingDays.optional().or(z.literal("")),
+  websiteUrl: ProjectSchema.shape.websiteUrl.optional().or(z.literal("")),
 
   // Project media and documentation
   photoUrl: z.union([z.instanceof(File), z.string(), z.undefined(), z.null()]).optional(),
@@ -60,6 +61,7 @@ export const EntryFormSchema = z.object({
   slug: ProjectSchema.shape.slug,
   email: ProjectSchema.shape.email,
   description: ProjectSchema.shape.description,
+  websiteUrl: ProjectSchema.shape.websiteUrl,
   currency: CurrencySchema.pick({
     id: true,
     name: true,
@@ -71,6 +73,7 @@ export const EntryFormSchema = z.object({
  */
 export const ProjectFormSchema = OptionalFormSchema.extend({
   description: ProjectSchema.shape.description,
+  websiteUrl: ProjectSchema.shape.websiteUrl,
   tokensSupply: ProjectSchema.shape.tokensSupply,
   amountToRaise: ProjectSchema.shape.amountToRaise,
   startDate: ProjectSchema.shape.startDate,

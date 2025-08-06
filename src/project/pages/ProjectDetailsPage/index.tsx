@@ -187,7 +187,7 @@ export const ProjectDetailsPage: React.FC = () => {
       case ProjectStates.SENT_TO_REVIEW:
         return (
           <ProjectEvaluation
-            projectId={data.id}
+            project={data}
             admin={{
               wallet: wallet.publicKey,
             }}
@@ -196,6 +196,7 @@ export const ProjectDetailsPage: React.FC = () => {
 
       case ProjectStates.REQUEST_MORE_INFO:
         return <ProjectComments comments={data.comments ?? ""} />;
+
       default:
         return null;
     }

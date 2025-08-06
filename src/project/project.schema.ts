@@ -42,6 +42,8 @@ export const ProjectSchema = z.object({
 
   tokenName: z.string().min(1, { message: "Token name is required" }),
 
+  websiteUrl: z.string().url({ message: "Invalid URL format" }).min(1, { message: "Website URL is required" }),
+
   tokensSupply: z
     .number({ invalid_type_error: "Tokens supply must be a number" })
     .nonnegative("Tokens supply must be zero or greater"),

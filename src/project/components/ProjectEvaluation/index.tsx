@@ -17,14 +17,14 @@ import { Typography } from "@/shared/components/Typography";
 import { useUserByWallet } from "@/user/hooks/useUserByWallet";
 import { USER_ROUTES } from "@/user/user.constants";
 import { User, UserSettingsTabs } from "@/user/user.types";
-// import { useCreateProject } from "@/wallet/hooks/useCreateProject";
+import { useCreateProject } from "@/wallet/hooks/useCreateProject";
 import { useQubicConnect } from "@/wallet/qubic/QubicConnectContext";
 
 import { confirmationLabels, confirmationVariants, mainLiterals, toastLabels } from "./ProjectEvaluation.constants";
 import styles from "./ProjectEvaluation.module.scss";
 
 interface ProjectEvaluationProps {
-  projectId: Project["id"];
+  project: Project;
   admin: {
     wallet: User["wallet"];
   };
@@ -35,9 +35,9 @@ interface ProjectEvaluationProps {
  *
  * @returns {JSX.Element} The JSX code for ProjectEvaluation component.
  */
-export const ProjectEvaluation: React.FC<ProjectEvaluationProps> = ({ projectId, admin }) => {
+export const ProjectEvaluation: React.FC<ProjectEvaluationProps> = ({ project, admin }) => {
   const reviewProject = useReviewProject();
-  // const { mutate: createProject, isError, errorMessage, txHash } = useCreateProject();
+  const { mutate: createProject } = useCreateProject();
   const { wallet } = useQubicConnect();
   const { data: user } = useUserByWallet(wallet?.publicKey);
   const { openModal, closeModal } = useModal();
@@ -66,40 +66,51 @@ export const ProjectEvaluation: React.FC<ProjectEvaluationProps> = ({ projectId,
    * @returns {void} This function does not return a value.
    */
   const onConfirm = useCallback(
-    (response: ProjectReviewStatus, setLoading: (loading: boolean) => void) => {
+    async (response: ProjectReviewStatus, setLoading: (loading: boolean) => void) => {
       setLoading(true);
-      reviewProject.mutate(
-        {
-          id: projectId,
-          wallet: admin.wallet,
-          data: {
-            response,
-            comments: getValues("comment"),
+
+      const update = () => {
+        reviewProject.mutate(
+          {
+            id: project.id,
+            wallet: admin.wallet,
+            data: {
+              response,
+              comments: getValues("comment"),
+            },
           },
-        },
-        {
-          onSuccess: () => {
-            reset();
-            createToast(ToastIds.CONFIRMATION, {
-              type: "success",
-              title: toastLabels[response].title,
-              description: toastLabels[response].description,
-            });
-            closeModal();
-            navigate(getRoute(USER_ROUTES.SETTINGS, { tabId: UserSettingsTabs.MY_PROJECTS }));
+          {
+            onSuccess: () => {
+              createToast(ToastIds.CONFIRMATION, {
+                type: "success",
+                title: toastLabels[response].title,
+                description: toastLabels[response].description,
+              });
+              reset();
+              closeModal();
+              navigate(getRoute(USER_ROUTES.SETTINGS, { tabId: UserSettingsTabs.MY_PROJECTS }));
+            },
+            onError: () => {
+              setLoading(false);
+              createToast(ToastIds.CONFIRMATION, {
+                type: "error",
+                title: "An unexpected error occurred",
+                description: "Please try again. If the error persists, contact support.",
+              });
+            },
           },
-          onError: () => {
-            setLoading(false);
-            createToast(ToastIds.CONFIRMATION, {
-              type: "error",
-              title: "An unexpected error occurred",
-              description: "Please try again. If the error persists, contact support.",
-            });
-          },
-        },
-      );
+        );
+      };
+
+      if (response === ProjectReviewStatus.APPROVED) {
+        const tx = await createProject(project);
+        console.log("tx", tx);
+        update();
+      } else {
+        update();
+      }
     },
-    [projectId, admin.wallet, getValues, reviewProject, createToast],
+    [project, admin.wallet, getValues, reviewProject, createToast],
   );
 
   /**

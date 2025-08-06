@@ -30,7 +30,7 @@ import styles from "./ProjectHeader.module.scss";
 type ProjectHeaderProps = Pick<
   Project,
   | "name"
-  | "description"
+  | "websiteUrl"
   | "state"
   | "bannerUrl"
   | "photoUrl"
@@ -54,7 +54,7 @@ type ProjectHeaderProps = Pick<
  */
 export const ProjectHeader: React.FC<ProjectHeaderProps> = ({
   name,
-  description,
+  websiteUrl,
   state,
   photoUrl,
   bannerUrl,
@@ -90,7 +90,7 @@ export const ProjectHeader: React.FC<ProjectHeaderProps> = ({
     <div className={styles.layout}>
       <div className={styles.stars} />
       <div className={styles.banner}>
-        <img src={bannerUrl} width="100%" height={isMobile ? 250 : 500} alt={`${name} banner`} />
+        <img src={bannerUrl} width="100%" height={isMobile ? 250 : 250} alt={`${name} banner`} />
 
         <div className={styles.bar}>
           <div className={styles.content}>
@@ -116,7 +116,7 @@ export const ProjectHeader: React.FC<ProjectHeaderProps> = ({
             <img src={photoUrl} width={62} height={62} alt={`${name} avatar`} />
           </div>
 
-          <div className={styles.field}>
+          <div className={classNames(styles.field, styles.toBottom)}>
             <div>
               <div className={classNames(styles.inline, styles.title)}>
                 <Typography as="h1" variant="heading" size="large">
@@ -141,15 +141,18 @@ export const ProjectHeader: React.FC<ProjectHeaderProps> = ({
                   </div>
                 )}
               </div>
-
-              <div className={styles.description}>
-                <Typography as="p" variant="body" size="medium" textAlign={isMobile ? "center" : "left"}>
-                  <span dangerouslySetInnerHTML={{ __html: description }} />
-                </Typography>
-              </div>
             </div>
 
             <div className={styles.actions}>
+              <a href={websiteUrl} target={"_blank"}>
+                <Button
+                  variant="solid"
+                  color="primary"
+                  caption="Website"
+                  size="small"
+                  iconLeft={<RiExternalLinkLine />}
+                />
+              </a>
               <a href={whitepaperUrl} target={"_blank"}>
                 <Button
                   variant="outline"
