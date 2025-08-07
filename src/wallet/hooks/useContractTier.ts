@@ -1,13 +1,24 @@
 import { create } from "zustand";
 
-import { getTierLevelByUser } from "../qubic/contract/nostromoApi";
+import { getTierLevelByUser, getStats } from "../qubic/contract/nostromoApi";
 import { useQubicConnect } from "../qubic/QubicConnectContext";
+
+interface Stats {
+  epochRevenue: number;
+  totalPoolWeight: number;
+  numberOfRegister: number;
+  numberOfCreatedProject: number;
+  numberOfFundraising: number;
+}
 
 interface Store {
   isLoading: boolean;
   setLoading: (isLoading: boolean) => void;
   tierLevel: number;
   setTierLevel: (tierLevel: number) => void;
+
+  stats: Stats;
+  setStats: (stats: Stats) => void;
 }
 
 /**
@@ -29,6 +40,16 @@ const store = create<Store>((set) => ({
    * @param tierLevel - New tier level value
    */
   setTierLevel: (tierLevel: number) => set({ tierLevel }),
+
+  stats: {
+    epochRevenue: 0,
+    totalPoolWeight: 0,
+    numberOfRegister: 0,
+    numberOfCreatedProject: 0,
+    numberOfFundraising: 0,
+  },
+
+  setStats: (stats: Stats) => set({ stats }),
 }));
 
 /**
@@ -37,7 +58,7 @@ const store = create<Store>((set) => ({
  */
 export const useContractTier = () => {
   const { httpEndpoint, wallet, qHelper } = useQubicConnect();
-  const { isLoading, setLoading, tierLevel, setTierLevel } = store();
+  const { isLoading, setLoading, tierLevel, setTierLevel, stats, setStats } = store();
 
   /**
    * Fetches the current tier level for the connected wallet
@@ -54,6 +75,11 @@ export const useContractTier = () => {
       const result = await getTierLevelByUser(httpEndpoint, wallet.publicKey, qHelper);
       const tierLevel = result.decodedFields?.tierLevel as number | undefined;
       setTierLevel(tierLevel ?? 0);
+
+      const stat = await getStats(httpEndpoint, qHelper);
+      const statLevel = stat.decodedFields as unknown as Stats;
+      console.log("statLevel", statLevel);
+      setStats(statLevel as Stats);
     } catch (error) {
       console.error("Error fetching tier level:", error);
     } finally {
@@ -66,6 +92,7 @@ export const useContractTier = () => {
     refetch,
     data: {
       tierLevel,
+      stats,
     },
   };
 };

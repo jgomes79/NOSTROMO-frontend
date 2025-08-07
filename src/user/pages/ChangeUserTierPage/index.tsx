@@ -50,6 +50,7 @@ export const ChangeUserTierPage: React.FC = () => {
   const handleClickSetTier = useCallback(
     async (tier: Tier) => {
       if (wallet) {
+        console.log("tier", tier);
         openModal(ModalsIds.CONFIRMATION, {
           title: "Change tier?",
           description: "Are you sure you want to change your tier?",

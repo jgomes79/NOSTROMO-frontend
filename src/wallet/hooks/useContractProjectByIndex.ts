@@ -73,9 +73,9 @@ export const useContractProjectByIndex = (indexOfProject?: number) => {
     }
     reset();
     try {
-      console.log("indexOfProject", indexOfProject);
+      console.log("XXXXXXXXXXXXXXindexOfProject", indexOfProject);
       const result = await getProjectByIndex(httpEndpoint, indexOfProject, qHelper);
-      console.info("result", result);
+      console.info("XXXXXXXXXXXXXresult", result);
       const projectData = result.decodedFields as unknown as Project;
       setProject(projectData);
     } catch (error) {

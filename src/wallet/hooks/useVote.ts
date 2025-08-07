@@ -89,6 +89,8 @@ export const useVote = () => {
       setError(false);
       setErrorMessage("");
 
+      console.log("indexOfProject", indexOfProject);
+
       const result: TransactionResult = await voteInProject(qubicConnect, indexOfProject, decision);
 
       if (result.success) {

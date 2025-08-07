@@ -68,6 +68,8 @@ export const ProjectDetailsPage: React.FC = () => {
   const { openModal, closeModal } = useModal();
   const { createToast } = useToast();
 
+  console.log("data?.smartContractId", data?.smartContractId);
+
   const { refetch: refetchUserVotes, isLoading: isLoadingUserVotes } = useContractUserVotes();
   const {
     data: { project: projectContract },
@@ -108,7 +110,7 @@ export const ProjectDetailsPage: React.FC = () => {
             setLoading(true);
             try {
               if (data.smartContractId) {
-                await voteOnProject(0, isYes);
+                await voteOnProject(data.smartContractId, isYes);
                 closeModal();
               } else {
                 createToast(ToastIds.CONFIRMATION, {

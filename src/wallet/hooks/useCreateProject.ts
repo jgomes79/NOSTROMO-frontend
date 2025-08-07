@@ -22,20 +22,25 @@ export const useCreateProject = () => {
   const qubic = useQubicConnect();
 
   const mutate = async (data: Project) => {
-
+    // Calcula endDate como un mes más que startDate, pero ajusta correctamente el mes (getMonth() es base 0)
+    const startDate = new Date(data.startDate);
+    const endDate = new Date(startDate);
+    endDate.setMonth(endDate.getMonth() + 1);
 
     const projectData: ProjectData = {
       tokenName: data.tokenName,
       supply: data.tokensForSale,
-      startYear: new Date(data.startDate).getFullYear(),
-      startMonth: new Date(data.startDate).getMonth() + 1,
-      startDay: new Date(data.startDate).getDate(),
-      startHour: new Date(data.startDate).getHours(),
-      endYear: new Date(data.startDate).getFullYear(),
-      endMonth: new Date(data.startDate).getMonth() + 1,
-      endDay: new Date(data.startDate).getDate(),
-      endHour: new Date(data.startDate).getHours(),
+      startYear: startDate.getFullYear(),
+      startMonth: startDate.getMonth() + 1,
+      startDay: startDate.getDate(),
+      startHour: startDate.getHours(),
+      endYear: endDate.getFullYear(),
+      endMonth: endDate.getMonth() + 1,
+      endDay: endDate.getDate(),
+      endHour: endDate.getHours(),
     };
+
+    console.log("projectData", projectData);
 
     setLoading(true);
     const result = await createProject(qubic, projectData);
