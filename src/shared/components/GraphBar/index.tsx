@@ -13,9 +13,10 @@ import { BarColor, ProgressBar } from "../ProgressBar";
 interface GraphBarProps {
   readonly colors: BarColor[];
   readonly data: number[];
+  readonly disabled: boolean[];
 }
 
-export const GraphBar: React.FC<GraphBarProps> = ({ colors, data }) => {
+export const GraphBar: React.FC<GraphBarProps> = ({ colors, data, disabled }) => {
   const totalValue = data.reduce((acc, value) => acc + value, 0);
 
   return (
@@ -26,6 +27,7 @@ export const GraphBar: React.FC<GraphBarProps> = ({ colors, data }) => {
           color={colors[index]}
           value={value}
           max={totalValue || 1}
+          disabled={disabled[index]}
         />
       ))}
     </div>

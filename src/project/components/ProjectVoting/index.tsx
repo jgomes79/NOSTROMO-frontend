@@ -1,6 +1,12 @@
 import classNames from "clsx";
 import { format } from "date-fns/format";
-import { RiChatPollFill, RiEmotionHappyFill, RiEmotionNormalFill } from "react-icons/ri";
+import {
+  RiChatCheckFill,
+  RiChatDeleteFill,
+  RiChatPollFill,
+  RiEmotionHappyFill,
+  RiEmotionNormalFill,
+} from "react-icons/ri";
 
 import { formatNumber } from "@/lib/number";
 import { Button } from "@/shared/components/Button";
@@ -26,13 +32,12 @@ export type Vote = "yes" | "no";
  * @property {(vote: Vote) => void} [onClick] - The callback function that is called when a vote is clicked.
  */
 interface ProjectVotingProps {
-  readonly vote: {
+  readonly config: {
     readonly limitDate: Date;
     readonly count: number[];
   };
-  readonly user: {
-    readonly vote?: Vote;
-  };
+  readonly myVote?: Vote;
+  readonly hasOwnership: boolean;
   readonly isLoading?: boolean;
   readonly onClick?: (vote: Vote) => void;
 }
@@ -43,7 +48,10 @@ interface ProjectVotingProps {
  * @param {ProjectVotingProps} props - The props for the component.
  * @returns {JSX.Element} The JSX code for the ProjectVoting component.
  */
-export const ProjectVoting: React.FC<ProjectVotingProps> = ({ vote, user, isLoading, onClick }) => {
+export const ProjectVoting: React.FC<ProjectVotingProps> = ({ config, myVote, hasOwnership, isLoading, onClick }) => {
+  const isPastLimitDate = true; //isPast(config.limitDate);
+  const isYes = true; // config.count[0] > config.count[1];
+
   const literals: Record<Vote, { title: string; color?: string; description: string }> = {
     yes: {
       title: "You have voted in favor of this project",
@@ -57,69 +65,138 @@ export const ProjectVoting: React.FC<ProjectVotingProps> = ({ vote, user, isLoad
 
   const defaultVote = {
     title: "This project is in the voting process",
-    description: `You have until ${format(vote.limitDate, "MMMM do, yyyy 'at' h:mm a")} to vote on this project`,
+    description: `You have until ${format(config.limitDate, "MMMM do, yyyy 'at' h:mm a")} to vote on this project`,
   };
 
-  const currentVote = user.vote ? literals[user.vote] : defaultVote;
+  const currentVote = myVote ? literals[myVote] : defaultVote;
+
+  /**
+   * Renders the content of the voting section.
+   *
+   * @returns {JSX.Element} The JSX code for the voting section.
+   */
+  const renderContent = () => {
+    if (isPastLimitDate) {
+      if (hasOwnership) {
+        return (
+          <div className={classNames(styles.field, styles.welcome)}>
+            <RiChatCheckFill size={48} className={styles.green} />
+            <div className={styles.line}>
+              <Typography as={"h2"} variant={"heading"} size={"medium"} textAlign={"center"}>
+                El proyecto ha sido {isYes ? "aprobado" : "rechazado"} por la comunidad.
+              </Typography>
+              <Typography as={"p"} variant={"body"} size={"medium"} textAlign={"center"} className={styles.lightgreen}>
+                Pronto se habilitaran las opciones de registro e inversión.
+              </Typography>
+            </div>
+            <div className={classNames(styles.actions, styles.center)}>
+              <div>
+                <Button
+                  caption="Habilitar registro"
+                  size={"small"}
+                  variant={"solid"}
+                  color={"primary"}
+                  onClick={() => {}}
+                />
+              </div>
+            </div>
+          </div>
+        );
+      }
+
+      return (
+        <div className={classNames(styles.field, styles.welcome)}>
+          {isYes ? (
+            <RiChatCheckFill size={48} className={styles.green} />
+          ) : (
+            <RiChatDeleteFill size={48} className={styles.red} />
+          )}
+          <div className={styles.line}>
+            <Typography as={"h2"} variant={"heading"} size={"medium"} textAlign={"center"}>
+              El proyecto ha sido {isYes ? "aprobado" : "rechazado"} por la comunidad.
+            </Typography>
+
+            {isYes && (
+              <Typography as={"p"} variant={"body"} size={"medium"} textAlign={"center"} className={styles.lightgreen}>
+                Pronto se habilitaran las opciones de registro e inversión.
+              </Typography>
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <>
+        <div className={classNames(styles.field, styles.welcome)}>
+          <RiChatPollFill size={48} />
+          <div className={styles.line}>
+            <Typography as={"h2"} variant={"heading"} size={"medium"} textAlign={"center"}>
+              {currentVote.title}
+            </Typography>
+            <Typography as={"p"} variant={"body"} size={"medium"} textAlign={"center"} className={styles.description}>
+              {currentVote.description}
+            </Typography>
+          </div>
+          {!currentVote && (
+            <div className={styles.actions}>
+              <Button
+                caption="Yes"
+                color={"primary"}
+                onClick={() => onClick?.("yes")}
+                disabled={!!isLoading}
+                iconLeft={<RiEmotionHappyFill size={24} />}
+              />
+              <Button
+                caption="No"
+                color={"error"}
+                onClick={() => onClick?.("no")}
+                disabled={!!isLoading}
+                iconLeft={<RiEmotionNormalFill size={24} />}
+              />
+            </div>
+          )}
+        </div>
+        <Separator />
+      </>
+    );
+  };
 
   if (isLoading) {
     return null;
   }
 
   return (
-    <Fieldset title={"Voting Phase"} className={styles.section}>
-      <div className={classNames(styles.field, styles.welcome)}>
-        <RiChatPollFill size={48} />
-        <div className={styles.line}>
-          <Typography as={"h2"} variant={"heading"} size={"medium"} textAlign={"center"}>
-            {currentVote.title}
-          </Typography>
-          <Typography as={"p"} variant={"body"} size={"medium"} textAlign={"center"} className={styles.description}>
-            {currentVote.description}
-          </Typography>
-        </div>
-        {!user.vote && (
-          <div className={styles.actions}>
-            <Button
-              caption="Yes"
-              color={"primary"}
-              onClick={() => onClick?.("yes")}
-              disabled={!!isLoading}
-              iconLeft={<RiEmotionHappyFill size={24} />}
-            />
-            <Button
-              caption="No"
-              color={"error"}
-              onClick={() => onClick?.("no")}
-              disabled={!!isLoading}
-              iconLeft={<RiEmotionNormalFill size={24} />}
-            />
-          </div>
-        )}
-      </div>
-      <Separator />
+    <Fieldset title={"Voting Phase"} variant={"white"} className={classNames(styles.section)}>
+      {renderContent()}
 
       <div className={classNames(styles.inline, styles.data)}>
         <DataLabel
           label={"Total Votes"}
           value={formatNumber(
-            vote.count.reduce((acc, vote) => acc + vote, 0),
+            config.count.reduce((acc, vote) => acc + vote, 0),
             0,
           )}
         />
-        <Countdown date={vote.limitDate}>
+        <Countdown date={config.limitDate}>
           {(timeLeft) => (
             <DataLabel
               label={"Time left"}
-              value={`${timeLeft.days} days, ${timeLeft.hours} hours, ${timeLeft.minutes} minutes, ${timeLeft.seconds} seconds`}
+              value={
+                isPastLimitDate
+                  ? "Finished"
+                  : `${timeLeft.days} days, ${timeLeft.hours} hours, ${timeLeft.minutes} minutes, ${timeLeft.seconds} seconds`
+              }
             />
           )}
         </Countdown>
       </div>
 
-      <div className={styles.inline}>
-        <GraphBar colors={["green", "red"]} data={vote.count} />
-      </div>
+      <GraphBar
+        colors={["green", "red"]}
+        disabled={[isPastLimitDate && !isYes, isPastLimitDate && isYes]}
+        data={config.count}
+      />
     </Fieldset>
   );
 };
