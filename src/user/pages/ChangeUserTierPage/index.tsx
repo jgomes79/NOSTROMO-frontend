@@ -1,9 +1,8 @@
 import { useCallback, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 
 import { useModal } from "@/core/modals/hooks/useModal";
 import { ModalsIds } from "@/core/modals/modals.types";
-import { ToastIds, useToast } from "@/core/toasts/hooks/useToast";
+import { useToast } from "@/core/toasts/hooks/useToast";
 import { getRoute } from "@/lib/router";
 import { NavigatorTitle } from "@/shared/components/NavigatorTitle";
 import { useAppTitle } from "@/shared/hooks/useAppTitle";
@@ -28,7 +27,7 @@ export const ChangeUserTierPage: React.FC = () => {
   const { wallet } = useQubicConnect();
   const { openModal, closeModal } = useModal();
   const { createToast } = useToast();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   useAppTitle("Upgrade Tier");
 
@@ -60,12 +59,12 @@ export const ChangeUserTierPage: React.FC = () => {
             action: async (setLoading) => {
               setLoading(true);
               await changeTier(tier.id);
-              createToast(ToastIds.CONFIRMATION, {
-                title: "Tier changed",
-                type: "success",
-              });
-              closeModal();
-              navigate(getRoute(USER_ROUTES.SETTINGS, { tabId: UserSettingsTabs.MY_TIER }));
+              // createToast(ToastIds.CONFIRMATION, {
+              //   title: "Tier changed",
+              //   type: "success",
+              // });
+              // closeModal();
+              // navigate(getRoute(USER_ROUTES.SETTINGS, { tabId: UserSettingsTabs.MY_TIER }));
             },
           },
           onDecline: {

@@ -1,8 +1,9 @@
 import { create } from "zustand";
 
-import { TransactionResult } from "../qubic/contract/contractApi";
-import { voteInProject, waitForTxReceipt } from "../qubic/contract/nostromoApi";
+import { getUserVoteStatus, voteInProject } from "@/lib/nostromo/services/nostromo.service";
+import { broadcastTx, fetchTickInfo } from "@/lib/nostromo/services/rpc.service";
 import { useQubicConnect } from "../qubic/QubicConnectContext";
+import { useTransactionMonitor } from "./useTransactionMonitor";
 
 interface Store {
   isLoading: boolean;
@@ -73,7 +74,8 @@ const store = create<Store>((set) => ({
  */
 export const useVote = () => {
   const { isLoading, setLoading, isError, setError, errorMessage, setErrorMessage, txHash, setTxHash } = store();
-  const qubicConnect = useQubicConnect();
+  const { wallet, getSignedTx } = useQubicConnect();
+  const { isMonitoring, monitorTransaction } = useTransactionMonitor();
 
   /**
    * Executes a vote transaction for a specific project.
@@ -84,30 +86,90 @@ export const useVote = () => {
    * @throws {Error} Throws an error if the transaction fails
    */
   const mutate = async (indexOfProject: number, decision: boolean): Promise<void> => {
+    if (!wallet?.publicKey) {
+      setError(true);
+      setErrorMessage("Wallet not connected");
+      return;
+    }
+
+    setLoading(true);
+    setError(false);
+    setErrorMessage("");
+
     try {
-      setLoading(true);
-      setError(false);
-      setErrorMessage("");
+      console.log("🗳️ Starting vote process...");
+      console.log("🗳️ Project index:", indexOfProject);
+      console.log("🗳️ Decision:", decision ? "YES" : "NO");
+      console.log("🗳️ Wallet:", wallet.publicKey);
 
-      console.log("indexOfProject", indexOfProject);
+      // Get current tick info
+      console.log("🗳️ Fetching tick info...");
+      const tickInfo = await fetchTickInfo();
+      const targetTick = tickInfo.tick + 10; // Add offset
+      console.log("🗳️ Current tick:", tickInfo.tick, "Target tick:", targetTick);
 
-      const result: TransactionResult = await voteInProject(qubicConnect, indexOfProject, decision);
+      // Get initial vote status for verification
+      console.log("🗳️ Getting initial vote status...");
+      const initialVoteStatus = await getUserVoteStatus(wallet.publicKey);
+      const initialVotedProjects = initialVoteStatus.numberOfVotedProjects;
+      console.log("🗳️ Initial voted projects:", initialVotedProjects);
 
-      if (result.success) {
-        setTxHash(result.txHash || "");
-        await waitForTxReceipt(qubicConnect.httpEndpoint, result.txHash || "");
+      // Create the vote transaction
+      console.log("🗳️ Creating vote transaction...");
+      const tx = await voteInProject(wallet.publicKey, indexOfProject, decision, targetTick);
+      console.log("🗳️ Vote transaction created:", tx);
+
+      // Sign transaction - handle both WalletConnect and other wallets
+      let signedResult;
+      if (wallet.connectType === "walletconnect") {
+        signedResult = await getSignedTx(tx);
       } else {
-        setError(true);
-        setErrorMessage(result.error || "Unknown error occurred during voting");
-        throw new Error(result.error || "Vote transaction failed");
+        const rawTx = await tx.build("0".repeat(55));
+        signedResult = await getSignedTx(rawTx, rawTx.length - 64);
+      }
+
+      // Broadcast transaction
+      const res = await broadcastTx(signedResult.tx);
+      console.log("📡 Vote broadcast response:", res);
+      console.log("📡 Response keys:", Object.keys(res || {}));
+
+      // Check different possible response formats for transaction ID
+      const txId = res?.result?.transactionId || res?.transactionId || res?.result?.id || res?.txId;
+      console.log("📡 Found transaction ID:", txId);
+
+      if (res && txId) {
+        setTxHash(txId);
+        setLoading(false);
+
+        console.log("🔄 Vote transaction broadcast successful. Monitoring for confirmation...");
+
+        // Monitor transaction with verification function
+        await monitorTransaction({
+          txId: txId,
+          targetTick,
+          verificationFunction: async () => {
+            const currentVoteStatus = await getUserVoteStatus(wallet.publicKey);
+            return currentVoteStatus.numberOfVotedProjects > initialVotedProjects;
+          },
+          onSuccess: () => {
+            console.log(`🎉 Vote confirmed! Successfully voted on project ${indexOfProject}`);
+          },
+          onError: (error) => {
+            setError(true);
+            setErrorMessage(error);
+          },
+        });
+      } else {
+        console.error("❌ Vote broadcast failed - no transaction ID found");
+        console.error("📡 Full response:", res);
+        throw new Error("Failed to broadcast vote transaction - no transaction ID returned");
       }
     } catch (error) {
       setError(true);
       const message = error instanceof Error ? error.message : "Unknown error occurred";
       setErrorMessage(message);
-      throw error;
-    } finally {
       setLoading(false);
+      throw error;
     }
   };
 
@@ -129,5 +191,6 @@ export const useVote = () => {
     txHash,
     reset,
     mutate,
+    isMonitoring,
   };
 };

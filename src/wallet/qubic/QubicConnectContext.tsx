@@ -7,10 +7,10 @@ import Crypto from "@qubic-lib/qubic-ts-library/dist/crypto";
 import { QubicHelper } from "@qubic-lib/qubic-ts-library/dist/qubicHelper";
 
 import { connectTypes, getSnapOrigin, tickOffset } from "./config";
+import { QHelper } from "./contract/nostromoApi";
 import { MetaMaskProvider } from "./MetamaskContext";
 import { QubicConnectProviderProps, TickInfoType, Transaction } from "./types";
 import { getSnap } from "./utils";
-import { QHelper } from "./contract/nostromoApi";
 
 // Constants from QubicHelper
 const PUBLIC_KEY_LENGTH = 32;
@@ -64,7 +64,7 @@ export function QubicConnectProvider({ children, config }: QubicConnectProviderP
   const [wallet, setWallet] = useState<Wallet | null>(null);
   const [showConnectModal, setShowConnectModal] = useState(false);
 
-  const httpEndpoint = "https://testnet-nostromo.qubicdev.com"; // live system
+  const httpEndpoint = import.meta.env.VITE_HTTP_ENDPOINT; // live system
   const [qHelper] = useState(() => new QubicHelper());
 
   useEffect(() => {

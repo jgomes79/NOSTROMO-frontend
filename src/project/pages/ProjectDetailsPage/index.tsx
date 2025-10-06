@@ -27,13 +27,13 @@ import { useContractUserVotes } from "@/wallet/hooks/useContractUserVotes";
 import { useVote } from "@/wallet/hooks/useVote";
 import { useQubicConnect } from "@/wallet/qubic/QubicConnectContext";
 
-import styles from "./ProjectDetailsPage.module.scss";
 import { ProjectHeader } from "../../components/ProjectHeader";
 import { ProjectRegister } from "../../components/ProjectRegister";
 import { ThresholdCalculator } from "../../components/ThresholdCalculator";
 import { useProject } from "../../hooks/useProject";
 import { PROJECT_ROUTES, ProjectTabLabels } from "../../project.constants";
 import { ProjectFormTabs, ProjectStates } from "../../project.types";
+import styles from "./ProjectDetailsPage.module.scss";
 
 /**
  * Type representing the parameters for the ProjectDetails component.
@@ -199,8 +199,8 @@ export const ProjectDetailsPage: React.FC = () => {
               },
               maxInvestment: 2000,
             }}
-            onInvest={() => {}}
-            onUpgradeTier={() => {}}
+            onInvest={() => null}
+            onUpgradeTier={() => null}
           />
         );
 
@@ -227,7 +227,7 @@ export const ProjectDetailsPage: React.FC = () => {
               },
               isRegistered: false,
             }}
-            onClick={() => {}}
+            onClick={() => null}
             isLoading={false}
           />
         );

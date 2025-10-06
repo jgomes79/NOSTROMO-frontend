@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import { RiAliensFill } from "react-icons/ri";
 
@@ -10,13 +10,12 @@ import { Loader } from "@/shared/components/Loader";
 import { ErrorPage } from "@/shared/pages/ErrorPage";
 import { useQubicConnect } from "@/wallet/qubic/QubicConnectContext";
 
-import styles from "./CreateOrEditProjectPage.module.scss";
-import { ProjectForm } from "../../forms/ProjectForm";
-import { ProjectFormValues } from "../../forms/ProjectForm";
+import { ProjectForm, ProjectFormValues } from "../../forms/ProjectForm";
 import { useProject } from "../../hooks/useProject";
 import { usePublishProject } from "../../hooks/usePublishProject";
 import { useUpsertProject } from "../../hooks/useUpsertProject";
 import { Project } from "../../project.types";
+import styles from "./CreateOrEditProjectPage.module.scss";
 
 /**
  * Type representing the parameters for the CreateOrEditProjectPage component.
@@ -66,7 +65,7 @@ export const CreateOrEditProjectPage: React.FC = () => {
             action: async (setLoading) => {
               if (!project.data) return false;
               setLoading(true);
-              await publishProject.mutateAsync(project.data.id);
+              await publishProject.mutateAsync(project.data);
               await project.refetch();
               closeModal();
             },

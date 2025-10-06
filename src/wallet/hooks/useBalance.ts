@@ -1,5 +1,6 @@
 import { create } from "zustand";
 
+import { fetchBalance } from "../../lib/nostromo/services/rpc.service";
 import { useQubicConnect } from "../qubic/QubicConnectContext";
 
 interface Store {
@@ -35,27 +36,27 @@ const store = create<Store>((set) => ({
  * @returns Object containing loading state, fetch function and tier level data
  */
 export const useBalance = () => {
-  const { getBalance, wallet } = useQubicConnect();
+  const { wallet } = useQubicConnect();
   const { isLoading, setLoading, balance, setBalance } = store();
 
   /**
-   * Fetches the current tier level for the connected wallet
+   * Fetches the current balance for the connected wallet
    * @returns void
-   * @throws Will not fetch if httpEndpoint or wallet public key is missing
+   * @throws Will not fetch if wallet public key is missing
    */
   const refetch = async () => {
-    if (!wallet || !wallet?.publicKey) {
+    if (!wallet?.publicKey) {
       return;
     }
 
     setLoading(true);
     try {
-      const {
-        balance: { balance },
-      } = await getBalance(wallet.publicKey);
-      setBalance(balance);
+      const balanceData = await fetchBalance(wallet.publicKey);
+      const balanceAmount = parseInt(balanceData.balance) || 0;
+      setBalance(balanceAmount);
     } catch (error) {
       console.error("Error fetching balance:", error);
+      setBalance(0);
     } finally {
       setLoading(false);
     }

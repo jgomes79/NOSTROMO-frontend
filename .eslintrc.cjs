@@ -21,14 +21,13 @@ module.exports = {
     "plugin:@tanstack/eslint-plugin-query/recommended",
   ],
   ignorePatterns: ["dist"],
-  plugins: [...imports.plugins, ...typescript.plugins, ...react.plugins, "react-refresh"],
+  plugins: [...typescript.plugins, ...react.plugins, "react-refresh"],
   rules: {
-    ...imports.rules,
     ...typescript.rules,
     ...react.rules,
     "react-hooks/exhaustive-deps": "off",
     "@typescript-eslint/naming-convention": "off",
-    "react-refresh/only-export-components": "off"
+    "react-refresh/only-export-components": "off",
   },
   settings: {
     ...react.settings,

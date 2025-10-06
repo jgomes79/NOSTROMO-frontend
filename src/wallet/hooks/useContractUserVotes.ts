@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-import { getUserVoteStatus } from "../qubic/contract/nostromoApi";
+import { getUserVoteStatus } from "../../lib/nostromo/services/nostromo.service";
 import { useQubicConnect } from "../qubic/QubicConnectContext";
 
 export interface ProjectIndexList {
@@ -70,7 +70,7 @@ const store = create<Store>((set) => ({
  * @returns Object containing loading state, fetch function and user votes data
  */
 export const useContractUserVotes = () => {
-  const { httpEndpoint, wallet, qHelper } = useQubicConnect();
+  const { wallet } = useQubicConnect();
   const {
     isLoading,
     setLoading,
@@ -87,10 +87,10 @@ export const useContractUserVotes = () => {
   /**
    * Fetches the current user votes for the connected wallet
    * @returns void
-   * @throws Will not fetch if httpEndpoint or wallet public key is missing
+   * @throws Will not fetch if wallet public key is missing
    */
   const refetch = async () => {
-    if (!httpEndpoint || !wallet?.publicKey) {
+    if (!wallet?.publicKey) {
       return;
     }
 
@@ -98,16 +98,14 @@ export const useContractUserVotes = () => {
     setIsError(false);
     setErrorMessage("");
     try {
-      const result = await getUserVoteStatus(httpEndpoint, wallet.publicKey, qHelper);
-      console.log("result", result);
-      const numberOfVotedProjects = result.decodedFields?.numberOfVotedProjects;
-      const projectIndexList = result.decodedFields?.projectIndexList;
-      setUserVotes((numberOfVotedProjects as number) ?? 0);
-      setProjectIndexList((projectIndexList as ProjectIndexList[]) ?? []);
+      const result = await getUserVoteStatus(wallet.publicKey);
+      console.log("User vote status:", result);
+      setUserVotes(result.numberOfVotedProjects);
+      setProjectIndexList(result.projectIndexList as unknown as ProjectIndexList[]);
     } catch (error) {
       console.error("Error fetching user votes:", error);
       setIsError(true);
-      setErrorMessage(error as string);
+      setErrorMessage(error instanceof Error ? error.message : "Unknown error");
     } finally {
       setLoading(false);
     }

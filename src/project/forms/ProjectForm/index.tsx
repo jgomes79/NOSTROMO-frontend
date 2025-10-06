@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { useForm, SubmitHandler, Controller } from "react-hook-form";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import classNames from "clsx";
@@ -33,12 +33,12 @@ import { TextArea } from "@/shared/components/TextArea";
 import { TextInput } from "@/shared/components/TextInput";
 import { Typography } from "@/shared/components/Typography";
 
+import { ProjectTabLabels } from "../../../project/project.constants";
+import { ProjectFormTabs } from "../../../project/project.types";
 import { getDefaultProjectFormValues } from "./ProjectForm.helpers";
 import styles from "./ProjectForm.module.scss";
 import { EntryFormSchema, OptionalFormSchema, ProjectFormSchema } from "./ProjectForm.schema";
-import { ProjectFormValues, ProjectFormProps } from "./ProjectForm.types";
-import { ProjectTabLabels } from "../../../project/project.constants";
-import { ProjectFormTabs } from "../../../project/project.types";
+import { ProjectFormProps, ProjectFormValues } from "./ProjectForm.types";
 
 /**
  * ProjectForm component.
@@ -65,6 +65,7 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
     reValidateMode: "onChange",
     mode: "all",
   });
+  console.log("isValid", isValid, errors);
 
   const name = watch("name"),
     slug = watch("slug"),
@@ -105,7 +106,9 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
    *
    * @param data - The data from the form.
    */
-  const onSubmitHandler: SubmitHandler<ProjectFormValues> = (data: ProjectFormValues) => onSubmit(isPublishing, data);
+  const onSubmitHandler: SubmitHandler<ProjectFormValues> = () => {
+    onSubmit(isPublishing, getValues());
+  };
 
   /**
    * Memoized value for the selected currency based on the currencyId.
@@ -568,7 +571,7 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
                 key={"bannerUrl"}
                 render={({ field }) => (
                   <FileUpload
-                    name={"banner"}
+                    name={"bannerUrl"}
                     icon={<RiImageAddLine />}
                     title={"Cover Photo"}
                     description={"Drag and drop, or click to upload the cover photo of your project"}
@@ -589,10 +592,10 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
                 <Controller
                   name="photoUrl"
                   control={control}
-                  key={"photo"}
+                  key={"photoUrl"}
                   render={({ field }) => (
                     <FileUpload
-                      name={"photo"}
+                      name={"photoUrl"}
                       icon={<RiImageAddLine />}
                       title={"Project Photo"}
                       className={styles.avatarImg}
@@ -782,4 +785,4 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
   );
 };
 
-export type { ProjectFormValues, ProjectFormSchema };
+export type { ProjectFormSchema, ProjectFormValues };

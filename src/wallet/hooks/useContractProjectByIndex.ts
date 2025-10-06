@@ -2,14 +2,14 @@ import { useEffect } from "react";
 
 import { create } from "zustand";
 
-import { getProjectByIndex, Project } from "../qubic/contract/nostromoApi";
-import { useQubicConnect } from "../qubic/QubicConnectContext";
+import { getProjectByIndex } from "../../lib/nostromo/services/nostromo.service";
+import { IProjectInfo } from "../../lib/nostromo/types";
 
 interface Store {
   isLoading: boolean;
   setLoading: (isLoading: boolean) => void;
-  project: Project | null;
-  setProject: (project: Project | null) => void;
+  project: IProjectInfo | null;
+  setProject: (project: IProjectInfo | null) => void;
   isError: boolean;
   setIsError: (isError: boolean) => void;
   errorMessage: string;
@@ -34,7 +34,7 @@ const store = create<Store>((set) => ({
   /** Function to update project
    * @param project - New project value
    */
-  setProject: (project: Project | null) => set({ project }),
+  setProject: (project: IProjectInfo | null) => set({ project }),
 
   /** Error state */
   isError: false,
@@ -58,7 +58,6 @@ const store = create<Store>((set) => ({
  * @returns Object containing loading state, fetch function and project data
  */
 export const useContractProjectByIndex = (indexOfProject?: number) => {
-  const { httpEndpoint, qHelper } = useQubicConnect();
   const { isLoading, setLoading, project, setProject, isError, setIsError, errorMessage, setErrorMessage } = store();
 
   /**
@@ -68,20 +67,19 @@ export const useContractProjectByIndex = (indexOfProject?: number) => {
    * @throws Will not fetch if httpEndpoint is missing
    */
   const refetch = async () => {
-    if (!httpEndpoint || indexOfProject === undefined || indexOfProject === null) {
+    if (indexOfProject === undefined || indexOfProject === null) {
       return;
     }
     reset();
     try {
-      console.log("XXXXXXXXXXXXXXindexOfProject", indexOfProject);
-      const result = await getProjectByIndex(httpEndpoint, indexOfProject, qHelper);
-      console.info("XXXXXXXXXXXXXresult", result);
-      const projectData = result.decodedFields as unknown as Project;
+      console.log("Fetching project by index:", indexOfProject);
+      const projectData = await getProjectByIndex(indexOfProject);
+      console.log("Project data:", projectData);
       setProject(projectData);
     } catch (error) {
       console.error("Error fetching project by index:", error);
       setIsError(true);
-      setErrorMessage(error as string);
+      setErrorMessage(error instanceof Error ? error.message : "Unknown error");
     } finally {
       setLoading(false);
     }

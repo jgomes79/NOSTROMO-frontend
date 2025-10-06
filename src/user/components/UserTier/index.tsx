@@ -21,9 +21,9 @@ import { useContractTier } from "@/wallet/hooks/useContractTier";
 import { useRegisterTier } from "@/wallet/hooks/useRegisterTier";
 import { useRemoveTier } from "@/wallet/hooks/useRemoveTier";
 
-import styles from "./UserTier.module.scss";
 import { useUserByWallet } from "../../hooks/useUserByWallet";
 import { User } from "../../user.types";
+import styles from "./UserTier.module.scss";
 
 /**
  * Props interface for UserTier component

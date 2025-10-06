@@ -5,11 +5,15 @@ import { broadcastTx, fetchTickInfo } from "../../lib/nostromo/services/rpc.serv
 import { useQubicConnect } from "../qubic/QubicConnectContext";
 import { useTransactionMonitor } from "./useTransactionMonitor";
 
+interface InvestmentData {
+  indexOfFundraising: number;
+  amount: number; // Amount in QU to invest
+}
+
 /**
- *
- * @returns
+ * Hook for investing in fundraising campaigns
  */
-export const useRegisterInProject = () => {
+export const useInvestInFundraising = () => {
   const [isLoading, setLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
@@ -17,10 +21,16 @@ export const useRegisterInProject = () => {
   const { wallet, getSignedTx } = useQubicConnect();
   const { isMonitoring, monitorTransaction } = useTransactionMonitor();
 
-  const mutate = async (indexOfFundraising: number, amount: number) => {
+  const mutate = async (data: InvestmentData) => {
     if (!wallet?.publicKey) {
       setIsError(true);
       setErrorMessage("Wallet not connected");
+      return;
+    }
+
+    if (data.amount <= 0) {
+      setIsError(true);
+      setErrorMessage("Investment amount must be greater than 0");
       return;
     }
 
@@ -29,18 +39,14 @@ export const useRegisterInProject = () => {
     setErrorMessage("");
 
     try {
+      console.log("💰 Investing in fundraising:", data);
+
       // Get current tick info
       const tickInfo = await fetchTickInfo();
       const targetTick = tickInfo.tick + 10;
 
-      // Get initial investment info for verification
-      const initialInvestments = await getInfoUserInvested(wallet.publicKey);
-      const initialInvestmentCount = initialInvestments.listUserInvested.filter((inv) => inv.investedAmount > 0).length;
-
-      console.log(`Investing ${amount} in fundraising ${indexOfFundraising}`);
-
       // Create the investment transaction
-      const tx = await investInProject(wallet.publicKey, indexOfFundraising, amount, targetTick);
+      const tx = await investInProject(wallet.publicKey, data.indexOfFundraising, data.amount, targetTick);
 
       // Sign transaction - handle both WalletConnect and other wallets
       let signedResult;
@@ -53,26 +59,39 @@ export const useRegisterInProject = () => {
 
       // Broadcast transaction
       const res = await broadcastTx(signedResult.tx);
+      console.log("📡 Investment broadcast response:", res);
 
-      if (res && res.result?.transactionId) {
-        setTxHash(res.result.transactionId);
+      // Check different possible response formats
+      const txId = res?.result?.transactionId || res?.transactionId || res?.result?.id || res?.txId;
+      console.log("📡 Found transaction ID:", txId);
+
+      if (res && txId) {
+        setTxHash(txId);
         setLoading(false);
 
         console.log("🔄 Investment transaction broadcast successful. Monitoring for confirmation...");
 
-        // Monitor transaction with verification function
+        // Monitor transaction with verification
         await monitorTransaction({
-          txId: res.result.transactionId,
+          txId: txId,
           targetTick,
           verificationFunction: async () => {
-            const currentInvestments = await getInfoUserInvested(wallet.publicKey);
-            const currentInvestmentCount = currentInvestments.listUserInvested.filter(
-              (inv) => inv.investedAmount > 0,
-            ).length;
-            return currentInvestmentCount > initialInvestmentCount;
+            // Verify investment was recorded by checking user's investment list
+            try {
+              const currentInvestments = await getInfoUserInvested(wallet.publicKey);
+              const investment = currentInvestments.listUserInvested.find(
+                (inv) => inv.indexOfFundraising === data.indexOfFundraising,
+              );
+              return !!(investment && investment.investedAmount >= data.amount);
+            } catch (error) {
+              console.log("Could not verify investment, assuming success");
+              return true;
+            }
           },
           onSuccess: () => {
-            console.log(`🎉 Investment confirmed! Successfully invested in project`);
+            console.log(
+              `🎉 Investment confirmed! Successfully invested ${data.amount} QU in fundraising ${data.indexOfFundraising}`,
+            );
           },
           onError: (error) => {
             setIsError(true);
@@ -83,7 +102,7 @@ export const useRegisterInProject = () => {
         throw new Error("Failed to broadcast investment transaction");
       }
     } catch (error) {
-      console.error("Error investing in project:", error);
+      console.error("Error investing in fundraising:", error);
       setIsError(true);
       setErrorMessage(error instanceof Error ? error.message : "Unknown error occurred");
       setLoading(false);

@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-import { getTierLevelByUser, getStats } from "../qubic/contract/nostromoApi";
+import { getStats, getTierLevelByUser } from "../../lib/nostromo/services/nostromo.service";
 import { useQubicConnect } from "../qubic/QubicConnectContext";
 
 interface Stats {
@@ -57,7 +57,7 @@ const store = create<Store>((set) => ({
  * @returns Object containing loading state, fetch function and tier level data
  */
 export const useContractTier = () => {
-  const { httpEndpoint, wallet, qHelper } = useQubicConnect();
+  const { wallet } = useQubicConnect();
   const { isLoading, setLoading, tierLevel, setTierLevel, stats, setStats } = store();
 
   /**
@@ -66,20 +66,18 @@ export const useContractTier = () => {
    * @throws Will not fetch if httpEndpoint or wallet public key is missing
    */
   const refetch = async () => {
-    if (!httpEndpoint || !wallet?.publicKey) {
+    if (!wallet?.publicKey) {
       return;
     }
 
     setLoading(true);
     try {
-      const result = await getTierLevelByUser(httpEndpoint, wallet.publicKey, qHelper);
-      const tierLevel = result.decodedFields?.tierLevel as number | undefined;
-      setTierLevel(tierLevel ?? 0);
+      const tierLevel = await getTierLevelByUser(wallet.publicKey);
+      setTierLevel(tierLevel);
 
-      const stat = await getStats(httpEndpoint, qHelper);
-      const statLevel = stat.decodedFields as unknown as Stats;
-      console.log("statLevel", statLevel);
-      setStats(statLevel as Stats);
+      const stats = await getStats();
+      console.log("stats", stats);
+      setStats(stats);
     } catch (error) {
       console.error("Error fetching tier level:", error);
     } finally {

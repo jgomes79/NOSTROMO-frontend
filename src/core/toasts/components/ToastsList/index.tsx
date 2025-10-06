@@ -1,9 +1,9 @@
 import { AnimatePresence, motion } from "framer-motion";
 
-import styles from "./ToastsList.module.scss";
 import { toasts } from "../../toasts.constants";
 import { ToastIds, ToastList } from "../../toasts.types";
 import { BaseToast } from "../BaseToast";
+import styles from "./ToastsList.module.scss";
 
 /**
  * Props for the ToastsList component.
