@@ -35,8 +35,6 @@ export const useCreateProject = () => {
       const startDate = new Date(data.startDate);
       const endDate = new Date(data.TGEDate || data.startDate); // Use TGEDate as endDate
 
-      console.log("Creating project with data:", data);
-
       // Get current tick info
       const tickInfo = await fetchTickInfo();
       const targetTick = tickInfo.tick + 10;
@@ -49,7 +47,7 @@ export const useCreateProject = () => {
       // Based on C++ GetYear: ((data >> 26) + 24) + 2000 = actualYear
       // So: (data >> 26) = actualYear - 2024
       // For 2025: (data >> 26) = 1, so we need to send 1 << 26
-      const encodeYear = (year: number) => (year - 2024) << 26;
+      const encodeYear = (year: number) => (year - 2000) << 26;
       const encodeMonth = (month: number) => (month & 0b1111) << 22;
       const encodeDay = (day: number) => (day & 0b11111) << 17;
       const encodeHour = (hour: number) => (hour & 0b11111) << 12;
@@ -121,8 +119,6 @@ export const useCreateProject = () => {
             const currentProjects = await getProjectIndexListByCreator(wallet.publicKey);
             console.log("🔍 Current projects:", currentProjects);
             const currentProjectCount = currentProjects.indexListForProjects.filter((idx) => idx !== 0).length;
-            console.log("🔍 Current project count:", currentProjectCount);
-            console.log("🔍 Initial project count:", initialProjectCount);
             return currentProjectCount > initialProjectCount;
           },
           onSuccess: () => {

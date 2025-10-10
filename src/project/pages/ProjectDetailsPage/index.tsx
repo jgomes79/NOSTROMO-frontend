@@ -68,8 +68,6 @@ export const ProjectDetailsPage: React.FC = () => {
   const { openModal, closeModal } = useModal();
   const { createToast } = useToast();
 
-  console.log("data?.smartContractId", data?.smartContractId);
-
   const { refetch: refetchUserVotes, isLoading: isLoadingUserVotes } = useContractUserVotes();
   const {
     data: { project: projectContract },

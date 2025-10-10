@@ -65,7 +65,6 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
     reValidateMode: "onChange",
     mode: "all",
   });
-  console.log("isValid", isValid, errors);
 
   const name = watch("name"),
     slug = watch("slug"),
@@ -140,7 +139,7 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
                   {...field}
                   label="Token Listing Date"
                   description={"Select the date when your token will be listed."}
-                  placeholder="YYYY-MM-DD"
+                  placeholder="YYYY-MM-DD HH:mm"
                   error={dirtyFields.startDate ? errors.startDate?.message : undefined}
                 />
               )}
@@ -359,7 +358,7 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
                     {...field}
                     label="ICO Start date"
                     description={"Select the date you want your project to start its initial registration phase."}
-                    placeholder="YYYY-MM-DD"
+                    placeholder="YYYY-MM-DD HH:mm"
                     error={dirtyFields.startDate ? errors.startDate?.message : undefined}
                   />
                 )}

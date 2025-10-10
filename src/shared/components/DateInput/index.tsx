@@ -4,9 +4,9 @@ import DatePicker from "react-datepicker";
 import classNames from "clsx";
 import { RiAlertLine } from "react-icons/ri";
 
-import styles from "./DateInput.module.scss";
 import { TagLabel } from "../TagLabel";
 import { Typography } from "../Typography";
+import styles from "./DateInput.module.scss";
 
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -64,11 +64,12 @@ export const DateInput = React.forwardRef<HTMLDivElement, DateInputProps>(
           </Typography>
         )}
         <DatePicker
+          showTimeSelect
           className={classNames(styles.input, error && styles.withError)}
           selected={new Date(value)}
           onChange={onChange}
           placeholderText={placeholder}
-          dateFormat="yyyy/MM/dd"
+          dateFormat="yyyy/MM/dd HH:mm"
         />
         {error && <TagLabel text={error} icon={<RiAlertLine />} color="red" />}
       </div>

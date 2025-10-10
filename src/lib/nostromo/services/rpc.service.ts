@@ -30,11 +30,9 @@ const processQueryQueue = async () => {
   if (isProcessing || queryQueue.length === 0) return;
 
   isProcessing = true;
-  console.log(`[Rate Limiter] Processing queue with ${queryQueue.length} requests`);
 
   while (queryQueue.length > 0) {
     const batch = queryQueue.splice(0, BATCH_SIZE);
-    console.log(`[Rate Limiter] Processing batch of ${batch.length} requests`);
 
     // Process batch in parallel
     const promises = batch.map(async ({ query, resolve, reject }) => {
@@ -54,12 +52,10 @@ const processQueryQueue = async () => {
 
     // Add delay between batches if there are more requests
     if (queryQueue.length > 0) {
-      console.log(`[Rate Limiter] Waiting ${RATE_LIMIT_DELAY}ms before next batch`);
       await new Promise((resolve) => setTimeout(resolve, RATE_LIMIT_DELAY));
     }
   }
 
-  console.log(`[Rate Limiter] Queue processing complete. Stats:`, getQueryStats());
   isProcessing = false;
 };
 
