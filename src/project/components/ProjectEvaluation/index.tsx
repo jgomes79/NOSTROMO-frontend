@@ -17,7 +17,6 @@ import { Typography } from "@/shared/components/Typography";
 import { useUserByWallet } from "@/user/hooks/useUserByWallet";
 import { USER_ROUTES } from "@/user/user.constants";
 import { User, UserSettingsTabs } from "@/user/user.types";
-import { useCreateProject } from "@/wallet/hooks/useCreateProject";
 import { useQubicConnect } from "@/wallet/qubic/QubicConnectContext";
 
 import { confirmationLabels, confirmationVariants, mainLiterals, toastLabels } from "./ProjectEvaluation.constants";
@@ -37,7 +36,6 @@ interface ProjectEvaluationProps {
  */
 export const ProjectEvaluation: React.FC<ProjectEvaluationProps> = ({ project, admin }) => {
   const reviewProject = useReviewProject();
-  const { mutate: createProject } = useCreateProject();
   const { wallet } = useQubicConnect();
   const { data: user } = useUserByWallet(wallet?.publicKey);
   const { openModal, closeModal } = useModal();
@@ -69,44 +67,36 @@ export const ProjectEvaluation: React.FC<ProjectEvaluationProps> = ({ project, a
     async (response: ProjectReviewStatus, setLoading: (loading: boolean) => void) => {
       setLoading(true);
 
-      const update = () => {
-        reviewProject.mutate(
-          {
-            id: project.id,
-            wallet: admin.wallet,
-            data: {
-              response,
-              comments: getValues("comment"),
-            },
+      reviewProject.mutate(
+        {
+          id: project.id,
+          wallet: admin.wallet,
+          data: {
+            response,
+            comments: getValues("comment"),
           },
-          {
-            onSuccess: () => {
-              createToast(ToastIds.CONFIRMATION, {
-                type: "success",
-                title: toastLabels[response].title,
-                description: toastLabels[response].description,
-              });
-              reset();
-              closeModal();
-              navigate(getRoute(USER_ROUTES.SETTINGS, { tabId: UserSettingsTabs.MY_PROJECTS }));
-            },
-            onError: () => {
-              setLoading(false);
-              createToast(ToastIds.CONFIRMATION, {
-                type: "error",
-                title: "An unexpected error occurred",
-                description: "Please try again. If the error persists, contact support.",
-              });
-            },
+        },
+        {
+          onSuccess: () => {
+            createToast(ToastIds.CONFIRMATION, {
+              type: "success",
+              title: toastLabels[response].title,
+              description: toastLabels[response].description,
+            });
+            reset();
+            closeModal();
+            navigate(getRoute(USER_ROUTES.SETTINGS, { tabId: UserSettingsTabs.MY_PROJECTS }));
           },
-        );
-      };
-
-      if (response === ProjectReviewStatus.APPROVED) {
-        const tx = await createProject(project);
-        console.log("tx", tx);
-        update();
-      }
+          onError: () => {
+            setLoading(false);
+            createToast(ToastIds.CONFIRMATION, {
+              type: "error",
+              title: "An unexpected error occurred",
+              description: "Please try again. If the error persists, contact support.",
+            });
+          },
+        },
+      );
     },
     [project, admin.wallet, getValues, reviewProject, createToast],
   );
