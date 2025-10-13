@@ -16,7 +16,7 @@ import {
   IInvestInfo,
   INostromoStats,
   IProjectIndexList,
-  IProjectInfo,
+  IProjectVote,
   IUserInvestedInfo,
   IUserVoteStatus,
 } from "../types/index";
@@ -174,7 +174,7 @@ export const getNumberOfInvestedProjects = async (userId: Uint8Array | string): 
   return new DataView(base64ToUint8Array(res.responseData).buffer).getUint32(0, true);
 };
 
-export const getProjectByIndex = async (indexOfProject: number): Promise<IProjectInfo> => {
+export const getProjectByIndex = async (indexOfProject: number): Promise<IProjectVote> => {
   const view = new DataView(new Uint8Array(4).buffer);
   view.setUint32(0, indexOfProject, true);
 
@@ -187,18 +187,13 @@ export const getProjectByIndex = async (indexOfProject: number): Promise<IProjec
 
   if (!res.responseData) {
     return {
+      creator: 0,
       tokenName: 0,
+      supply: 0,
+      startDate: 0,
+      endDate: 0,
       numberOfYes: 0,
       numberOfNo: 0,
-      supply: 0,
-      startYear: 0,
-      startMonth: 0,
-      startDay: 0,
-      startHour: 0,
-      endYear: 0,
-      endMonth: 0,
-      endDay: 0,
-      endHour: 0,
       isCreatedFundarasing: false,
     };
   }
@@ -208,20 +203,15 @@ export const getProjectByIndex = async (indexOfProject: number): Promise<IProjec
   const getUint32Value = (offset: number) => responseView.getUint32(offset, true);
 
   return {
-    tokenName: getValue(0),
-    numberOfYes: getUint32Value(8),
-    numberOfNo: getUint32Value(12),
-    supply: getValue(8),
-    startYear: getUint32Value(16),
-    startMonth: getUint32Value(20),
-    startDay: getUint32Value(24),
-    startHour: getUint32Value(28),
-    endYear: getUint32Value(32),
-    endMonth: getUint32Value(36),
-    endDay: getUint32Value(40),
-    endHour: getUint32Value(44),
+    creator: getValue(0),
+    tokenName: getValue(16),
+    supply: getValue(32),
+    startDate: getUint32Value(48),
+    endDate: getUint32Value(52),
+    numberOfYes: getUint32Value(56),
+    numberOfNo: getUint32Value(60),
     isCreatedFundarasing: false,
-  };
+  }
 };
 
 export const getFundraisingByIndex = async (indexOfFundraising: number): Promise<IFundraisingInfo> => {

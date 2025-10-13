@@ -141,6 +141,17 @@ export interface IProjectInfo {
   isCreatedFundarasing: boolean;
 }
 
+export interface IProjectVote {
+  creator: number,
+  tokenName: number,
+  supply: number,
+  startDate: number,
+  endDate: number,
+  numberOfYes: number,
+  numberOfNo: number,
+  isCreatedFundarasing: boolean,
+}
+
 export interface IFundraisingInfo {
   tokenPrice: number;
   soldAmount: number;
