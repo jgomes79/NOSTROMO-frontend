@@ -19,11 +19,17 @@ export const useCreateProject = () => {
   const { wallet, getSignedTx } = useQubicConnect();
   const { isMonitoring, monitorTransaction } = useTransactionMonitor();
 
-  const mutate = async (data: Project) => {
+  /**
+   * Creates a project on the Nostromo contract.
+   *
+   * @param {Project} data - The project data to create
+   * @returns {Promise<number | null>} The smart contract ID or null if the project creation fails
+   */
+  const mutate = async (data: Project): Promise<number | null> => {
     if (!wallet?.publicKey) {
       setIsError(true);
       setErrorMessage("Wallet not connected");
-      return;
+      return null;
     }
 
     setLoading(true);
@@ -37,11 +43,13 @@ export const useCreateProject = () => {
 
       // Get current tick info
       const tickInfo = await fetchTickInfo();
-      const targetTick = tickInfo.tick + 10;
+      const targetTick = tickInfo.tick + 20;
 
       // Get initial project count for verification
       const initialProjects = await getProjectIndexListByCreator(wallet.publicKey);
-      const initialProjectCount = initialProjects.indexListForProjects.filter((idx) => idx !== 0).length;
+      const initialProjectCount = initialProjects.indexListForProjects.length;
+      console.log("🔍 Initial project count:", initialProjectCount);
+      console.log("🔍 Initial projects:", initialProjects);
 
       // Create the project transaction
       // Based on C++ GetYear: ((data >> 26) + 24) + 2000 = actualYear
@@ -107,28 +115,33 @@ export const useCreateProject = () => {
 
       if (res && txId) {
         setTxHash(txId);
-        setLoading(false);
 
         console.log("🔄 Project creation transaction broadcast successful. Monitoring for confirmation...");
 
         // Monitor transaction with verification function
+        // The await ensures code doesn't continue until monitoring completes
         await monitorTransaction({
           txId: txId,
           targetTick,
           verificationFunction: async () => {
             const currentProjects = await getProjectIndexListByCreator(wallet.publicKey);
-            console.log("🔍 Current projects:", currentProjects);
-            const currentProjectCount = currentProjects.indexListForProjects.filter((idx) => idx !== 0).length;
+            const currentProjectCount = currentProjects.indexListForProjects.length;
             return currentProjectCount > initialProjectCount;
-          },
-          onSuccess: () => {
-            console.log(`🎉 Project creation confirmed! Successfully created project`);
           },
           onError: (error) => {
             setIsError(true);
             setErrorMessage(error);
+            return null;
           },
         });
+
+        const currentProjects = await getProjectIndexListByCreator(wallet.publicKey);
+        const smartContractId = currentProjects.indexListForProjects[currentProjects.indexListForProjects.length - 1];
+        console.log("🔍 Smart contract ID:", smartContractId);
+
+        // Only set loading to false after monitoring completes
+        setLoading(false);
+        return smartContractId;
       } else {
         throw new Error("Failed to broadcast project creation transaction");
       }
@@ -137,6 +150,7 @@ export const useCreateProject = () => {
       setIsError(true);
       setErrorMessage(error instanceof Error ? error.message : "Unknown error occurred");
       setLoading(false);
+      return null;
     }
   };
 

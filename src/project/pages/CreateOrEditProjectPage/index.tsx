@@ -65,7 +65,7 @@ export const CreateOrEditProjectPage: React.FC = () => {
             action: async (setLoading) => {
               if (!project.data) return false;
               setLoading(true);
-              await publishProject.mutateAsync(project.data.id);
+              await publishProject.mutateAsync(project.data);
               await project.refetch();
               closeModal();
             },

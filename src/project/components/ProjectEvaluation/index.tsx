@@ -106,8 +106,6 @@ export const ProjectEvaluation: React.FC<ProjectEvaluationProps> = ({ project, a
         const tx = await createProject(project);
         console.log("tx", tx);
         update();
-      } else {
-        update();
       }
     },
     [project, admin.wallet, getValues, reviewProject, createToast],

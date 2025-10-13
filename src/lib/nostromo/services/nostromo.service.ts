@@ -363,7 +363,10 @@ export const getProjectIndexListByCreator = async (creator: Uint8Array | string)
 
   const indexListForProjects: number[] = [];
   for (let i = 0; i < 128; i++) {
-    indexListForProjects.push(responseView.getUint32(i * 4, true));
+    const index = responseView.getUint32(i * 4, true);
+    if (index < 10000) {
+      indexListForProjects.push(index);
+    }
   }
 
   return {
