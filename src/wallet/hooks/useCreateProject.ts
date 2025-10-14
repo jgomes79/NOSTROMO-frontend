@@ -63,13 +63,13 @@ export const useCreateProject = () => {
       const startDatePacked =
         encodeYear(startDate.getUTCFullYear()) |
         encodeMonth(startDate.getUTCMonth() + 1) |
-        encodeDay(startDate.getUTCDate()) |
+        encodeDay(startDate.getUTCDay()) |
         encodeHour(startDate.getUTCHours());
 
       const endDatePacked =
         encodeYear(endDate.getUTCFullYear()) |
         encodeMonth(endDate.getUTCMonth() + 1) |
-        encodeDay(endDate.getUTCDate()) |
+        encodeDay(endDate.getUTCDay()) |
         encodeHour(endDate.getUTCHours());
 
       console.log("🔢 Encoded dates:", {
@@ -85,11 +85,11 @@ export const useCreateProject = () => {
         data.tokensForSale,
         startDate.getUTCFullYear() - 2000, // Try integration scripts approach
         startDate.getUTCMonth() + 1,
-        startDate.getUTCDate(),
+        startDate.getUTCDay(),
         startDate.getUTCHours(),
         endDate.getUTCFullYear() - 2000,
         endDate.getUTCMonth() + 1,
-        endDate.getUTCDate(),
+        endDate.getUTCDay(),
         endDate.getUTCHours(),
         targetTick,
       );

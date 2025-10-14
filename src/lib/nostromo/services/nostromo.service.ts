@@ -16,7 +16,6 @@ import {
   IInvestInfo,
   INostromoStats,
   IProjectIndexList,
-  IProjectVote,
   IUserInvestedInfo,
   IUserVoteStatus,
 } from "../types/index";
@@ -174,7 +173,7 @@ export const getNumberOfInvestedProjects = async (userId: Uint8Array | string): 
   return new DataView(base64ToUint8Array(res.responseData).buffer).getUint32(0, true);
 };
 
-export const getProjectByIndex = async (indexOfProject: number): Promise<IProjectVote> => {
+export const getProjectByIndex = async (indexOfProject: number): Promise<IProjectInfo> => {
   const view = new DataView(new Uint8Array(4).buffer);
   view.setUint32(0, indexOfProject, true);
 
@@ -190,8 +189,14 @@ export const getProjectByIndex = async (indexOfProject: number): Promise<IProjec
       creator: 0,
       tokenName: 0,
       supply: 0,
-      startDate: 0,
-      endDate: 0,
+      startYear: 0,
+      startMonth: 0,
+      startDay: 0,
+      startHour: 0,
+      endYear: 0,
+      endMonth: 0,
+      endDay: 0,
+      endHour: 0,
       numberOfYes: 0,
       numberOfNo: 0,
       isCreatedFundarasing: false,
@@ -202,7 +207,7 @@ export const getProjectByIndex = async (indexOfProject: number): Promise<IProjec
   const getValue = (offset: number) => Number(responseView.getBigUint64(offset, true));
   const getUint32Value = (offset: number) => responseView.getUint32(offset, true);
 
-  return {
+  const data = {
     creator: getValue(0),
     tokenName: getValue(32),
     supply: getValue(40),
@@ -211,6 +216,26 @@ export const getProjectByIndex = async (indexOfProject: number): Promise<IProjec
     numberOfYes: getUint32Value(56),
     numberOfNo: getUint32Value(60),
     isCreatedFundarasing: false,
+  }
+
+  const startDate = new Date(data.startDate);
+  const endDate = new Date(data.endDate);
+
+  return {
+    creator: data.creator,
+    tokenName: data.tokenName,
+    supply: data.supply,
+    startYear: startDate.getUTCFullYear() - 2000,
+    startMonth: startDate.getUTCMonth() + 1,
+    startDay: startDate.getUTCDay(),
+    startHour: startDate.getUTCHours(),
+    endYear: endDate.getUTCFullYear() - 2000,
+    endMonth: endDate.getUTCMonth() + 1,
+    endDay: endDate.getUTCDay(),
+    endHour: endDate.getUTCHours(),
+    numberOfYes: data.numberOfYes,
+    numberOfNo: data.numberOfNo,
+    isCreatedFundarasing: data.isCreatedFundarasing,
   }
 };
 
