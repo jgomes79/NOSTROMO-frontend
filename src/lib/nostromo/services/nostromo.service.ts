@@ -205,11 +205,11 @@ export const getProjectByIndex = async (indexOfProject: number): Promise<IProjec
   return {
     creator: getValue(0),
     tokenName: getValue(32),
-    supply: getValue(48),
-    startDate: getUint32Value(52),
-    endDate: getUint32Value(56),
-    numberOfYes: getUint32Value(60),
-    numberOfNo: getUint32Value(64),
+    supply: getValue(40),
+    startDate: getUint32Value(48),
+    endDate: getUint32Value(52),
+    numberOfYes: getUint32Value(56),
+    numberOfNo: getUint32Value(60),
     isCreatedFundarasing: false,
   }
 };
