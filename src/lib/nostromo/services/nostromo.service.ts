@@ -16,6 +16,7 @@ import {
   IInvestInfo,
   INostromoStats,
   IProjectIndexList,
+  IProjectInfo,
   IUserInvestedInfo,
   IUserVoteStatus,
 } from "../types/index";
@@ -186,7 +187,6 @@ export const getProjectByIndex = async (indexOfProject: number): Promise<IProjec
 
   if (!res.responseData) {
     return {
-      creator: 0,
       tokenName: 0,
       supply: 0,
       startYear: 0,
@@ -216,13 +216,12 @@ export const getProjectByIndex = async (indexOfProject: number): Promise<IProjec
     numberOfYes: getUint32Value(56),
     numberOfNo: getUint32Value(60),
     isCreatedFundarasing: false,
-  }
+  };
 
   const startDate = new Date(data.startDate);
   const endDate = new Date(data.endDate);
 
   return {
-    creator: data.creator,
     tokenName: data.tokenName,
     supply: data.supply,
     startYear: startDate.getUTCFullYear() - 2000,
@@ -236,7 +235,7 @@ export const getProjectByIndex = async (indexOfProject: number): Promise<IProjec
     numberOfYes: data.numberOfYes,
     numberOfNo: data.numberOfNo,
     isCreatedFundarasing: data.isCreatedFundarasing,
-  }
+  };
 };
 
 export const getFundraisingByIndex = async (indexOfFundraising: number): Promise<IFundraisingInfo> => {

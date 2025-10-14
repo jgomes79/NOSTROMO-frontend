@@ -1,4 +1,4 @@
-import { addMonths } from "date-fns/addMonths";
+import { addMonths } from "date-fns";
 
 export const getDefaultProjectFormValues = () => ({
   name: "",
