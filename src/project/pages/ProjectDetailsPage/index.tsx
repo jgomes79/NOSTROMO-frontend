@@ -70,13 +70,13 @@ export const ProjectDetailsPage: React.FC = () => {
   const { openModal, closeModal } = useModal();
   const { createToast } = useToast();
 
-  const { refetch: refetchUserVotes, isLoading: isLoadingUserVotes } = useContractUserVotes();
+  const { data: userVotes, refetch: refetchUserVotes, isLoading: isLoadingUserVotes } = useContractUserVotes();
   const {
     data: { project: projectContract },
     isLoading: isLoadingProjectByIndex,
   } = useContractProjectByIndex(data?.smartContractId);
 
-  console.log("projectContract", projectContract);
+  console.log("userVotes", userVotes);
 
   const navigate = useNavigate();
 

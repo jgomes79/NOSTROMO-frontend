@@ -70,6 +70,7 @@ export const DateInput = React.forwardRef<HTMLDivElement, DateInputProps>(
           onChange={onChange}
           placeholderText={placeholder}
           dateFormat="yyyy/MM/dd HH:mm"
+          popperClassName={styles.popper}
         />
         {error && <TagLabel text={error} icon={<RiAlertLine />} color="red" />}
       </div>
