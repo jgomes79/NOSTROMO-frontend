@@ -27,6 +27,7 @@ import { useContractUserVotes } from "@/wallet/hooks/useContractUserVotes";
 import { useVote } from "@/wallet/hooks/useVote";
 import { useQubicConnect } from "@/wallet/qubic/QubicConnectContext";
 
+import { useUserByWallet } from "../../../user/hooks/useUserByWallet";
 import { ProjectHeader } from "../../components/ProjectHeader";
 import { ProjectRegister } from "../../components/ProjectRegister";
 import { ThresholdCalculator } from "../../components/ThresholdCalculator";
@@ -63,6 +64,7 @@ export const ProjectDetailsPage: React.FC = () => {
     refetch: refetchUserTier,
     data: { tierLevel },
   } = useContractTier();
+  const { data: user } = useUserByWallet(wallet?.publicKey);
   const { data, ...project } = useProject(slug);
   const { mutate: voteOnProject } = useVote();
   const { openModal, closeModal } = useModal();
@@ -73,6 +75,8 @@ export const ProjectDetailsPage: React.FC = () => {
     data: { project: projectContract },
     isLoading: isLoadingProjectByIndex,
   } = useContractProjectByIndex(data?.smartContractId);
+
+  console.log("projectContract", projectContract);
 
   const navigate = useNavigate();
 
@@ -238,7 +242,7 @@ export const ProjectDetailsPage: React.FC = () => {
               count: [projectContract?.numberOfYes ?? 0, projectContract?.numberOfNo ?? 0],
             }}
             myVote={undefined}
-            hasOwnership={true} //user?.id === data.owner?.id
+            hasOwnership={user?.id === data.owner?.id}
             isLoading={isLoadingUserVotes}
             onClick={handleClickVote}
           />

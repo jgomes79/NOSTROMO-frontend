@@ -1,4 +1,5 @@
 import classNames from "clsx";
+import { isPast } from "date-fns";
 import { format } from "date-fns/format";
 import {
   RiChatCheckFill,
@@ -49,8 +50,8 @@ interface ProjectVotingProps {
  * @returns {JSX.Element} The JSX code for the ProjectVoting component.
  */
 export const ProjectVoting: React.FC<ProjectVotingProps> = ({ config, myVote, hasOwnership, isLoading, onClick }) => {
-  const isPastLimitDate = true; //isPast(config.limitDate);
-  const isYes = true; // config.count[0] > config.count[1];
+  const isPastLimitDate = isPast(config.limitDate);
+  const isYes = config.count[0] > config.count[1];
 
   const literals: Record<Vote, { title: string; color?: string; description: string }> = {
     yes: {
@@ -96,7 +97,7 @@ export const ProjectVoting: React.FC<ProjectVotingProps> = ({ config, myVote, ha
                   size={"small"}
                   variant={"solid"}
                   color={"primary"}
-                  onClick={() => {}}
+                  onClick={() => null}
                 />
               </div>
             </div>
