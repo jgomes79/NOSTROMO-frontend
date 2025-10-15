@@ -34,6 +34,7 @@ export type Vote = "yes" | "no";
  */
 interface ProjectVotingProps {
   readonly config: {
+    readonly startDate: Date;
     readonly limitDate: Date;
     readonly count: number[];
   };
@@ -50,7 +51,7 @@ interface ProjectVotingProps {
  * @returns {JSX.Element} The JSX code for the ProjectVoting component.
  */
 export const ProjectVoting: React.FC<ProjectVotingProps> = ({ config, myVote, hasOwnership, isLoading, onClick }) => {
-  const isPastLimitDate = isPast(config.limitDate);
+  const isPastStartDate = isPast(config.startDate);
   const isYes = config.count[0] > config.count[1];
 
   const literals: Record<Vote, { title: string; color?: string; description: string }> = {
@@ -77,7 +78,7 @@ export const ProjectVoting: React.FC<ProjectVotingProps> = ({ config, myVote, ha
    * @returns {JSX.Element} The JSX code for the voting section.
    */
   const renderContent = () => {
-    if (isPastLimitDate) {
+    if (isPastStartDate) {
       if (hasOwnership) {
         return (
           <div className={classNames(styles.field, styles.welcome)}>
@@ -139,7 +140,7 @@ export const ProjectVoting: React.FC<ProjectVotingProps> = ({ config, myVote, ha
               {currentVote.description}
             </Typography>
           </div>
-          {!currentVote && (
+          {!myVote && (
             <div className={styles.actions}>
               <Button
                 caption="Yes"
@@ -184,7 +185,7 @@ export const ProjectVoting: React.FC<ProjectVotingProps> = ({ config, myVote, ha
             <DataLabel
               label={"Time left"}
               value={
-                isPastLimitDate
+                isPastStartDate
                   ? "Finished"
                   : `${timeLeft.days} days, ${timeLeft.hours} hours, ${timeLeft.minutes} minutes, ${timeLeft.seconds} seconds`
               }
@@ -195,7 +196,7 @@ export const ProjectVoting: React.FC<ProjectVotingProps> = ({ config, myVote, ha
 
       <GraphBar
         colors={["green", "red"]}
-        disabled={[isPastLimitDate && !isYes, isPastLimitDate && isYes]}
+        disabled={[isPastStartDate && !isYes, isPastStartDate && isYes]}
         data={config.count}
       />
     </Fieldset>

@@ -105,7 +105,7 @@ export const useVote = () => {
       // Get current tick info
       console.log("🗳️ Fetching tick info...");
       const tickInfo = await fetchTickInfo();
-      const targetTick = tickInfo.tick + 10; // Add offset
+      const targetTick = tickInfo.tick + 20; // Add offset
       console.log("🗳️ Current tick:", tickInfo.tick, "Target tick:", targetTick);
 
       // Get initial vote status for verification

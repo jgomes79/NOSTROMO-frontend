@@ -238,11 +238,12 @@ export const ProjectDetailsPage: React.FC = () => {
         return (
           <ProjectVoting
             config={{
-              limitDate: data.startDate,
+              startDate: data.startDate,
+              limitDate: data.TGEDate,
               count: [projectContract?.numberOfYes ?? 0, projectContract?.numberOfNo ?? 0],
             }}
             myVote={undefined}
-            hasOwnership={user?.id === data.owner?.id}
+            hasOwnership={user?.id !== data.owner?.id}
             isLoading={isLoadingUserVotes}
             onClick={handleClickVote}
           />
