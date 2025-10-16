@@ -98,14 +98,12 @@ export const ProjectVoting: React.FC<ProjectVotingProps> = ({
               </Typography>
             </div>
             <div className={styles.actions}>
-              <div>
-                <Button
-                  caption="Move to Upcoming Phase"
-                  color={"primary"}
-                  onClick={() => null}
-                  iconLeft={<RiArrowUpCircleFill size={24} />}
-                />
-              </div>
+              <Button
+                caption="Move to Upcoming Phase"
+                color={"primary"}
+                onClick={() => null}
+                iconLeft={<RiArrowUpCircleFill size={24} />}
+              />
             </div>
           </div>
         );
