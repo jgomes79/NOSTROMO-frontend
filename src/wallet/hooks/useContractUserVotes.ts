@@ -12,8 +12,8 @@ interface Store {
   setLoading: (isLoading: boolean) => void;
   userVotes: number;
   setUserVotes: (userVotes: number) => void;
-  projectIndexList: ProjectIndexList[];
-  setProjectIndexList: (projectIndexList: ProjectIndexList[]) => void;
+  projectIndexList: number[];
+  setProjectIndexList: (projectIndexList: number[]) => void;
   isError: boolean;
   setIsError: (isError: boolean) => void;
   errorMessage: string;
@@ -46,7 +46,7 @@ const store = create<Store>((set) => ({
   /** Function to update project index list
    * @param projectIndexList - New project index list value
    */
-  setProjectIndexList: (projectIndexList: ProjectIndexList[]) => set({ projectIndexList }),
+  setProjectIndexList: (projectIndexList: number[]) => set({ projectIndexList }),
 
   /** Error state */
   isError: false,
@@ -101,7 +101,7 @@ export const useContractUserVotes = () => {
       const result = await getUserVoteStatus(wallet.publicKey);
       console.log("User vote status:", result);
       setUserVotes(result.numberOfVotedProjects);
-      setProjectIndexList(result.projectIndexList as unknown as ProjectIndexList[]);
+      setProjectIndexList(result.projectIndexList);
     } catch (error) {
       console.error("Error fetching user votes:", error);
       setIsError(true);

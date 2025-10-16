@@ -13,7 +13,7 @@ import { getRoute } from "@/lib/router";
 import { ProjectComments } from "@/project/components/ProjectComments";
 import { ProjectEvaluation } from "@/project/components/ProjectEvaluation";
 import { ProjectInvestment } from "@/project/components/ProjectInvestment";
-import { ProjectVoting, Vote } from "@/project/components/ProjectVoting";
+import { ProjectVoting } from "@/project/components/ProjectVoting";
 import { Button } from "@/shared/components/Button";
 import { Card } from "@/shared/components/Card";
 import { DataLabel } from "@/shared/components/DataLabel";
@@ -26,6 +26,7 @@ import { useContractTier } from "@/wallet/hooks/useContractTier";
 import { useContractUserVotes } from "@/wallet/hooks/useContractUserVotes";
 import { useVote } from "@/wallet/hooks/useVote";
 import { useQubicConnect } from "@/wallet/qubic/QubicConnectContext";
+import { ProjectPendingToCreate } from "../../components/ProjectPendingToCreate";
 
 import { useUserByWallet } from "../../../user/hooks/useUserByWallet";
 import { ProjectHeader } from "../../components/ProjectHeader";
@@ -73,10 +74,7 @@ export const ProjectDetailsPage: React.FC = () => {
   const { data: userVotes, refetch: refetchUserVotes, isLoading: isLoadingUserVotes } = useContractUserVotes();
   const {
     data: { project: projectContract },
-    isLoading: isLoadingProjectByIndex,
   } = useContractProjectByIndex(data?.smartContractId);
-
-  console.log("userVotes", userVotes);
 
   const navigate = useNavigate();
 
@@ -95,24 +93,23 @@ export const ProjectDetailsPage: React.FC = () => {
    * @param {Vote} vote - The vote to be cast.
    * @returns {void}
    */
-  const handleClickVote = async (vote: Vote) => {
-    const isYes = vote === "yes";
+  const handleClickVote = async (vote: boolean) => {
     if (data) {
-      const voteType = isYes ? "in favor of" : "against";
+      const voteType = vote ? "in favor of" : "against";
       const confirmationTitle = `Vote ${voteType} this project`;
       const confirmationDescription = `Are you sure you want to vote ${voteType} this project?`;
 
       openModal(ModalsIds.CONFIRMATION, {
-        type: isYes ? "success" : "error",
+        type: vote ? "success" : "error",
         title: confirmationTitle,
         description: confirmationDescription,
         onConfirm: {
-          caption: isYes ? "Vote in favor" : "Vote against",
+          caption: vote ? "Vote in favor" : "Vote against",
           action: async (setLoading) => {
             setLoading(true);
             try {
               if (data.smartContractId) {
-                await voteOnProject(data.smartContractId, isYes);
+                await voteOnProject(data.smartContractId, vote);
                 closeModal();
               } else {
                 createToast(ToastIds.CONFIRMATION, {
@@ -206,6 +203,9 @@ export const ProjectDetailsPage: React.FC = () => {
           />
         );
 
+      case ProjectStates.PENDING_TO_CREATE:
+        return <ProjectPendingToCreate />;
+
       case ProjectStates.UPCOMING:
         return (
           <ProjectRegister
@@ -242,8 +242,8 @@ export const ProjectDetailsPage: React.FC = () => {
               limitDate: data.TGEDate,
               count: [projectContract?.numberOfYes ?? 0, projectContract?.numberOfNo ?? 0],
             }}
-            myVote={undefined}
-            hasOwnership={user?.id !== data.owner?.id}
+            myVote={!!userVotes?.projectIndexList.includes(data.smartContractId as number)}
+            hasOwnership={user?.id === data.owner?.id}
             isLoading={isLoadingUserVotes}
             onClick={handleClickVote}
           />
@@ -326,7 +326,7 @@ export const ProjectDetailsPage: React.FC = () => {
    *
    * @returns {JSX.Element} The loader component.
    */
-  if ((project.isLoading && !data) || isLoadingProjectByIndex) {
+  if (project.isLoading && !data) {
     return <Loader variant={"full"} size={42} />;
   }
 

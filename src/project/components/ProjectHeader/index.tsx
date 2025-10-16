@@ -1,17 +1,17 @@
 import classNames from "clsx";
 import {
-  RiTwitterXFill,
-  RiInstagramLine,
-  RiTelegramFill,
+  RiCoinsLine,
   RiDiscordFill,
-  RiMediumFill,
   RiExternalLinkLine,
   RiGlobalLine,
+  RiInstagramLine,
+  RiMediumFill,
   RiStockLine,
-  RiCoinsLine,
+  RiTelegramFill,
+  RiTwitterXFill,
 } from "react-icons/ri";
 
-import { formatPrice, formatNumber } from "@/lib/number";
+import { formatNumber, formatPrice } from "@/lib/number";
 import { Project, ProjectStates } from "@/project/project.types";
 import { Button } from "@/shared/components/Button";
 import { Card } from "@/shared/components/Card";
@@ -22,6 +22,7 @@ import { Separator } from "@/shared/components/Separator";
 import { Typography } from "@/shared/components/Typography";
 import useResponsive from "@/shared/hooks/useResponsive";
 
+import { isBefore } from "date-fns/isBefore";
 import styles from "./ProjectHeader.module.scss";
 
 /**
@@ -70,20 +71,47 @@ export const ProjectHeader: React.FC<ProjectHeaderProps> = ({
   whitepaperUrl,
 }) => {
   const { isMobile } = useResponsive();
+  const isBeforeStartDate = isBefore(new Date(), startDate);
 
-  const stateLabels = {
-    [ProjectStates.ALL]: { title: "", banner: "", footer: "" },
-    [ProjectStates.DRAFT]: { title: "Draft", banner: "", footer: "" },
-    [ProjectStates.SENT_TO_REVIEW]: { title: "Sent to Review", banner: "", footer: "" },
-    [ProjectStates.REJECTED]: { title: "Rejected", banner: "", footer: "" },
-    [ProjectStates.CLOSED]: { title: "Closed", banner: "Claim tokens in", footer: "" },
-    [ProjectStates.FAILED]: { title: "Failed", banner: "", footer: "" },
-    [ProjectStates.FUNDING_PHASE_1]: { title: "Funding Phase 1", banner: "Phase 1 ends in", footer: "" },
-    [ProjectStates.FUNDING_PHASE_2]: { title: "Funding Phase 2", banner: "Phase 2 ends in", footer: "" },
-    [ProjectStates.FUNDING_PHASE_3]: { title: "Funding Phase 3", banner: "Phase 3 ends in", footer: "" },
-    [ProjectStates.READY_TO_VOTE]: { title: "Ready to Vote", banner: "Voting ends in", footer: "" },
-    [ProjectStates.REQUEST_MORE_INFO]: { title: "More Info Requested", banner: "", footer: "" },
-    [ProjectStates.UPCOMING]: { title: "Upcoming", banner: "Registration ends in", footer: "" },
+  // const stateLabels = {
+  //   [ProjectStates.ALL]: { title: "", banner: "", footer: "" },
+  //   [ProjectStates.DRAFT]: { title: "Draft", banner: "", footer: "" },
+  //   [ProjectStates.SENT_TO_REVIEW]: { title: "Sent to Review", banner: "", footer: "" },
+  //   [ProjectStates.REJECTED]: { title: "Rejected", banner: "", footer: "" },
+  //   [ProjectStates.CLOSED]: { title: "Closed", banner: "Claim tokens in", footer: "" },
+  //   [ProjectStates.FAILED]: { title: "Failed", banner: "", footer: "" },
+  //   [ProjectStates.FUNDING_PHASE_1]: { title: "Funding Phase 1", banner: "Phase 1 ends in", footer: "" },
+  //   [ProjectStates.FUNDING_PHASE_2]: { title: "Funding Phase 2", banner: "Phase 2 ends in", footer: "" },
+  //   [ProjectStates.FUNDING_PHASE_3]: { title: "Funding Phase 3", banner: "Phase 3 ends in", footer: "" },
+  //   [ProjectStates.READY_TO_VOTE]: { title: "Ready to Vote", banner: "Voting ends in", footer: "" },
+  //   [ProjectStates.REQUEST_MORE_INFO]: { title: "More Info Requested", banner: "", footer: "" },
+  //   [ProjectStates.UPCOMING]: { title: "Upcoming", banner: "Registration ends in", footer: "" },
+  // };
+
+  /**
+   * Renders the banner for the project header.
+   *
+   * @returns {JSX.Element} The rendered banner component.
+   */
+  const renderBanner = () => {
+    if (state !== ProjectStates.READY_TO_VOTE) {
+      return null;
+    }
+
+    const title = isBeforeStartDate ? "Voting starts in" : "Voting ends in";
+
+    return (
+      <div className={styles.time}>
+        <Typography as="h2">{title.toUpperCase()}</Typography>
+        <Countdown date={startDate}>
+          {(timeLeft) => (
+            <Typography variant="heading" size="small">
+              {timeLeft.days}D - {timeLeft.hours}H - {timeLeft.minutes}M - {timeLeft.seconds}S
+            </Typography>
+          )}
+        </Countdown>
+      </div>
+    );
   };
 
   return (
@@ -93,20 +121,7 @@ export const ProjectHeader: React.FC<ProjectHeaderProps> = ({
         <img src={bannerUrl} width="100%" height={isMobile ? 250 : 250} alt={`${name} banner`} />
 
         <div className={styles.bar}>
-          <div className={styles.content}>
-            {startDate && stateLabels[state].banner !== "" && (
-              <div className={styles.time}>
-                <Typography as="h2">{stateLabels[state].banner.toUpperCase()}</Typography>
-                <Countdown date={startDate}>
-                  {(timeLeft) => (
-                    <Typography variant="heading" size="small">
-                      {timeLeft.days}D - {timeLeft.hours}H - {timeLeft.minutes}M - {timeLeft.seconds}S
-                    </Typography>
-                  )}
-                </Countdown>
-              </div>
-            )}
-          </div>
+          <div className={styles.content}>{renderBanner()}</div>
         </div>
       </div>
 

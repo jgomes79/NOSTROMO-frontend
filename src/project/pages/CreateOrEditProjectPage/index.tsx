@@ -12,6 +12,7 @@ import { useQubicConnect } from "@/wallet/qubic/QubicConnectContext";
 
 import { ProjectForm, ProjectFormValues } from "../../forms/ProjectForm";
 import { useProject } from "../../hooks/useProject";
+import { useProjectSendToReview } from "../../hooks/useProjectSendToReview";
 import { usePublishProject } from "../../hooks/usePublishProject";
 import { useUpsertProject } from "../../hooks/useUpsertProject";
 import { Project } from "../../project.types";
@@ -37,7 +38,8 @@ export const CreateOrEditProjectPage: React.FC = () => {
   const navigate = useNavigate();
 
   const upsertProject = useUpsertProject(),
-    publishProject = usePublishProject();
+    publishProject = usePublishProject(),
+    sendProjectToReview = useProjectSendToReview();
 
   const { openModal, closeModal } = useModal();
 
@@ -65,7 +67,7 @@ export const CreateOrEditProjectPage: React.FC = () => {
             action: async (setLoading) => {
               if (!project.data) return false;
               setLoading(true);
-              await publishProject.mutateAsync(project.data);
+              await sendProjectToReview.mutateAsync({ projectId: project.data.id });
               await project.refetch();
               closeModal();
             },

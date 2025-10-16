@@ -1,5 +1,4 @@
 import classNames from "clsx";
-import { isPast } from "date-fns";
 import { format } from "date-fns/format";
 import {
   RiChatCheckFill,
@@ -20,8 +19,6 @@ import { Typography } from "@/shared/components/Typography";
 
 import styles from "./ProjectVoting.module.scss";
 
-export type Vote = "yes" | "no";
-
 /**
  * Props for the ProjectVoting component.
  * @property {Object} vote - The voting details for the project.
@@ -38,10 +35,10 @@ interface ProjectVotingProps {
     readonly limitDate: Date;
     readonly count: number[];
   };
-  readonly myVote?: Vote;
+  readonly myVote?: boolean;
   readonly hasOwnership: boolean;
   readonly isLoading?: boolean;
-  readonly onClick?: (vote: Vote) => void;
+  readonly onClick?: (vote: boolean) => void;
 }
 
 /**
@@ -51,26 +48,25 @@ interface ProjectVotingProps {
  * @returns {JSX.Element} The JSX code for the ProjectVoting component.
  */
 export const ProjectVoting: React.FC<ProjectVotingProps> = ({ config, myVote, hasOwnership, isLoading, onClick }) => {
-  const isPastStartDate = isPast(config.startDate);
+  const isAfterStartDate = config.startDate < new Date();
+  const isVotingPhase = new Date() > config.startDate && new Date() < config.limitDate;
   const isYes = config.count[0] > config.count[1];
 
-  const literals: Record<Vote, { title: string; color?: string; description: string }> = {
-    yes: {
-      title: "You have voted in favor of this project",
-      description: `You will be able to see the results at the end of the voting process`,
-    },
-    no: {
-      title: "You have voted against this project",
-      description: `You will be able to see the results at the end of the voting process`,
-    },
+  const hasVotedLiterals = {
+    title: "You have voted in this project",
+    description: `You will be able to see the results at the end of the voting process`,
   };
 
   const defaultVote = {
-    title: "This project is in the voting process",
-    description: `You have until ${format(config.limitDate, "MMMM do, yyyy 'at' h:mm a")} to vote on this project`,
+    title: isAfterStartDate
+      ? "This project is waiting for the voting to start"
+      : "This project is in the voting process",
+    description: isAfterStartDate
+      ? `The voting will start at ${format(config.startDate, "MMMM do, yyyy 'at' h:mm a")}`
+      : `You have until ${format(config.limitDate, "MMMM do, yyyy 'at' h:mm a")} to vote on this project`,
   };
 
-  const currentVote = myVote ? literals[myVote] : defaultVote;
+  const currentVote = myVote ? hasVotedLiterals : defaultVote;
 
   /**
    * Renders the content of the voting section.
@@ -78,7 +74,7 @@ export const ProjectVoting: React.FC<ProjectVotingProps> = ({ config, myVote, ha
    * @returns {JSX.Element} The JSX code for the voting section.
    */
   const renderContent = () => {
-    if (isPastStartDate) {
+    if (new Date() > config.limitDate) {
       if (hasOwnership) {
         return (
           <div className={classNames(styles.field, styles.welcome)}>
@@ -140,19 +136,19 @@ export const ProjectVoting: React.FC<ProjectVotingProps> = ({ config, myVote, ha
               {currentVote.description}
             </Typography>
           </div>
-          {!myVote && (
+          {!myVote && isAfterStartDate && (
             <div className={styles.actions}>
               <Button
                 caption="Yes"
                 color={"primary"}
-                onClick={() => onClick?.("yes")}
+                onClick={() => onClick?.(true)}
                 disabled={!!isLoading}
                 iconLeft={<RiEmotionHappyFill size={24} />}
               />
               <Button
                 caption="No"
                 color={"error"}
-                onClick={() => onClick?.("no")}
+                onClick={() => onClick?.(false)}
                 disabled={!!isLoading}
                 iconLeft={<RiEmotionNormalFill size={24} />}
               />
@@ -172,33 +168,37 @@ export const ProjectVoting: React.FC<ProjectVotingProps> = ({ config, myVote, ha
     <Fieldset title={"Voting Phase"} variant={"white"} className={classNames(styles.section)}>
       {renderContent()}
 
-      <div className={classNames(styles.inline, styles.data)}>
-        <DataLabel
-          label={"Total Votes"}
-          value={formatNumber(
-            config.count.reduce((acc, vote) => acc + vote, 0),
-            0,
-          )}
-        />
-        <Countdown date={config.limitDate}>
-          {(timeLeft) => (
+      {isAfterStartDate && (
+        <>
+          <div className={classNames(styles.inline, styles.data)}>
             <DataLabel
-              label={"Time left"}
-              value={
-                isPastStartDate
-                  ? "Finished"
-                  : `${timeLeft.days} days, ${timeLeft.hours} hours, ${timeLeft.minutes} minutes, ${timeLeft.seconds} seconds`
-              }
+              label={"Total Votes"}
+              value={formatNumber(
+                config.count.reduce((acc, vote) => acc + vote, 0),
+                0,
+              )}
             />
-          )}
-        </Countdown>
-      </div>
+            <Countdown date={!isVotingPhase ? config.startDate : config.limitDate}>
+              {(timeLeft) => (
+                <DataLabel
+                  label={"Time left"}
+                  value={
+                    new Date() > config.limitDate
+                      ? "Finished"
+                      : `${timeLeft.days} days, ${timeLeft.hours} hours, ${timeLeft.minutes} minutes, ${timeLeft.seconds} seconds`
+                  }
+                />
+              )}
+            </Countdown>
+          </div>
 
-      <GraphBar
-        colors={["green", "red"]}
-        disabled={[isPastStartDate && !isYes, isPastStartDate && isYes]}
-        data={config.count}
-      />
+          <GraphBar
+            colors={["green", "red"]}
+            disabled={[new Date() > config.limitDate && !isYes, new Date() > config.limitDate && isYes]}
+            data={config.count}
+          />
+        </>
+      )}
     </Fieldset>
   );
 };

@@ -101,6 +101,17 @@ export const publishProject = (projectId: Project["id"], smartContractId: number
   });
 
 /**
+ * Sends a project to review by its ID.
+ *
+ * @param {Project["id"]} projectId - The unique identifier of the project to send to review.
+ * @returns {Promise<Project>} - A promise that resolves to the project data.
+ */
+export const sendProjectToReview = (projectId: Project["id"]) =>
+  request<Project>(getEndpoint("projects-service", `/projects/${projectId}/send-to-review`), {
+    method: "POST",
+  });
+
+/**
  * Type representing the response from the getProjectsVip API.
  *
  * @property {Project[]} rows - An array of VIP projects.

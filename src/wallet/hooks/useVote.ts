@@ -149,6 +149,8 @@ export const useVote = () => {
           targetTick,
           verificationFunction: async () => {
             const currentVoteStatus = await getUserVoteStatus(wallet.publicKey);
+            console.log("🗳️ Current vote status:", currentVoteStatus);
+            console.log("🗳️ Initial voted projects:", initialVotedProjects);
             return currentVoteStatus.numberOfVotedProjects > initialVotedProjects;
           },
           onSuccess: () => {

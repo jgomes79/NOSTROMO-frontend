@@ -10,9 +10,9 @@ import { Image } from "@/shared/components/Image";
 import { Separator } from "@/shared/components/Separator";
 import { Typography } from "@/shared/components/Typography";
 
-import styles from "./ProjectCard.module.scss";
 import { PROJECT_ROUTES, PROJECT_STATE_STRING } from "../../project.constants";
 import { Project, ProjectFormTabs, ProjectStates } from "../../project.types";
+import styles from "./ProjectCard.module.scss";
 
 /**
  * A card component that displays information about a project.
@@ -36,6 +36,7 @@ export const ProjectCard: React.FC<Project> = ({
     [ProjectStates.ALL]: { title: "", banner: "", footer: "" },
     [ProjectStates.DRAFT]: { title: "Draft", banner: "", footer: "Edit Project" },
     [ProjectStates.SENT_TO_REVIEW]: { title: "Sent to Review", banner: "", footer: "Review" },
+    [ProjectStates.PENDING_TO_CREATE]: { title: "Pending to create", banner: "", footer: "Create" },
     [ProjectStates.REJECTED]: { title: "Rejected", banner: "", footer: "Project Rejected" },
     [ProjectStates.CLOSED]: { title: "Closed", banner: "Claim tokens in", footer: "Claim tokens" },
     [ProjectStates.FAILED]: { title: "Failed", banner: "", footer: "" },
