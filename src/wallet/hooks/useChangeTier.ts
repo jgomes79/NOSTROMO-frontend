@@ -72,15 +72,15 @@ export const useChangeTier = () => {
       // Broadcast transaction
       const res = await broadcastTx(signedResult.tx);
 
-      if (res && res.result?.transactionId) {
-        setTxHash(res.result.transactionId);
+      if (res && res?.transactionId) {
+        setTxHash(res.transactionId);
         setLoading(false);
 
         console.log("🔄 Tier upgrade transaction broadcast successful. Monitoring for confirmation...");
 
         // Monitor transaction with verification function
         await monitorTransaction({
-          txId: res.result.transactionId,
+          txId: res.transactionId,
           targetTick,
           verificationFunction: async () => {
             const updatedTierLevel = await getTierLevelByUser(wallet.publicKey);
