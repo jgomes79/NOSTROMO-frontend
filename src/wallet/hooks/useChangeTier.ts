@@ -38,7 +38,7 @@ export const useChangeTier = () => {
     try {
       // Get current tick info
       const tickInfo = await fetchTickInfo();
-      const targetTick = tickInfo.tick + 10;
+      const targetTick = tickInfo.tick + 20;
 
       // Get current tier level for verification
       const currentTierLevel = await getTierLevelByUser(wallet.publicKey);

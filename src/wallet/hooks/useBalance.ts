@@ -51,6 +51,7 @@ export const useBalance = () => {
 
     setLoading(true);
     try {
+      console.log("User account: ", wallet.publicKey);
       const balanceData = await fetchBalance(wallet.publicKey);
       const balanceAmount = parseInt(balanceData.balance) || 0;
       setBalance(balanceAmount);
