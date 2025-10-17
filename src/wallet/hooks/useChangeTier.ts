@@ -88,6 +88,7 @@ export const useChangeTier = () => {
           },
           onSuccess: () => {
             console.log(`🎉 Tier upgrade confirmed! Successfully upgraded to tier ${newTierLevel}`);
+            setLoading(false);
           },
           onError: (error) => {
             setIsError(true);

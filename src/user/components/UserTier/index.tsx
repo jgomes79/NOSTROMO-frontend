@@ -22,7 +22,7 @@ import { useRegisterTier } from "@/wallet/hooks/useRegisterTier";
 import { useRemoveTier } from "@/wallet/hooks/useRemoveTier";
 
 import { useUserByWallet } from "../../hooks/useUserByWallet";
-import { User } from "../../user.types";
+import { User, UserSettingsTabs } from "../../user.types";
 import styles from "./UserTier.module.scss";
 
 /**
@@ -130,6 +130,7 @@ export const UserTier: React.FC<UserTierProps> = ({ wallet, userTier }) => {
                   title: "Tier Upgraded",
                   type: "success",
                 });
+                navigate(getRoute(USER_ROUTES.SETTINGS, { tabId: UserSettingsTabs.MY_TIER }));
                 closeModal();
               } catch (error) {
                 createToast(ToastIds.CONFIRMATION, {
