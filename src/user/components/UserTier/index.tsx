@@ -75,14 +75,24 @@ export const UserTier: React.FC<UserTierProps> = ({ wallet, userTier }) => {
           caption: "Unstake Tokens",
           action: async (setLoading) => {
             setLoading(true);
-            await removeTier();
-            await refetchUserbyWallet();
-            await refetchTier();
-            createToast(ToastIds.CONFIRMATION, {
-              title: "Tokens Unstaked",
-              type: "success",
-            });
-            closeModal();
+            try {
+              await removeTier();
+              await refetchUserbyWallet();
+              await refetchTier();
+              createToast(ToastIds.CONFIRMATION, {
+                title: "Tokens Unstaked",
+                type: "success",
+              });
+              closeModal();
+            } catch (error) {
+              createToast(ToastIds.CONFIRMATION, {
+                title: "Error Unstaking Tokens",
+                type: "error",
+                description: error instanceof Error ? error.message : "Unknown error occurred",
+              });
+            } finally {
+              setLoading(false);
+            }
           },
         },
         onDecline: {
@@ -112,14 +122,24 @@ export const UserTier: React.FC<UserTierProps> = ({ wallet, userTier }) => {
             caption: "Upgrade Tier",
             action: async (setLoading) => {
               setLoading(true);
-              await registerInTier(tier.id);
-              await refetchUserbyWallet();
-              await refetchTier();
-              createToast(ToastIds.CONFIRMATION, {
-                title: "Tier Upgraded",
-                type: "success",
-              });
-              closeModal();
+              try {
+                await registerInTier(tier.id);
+                await refetchUserbyWallet();
+                await refetchTier();
+                createToast(ToastIds.CONFIRMATION, {
+                  title: "Tier Upgraded",
+                  type: "success",
+                });
+                closeModal();
+              } catch (error) {
+                createToast(ToastIds.CONFIRMATION, {
+                  title: "Error Upgrading Tier",
+                  type: "error",
+                  description: error instanceof Error ? error.message : "Unknown error occurred",
+                });
+              } finally {
+                setLoading(false);
+              }
             },
           },
           onDecline: {

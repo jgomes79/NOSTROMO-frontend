@@ -29,6 +29,7 @@ import { useQubicConnect } from "@/wallet/qubic/QubicConnectContext";
 import { ProjectPendingToCreate } from "../../components/ProjectPendingToCreate";
 
 import { useUserByWallet } from "../../../user/hooks/useUserByWallet";
+import { UserTypes } from "../../../user/user.types";
 import { ProjectHeader } from "../../components/ProjectHeader";
 import { ProjectRegister } from "../../components/ProjectRegister";
 import { ThresholdCalculator } from "../../components/ThresholdCalculator";
@@ -110,6 +111,7 @@ export const ProjectDetailsPage: React.FC = () => {
             try {
               if (data.smartContractId) {
                 await voteOnProject(data.smartContractId, vote);
+                await refetchUserVotes();
                 closeModal();
               } else {
                 createToast(ToastIds.CONFIRMATION, {
@@ -244,6 +246,7 @@ export const ProjectDetailsPage: React.FC = () => {
             }}
             myVote={!!userVotes?.projectIndexList.includes(data.smartContractId as number)}
             hasOwnership={user?.id === data.owner?.id}
+            isAdmin={user?.type === UserTypes.ADMIN}
             isLoading={isLoadingUserVotes}
             onClick={handleClickVote}
           />

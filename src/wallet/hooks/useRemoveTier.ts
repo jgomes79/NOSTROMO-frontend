@@ -53,15 +53,15 @@ export const useRemoveTier = () => {
       // Broadcast transaction
       const res = await broadcastTx(signedResult.tx);
 
-      if (res && res.result?.transactionId) {
-        setTxHash(res.result.transactionId);
+      if (res && res.transactionId) {
+        setTxHash(res.transactionId);
         setLoading(false);
 
         console.log("🔄 Tier removal transaction broadcast successful. Monitoring for confirmation...");
 
         // Monitor transaction with verification function
         await monitorTransaction({
-          txId: res.result.transactionId,
+          txId: res.transactionId,
           targetTick,
           verificationFunction: async () => {
             const updatedTierLevel = await getTierLevelByUser(wallet.publicKey);
@@ -69,6 +69,7 @@ export const useRemoveTier = () => {
           },
           onSuccess: () => {
             console.log(`🎉 Tier removal confirmed! Successfully removed from tier`);
+            setLoading(false);
           },
           onError: (error) => {
             setIsError(true);

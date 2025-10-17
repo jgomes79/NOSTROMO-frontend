@@ -3,6 +3,7 @@ import { useState } from "react";
 import { getTierLevelByUser, registerInTier } from "../../lib/nostromo/services/nostromo.service";
 import { broadcastTx, fetchTickInfo } from "../../lib/nostromo/services/rpc.service";
 import { useQubicConnect } from "../qubic/QubicConnectContext";
+import { useTransactionMonitor } from "./useTransactionMonitor";
 
 /**
  * Hook for registering in a tier
@@ -13,8 +14,8 @@ export const useRegisterTier = () => {
   const [isError, setIsError] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [txHash, setTxHash] = useState<string>("");
-  const [isMonitoring, setIsMonitoring] = useState<boolean>(false);
   const { wallet, getSignedTx } = useQubicConnect();
+  const { isMonitoring, monitorTransaction } = useTransactionMonitor();
 
   const mutate = async (tierLevel: number) => {
     if (!wallet?.publicKey) {
@@ -61,18 +62,31 @@ export const useRegisterTier = () => {
       const res = await broadcastTx(signedResult.tx);
       console.log("📡 Broadcast response:", res);
 
-      if (res && res.result?.transactionId) {
-        setTxHash(res.result.transactionId);
+      if (res && res.transactionId) {
+        setTxHash(res.transactionId);
 
         // Start monitoring the transaction like qearn does
-        setIsMonitoring(true);
-        setLoading(false); // Stop initial loading, but keep monitoring
 
         // Log monitoring status
         console.log("🔄 Transaction broadcast successful. Monitoring for confirmation...");
 
         // Monitor transaction confirmation
-        await monitorTransaction(res.result.transactionId, targetTick, tierLevel);
+        await monitorTransaction({
+          txId: res.transactionId,
+          targetTick,
+          verificationFunction: async () => {
+            const updatedTierLevel = await getTierLevelByUser(wallet.publicKey);
+            return updatedTierLevel === tierLevel;
+          },
+          onSuccess: () => {
+            console.log(`🎉 Tier registration confirmed! Successfully registered in tier ${tierLevel}`);
+            setLoading(false);
+          },
+          onError: (error) => {
+            setIsError(true);
+            setErrorMessage(error);
+          },
+        });
       } else {
         throw new Error("Failed to broadcast transaction");
       }
@@ -91,64 +105,6 @@ export const useRegisterTier = () => {
       setErrorMessage(errorMessage);
       setLoading(false);
     }
-  };
-
-  // Transaction monitoring function (like qearn)
-  const monitorTransaction = async (txId: string, targetTick: number, expectedTierLevel: number) => {
-    const maxWaitTicks = 15; // Wait max 15 ticks like qearn
-    let currentTick = 0;
-
-    const checkInterval = setInterval(async () => {
-      try {
-        const tickInfo = await fetchTickInfo();
-        currentTick = tickInfo.tick;
-
-        console.log(`Monitoring transaction ${txId}: current tick ${currentTick}, target tick ${targetTick}`);
-
-        if (currentTick > targetTick) {
-          if (currentTick > targetTick + maxWaitTicks) {
-            // Transaction failed - timeout
-            clearInterval(checkInterval);
-            setIsMonitoring(false);
-            setIsError(true);
-            setErrorMessage("Transaction failed - timeout waiting for confirmation");
-            console.error("Transaction timeout");
-
-            // Log timeout error
-            console.error("❌ Transaction timeout - failed to confirm within expected time");
-            return;
-          }
-
-          // Check if tier level actually changed by querying the smart contract
-          const currentTierLevel = await getTierLevelByUser(wallet!.publicKey);
-
-          if (currentTierLevel === expectedTierLevel) {
-            // Success! Tier level changed
-            clearInterval(checkInterval);
-            setIsMonitoring(false);
-            console.log(`✅ Tier registration successful! New tier level: ${currentTierLevel}`);
-
-            // Log success
-            console.log(`🎉 Tier registration confirmed! Successfully registered in tier ${expectedTierLevel}`);
-          } else {
-            // Keep waiting, transaction might still be processing
-            console.log(`Waiting for tier change... Current: ${currentTierLevel}, Expected: ${expectedTierLevel}`);
-          }
-        }
-      } catch (error) {
-        console.error("Error monitoring transaction:", error);
-      }
-    }, 2000); // Check every 2 seconds like qearn
-
-    // Cleanup after 5 minutes max
-    setTimeout(() => {
-      clearInterval(checkInterval);
-      if (isMonitoring) {
-        setIsMonitoring(false);
-        setIsError(true);
-        setErrorMessage("Transaction monitoring timeout");
-      }
-    }, 300000); // 5 minutes
   };
 
   return {

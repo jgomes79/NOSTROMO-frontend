@@ -1,6 +1,7 @@
 import classNames from "clsx";
 import { format } from "date-fns/format";
 import {
+  RiArrowUpCircleFill,
   RiChatCheckFill,
   RiChatDeleteFill,
   RiChatPollFill,
@@ -36,6 +37,7 @@ interface ProjectVotingProps {
     readonly count: number[];
   };
   readonly myVote?: boolean;
+  readonly isAdmin: boolean;
   readonly hasOwnership: boolean;
   readonly isLoading?: boolean;
   readonly onClick?: (vote: boolean) => void;
@@ -47,9 +49,14 @@ interface ProjectVotingProps {
  * @param {ProjectVotingProps} props - The props for the component.
  * @returns {JSX.Element} The JSX code for the ProjectVoting component.
  */
-export const ProjectVoting: React.FC<ProjectVotingProps> = ({ config, myVote, hasOwnership, isLoading, onClick }) => {
-  const isAfterStartDate = config.startDate < new Date();
-  const isVotingPhase = new Date() > config.startDate && new Date() < config.limitDate;
+export const ProjectVoting: React.FC<ProjectVotingProps> = ({
+  config,
+  myVote,
+  isAdmin,
+  hasOwnership,
+  isLoading,
+  onClick,
+}) => {
   const isYes = config.count[0] > config.count[1];
 
   const hasVotedLiterals = {
@@ -58,12 +65,14 @@ export const ProjectVoting: React.FC<ProjectVotingProps> = ({ config, myVote, ha
   };
 
   const defaultVote = {
-    title: isAfterStartDate
-      ? "This project is waiting for the voting to start"
-      : "This project is in the voting process",
-    description: isAfterStartDate
-      ? `The voting will start at ${format(config.startDate, "MMMM do, yyyy 'at' h:mm a")}`
-      : `You have until ${format(config.limitDate, "MMMM do, yyyy 'at' h:mm a")} to vote on this project`,
+    title:
+      new Date() < config.startDate
+        ? "This project is waiting for the voting to start"
+        : "This project is in the voting process",
+    description:
+      new Date() < config.startDate
+        ? `The voting will start at ${format(config.startDate, "MMMM do, yyyy 'at' h:mm a")}`
+        : `You have until ${format(config.limitDate, "MMMM do, yyyy 'at' h:mm a")} to vote on this project`,
   };
 
   const currentVote = myVote ? hasVotedLiterals : defaultVote;
@@ -75,28 +84,80 @@ export const ProjectVoting: React.FC<ProjectVotingProps> = ({ config, myVote, ha
    */
   const renderContent = () => {
     if (new Date() > config.limitDate) {
-      if (hasOwnership) {
+      if (isAdmin && isYes) {
         return (
           <div className={classNames(styles.field, styles.welcome)}>
             <RiChatCheckFill size={48} className={styles.green} />
             <div className={styles.line}>
               <Typography as={"h2"} variant={"heading"} size={"medium"} textAlign={"center"}>
-                El proyecto ha sido {isYes ? "aprobado" : "rechazado"} por la comunidad.
+                Project Approved - Ready for Next Phase
               </Typography>
               <Typography as={"p"} variant={"body"} size={"medium"} textAlign={"center"} className={styles.lightgreen}>
-                Pronto se habilitaran las opciones de registro e inversión.
+                The community has approved this project. You can now transition it to the upcoming phase and enable
+                registration and investment options.
               </Typography>
             </div>
-            <div className={classNames(styles.actions, styles.center)}>
-              <div>
-                <Button
-                  caption="Habilitar registro"
-                  size={"small"}
-                  variant={"solid"}
-                  color={"primary"}
-                  onClick={() => null}
-                />
+            <div className={styles.actions}>
+              <Button
+                caption="Move to Upcoming Phase"
+                color={"primary"}
+                onClick={() => null}
+                iconLeft={<RiArrowUpCircleFill size={24} />}
+              />
+            </div>
+          </div>
+        );
+      }
+
+      if (hasOwnership) {
+        if (isYes) {
+          return (
+            <div className={classNames(styles.field, styles.welcome)}>
+              <RiChatCheckFill size={48} className={styles.green} />
+              <div className={styles.line}>
+                <Typography as={"h2"} variant={"heading"} size={"medium"} textAlign={"center"}>
+                  The project has been approved by the community
+                </Typography>
+                <Typography
+                  as={"p"}
+                  variant={"body"}
+                  size={"medium"}
+                  textAlign={"center"}
+                  className={styles.lightgreen}
+                >
+                  Soon the registration and investment options will be enabled.
+                </Typography>
               </div>
+            </div>
+          );
+        }
+
+        return (
+          <div className={classNames(styles.field, styles.welcome)}>
+            <RiChatDeleteFill size={48} className={styles.red} />
+            <div className={styles.line}>
+              <Typography as={"h2"} variant={"heading"} size={"medium"} textAlign={"center"}>
+                Project Rejected
+              </Typography>
+              <Typography as={"p"} variant={"body"} size={"medium"} textAlign={"center"} className={styles.lightgreen}>
+                The project has been rejected because is not approved by more than 50% of the votes.
+              </Typography>
+            </div>
+          </div>
+        );
+      }
+
+      if (config.count[0] === config.count[1]) {
+        return (
+          <div className={classNames(styles.field, styles.welcome)}>
+            <RiChatDeleteFill size={48} className={styles.red} />
+            <div className={styles.line}>
+              <Typography as={"h2"} variant={"heading"} size={"medium"} textAlign={"center"}>
+                Project Rejected
+              </Typography>
+              <Typography as={"p"} variant={"body"} size={"medium"} textAlign={"center"} className={styles.lightgreen}>
+                The project has been rejected because is not approved by more than 50% of the votes.
+              </Typography>
             </div>
           </div>
         );
@@ -111,12 +172,12 @@ export const ProjectVoting: React.FC<ProjectVotingProps> = ({ config, myVote, ha
           )}
           <div className={styles.line}>
             <Typography as={"h2"} variant={"heading"} size={"medium"} textAlign={"center"}>
-              El proyecto ha sido {isYes ? "aprobado" : "rechazado"} por la comunidad.
+              The project has been {isYes ? "approved" : "rejected"} by the community.
             </Typography>
 
             {isYes && (
               <Typography as={"p"} variant={"body"} size={"medium"} textAlign={"center"} className={styles.lightgreen}>
-                Pronto se habilitaran las opciones de registro e inversión.
+                Soon the registration and investment options will be enabled.
               </Typography>
             )}
           </div>
@@ -136,7 +197,7 @@ export const ProjectVoting: React.FC<ProjectVotingProps> = ({ config, myVote, ha
               {currentVote.description}
             </Typography>
           </div>
-          {!myVote && isAfterStartDate && (
+          {!myVote && new Date() > config.startDate && (
             <div className={styles.actions}>
               <Button
                 caption="Yes"
@@ -168,7 +229,7 @@ export const ProjectVoting: React.FC<ProjectVotingProps> = ({ config, myVote, ha
     <Fieldset title={"Voting Phase"} variant={"white"} className={classNames(styles.section)}>
       {renderContent()}
 
-      {isAfterStartDate && (
+      {new Date() > config.startDate && (
         <>
           <div className={classNames(styles.inline, styles.data)}>
             <DataLabel
@@ -178,7 +239,7 @@ export const ProjectVoting: React.FC<ProjectVotingProps> = ({ config, myVote, ha
                 0,
               )}
             />
-            <Countdown date={!isVotingPhase ? config.startDate : config.limitDate}>
+            <Countdown date={new Date() < config.startDate ? config.startDate : config.limitDate}>
               {(timeLeft) => (
                 <DataLabel
                   label={"Time left"}
@@ -192,11 +253,13 @@ export const ProjectVoting: React.FC<ProjectVotingProps> = ({ config, myVote, ha
             </Countdown>
           </div>
 
-          <GraphBar
-            colors={["green", "red"]}
-            disabled={[new Date() > config.limitDate && !isYes, new Date() > config.limitDate && isYes]}
-            data={config.count}
-          />
+          {new Date() > config.startDate && (
+            <GraphBar
+              colors={["green", "red"]}
+              disabled={[new Date() > config.limitDate && !isYes, new Date() > config.limitDate && isYes]}
+              data={config.count}
+            />
+          )}
         </>
       )}
     </Fieldset>
