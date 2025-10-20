@@ -1,0 +1,28 @@
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 24px 0;
+}
+
+.green {
+  color: $green-03;
+}
+
+.gray {
+  color: #C7D2BE;
+}

@@ -161,3 +161,15 @@ export const reviewProject = (id: Project["id"], wallet: User["wallet"], { respo
       comments,
     },
   });
+
+/**
+ * Moves a project to the pending to create phase.
+ *
+ * @param {Project["id"]} id - The unique identifier of the project to move to the upcoming phase.
+ * @param {User["wallet"]} wallet - The wallet address of the user moving the project to the pending to create phase.
+ * @returns {Promise<void>} - A promise that resolves when the project is successfully moved to the upcoming phase.
+ */
+export const moveToPendingToCreatePhase = (id: Project["id"], wallet: User["wallet"]) =>
+  request<Project>(getEndpoint("projects-service", `/projects/${id}/${wallet}/move-to-pending-to-create-phase`), {
+    method: "POST",
+  });

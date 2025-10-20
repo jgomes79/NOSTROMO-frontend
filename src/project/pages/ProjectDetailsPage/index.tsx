@@ -33,6 +33,7 @@ import { UserTypes } from "../../../user/user.types";
 import { ProjectHeader } from "../../components/ProjectHeader";
 import { ProjectRegister } from "../../components/ProjectRegister";
 import { ThresholdCalculator } from "../../components/ThresholdCalculator";
+import { useMoveToPendingToCreatePhase } from "../../hooks/useMoveToPendingToCreatePhase";
 import { useProject } from "../../hooks/useProject";
 import { PROJECT_ROUTES, ProjectTabLabels } from "../../project.constants";
 import { ProjectFormTabs, ProjectStates } from "../../project.types";
@@ -71,11 +72,11 @@ export const ProjectDetailsPage: React.FC = () => {
   const { mutate: voteOnProject } = useVote();
   const { openModal, closeModal } = useModal();
   const { createToast } = useToast();
-
   const { data: userVotes, refetch: refetchUserVotes, isLoading: isLoadingUserVotes } = useContractUserVotes();
   const {
     data: { project: projectContract },
   } = useContractProjectByIndex(data?.smartContractId);
+  const moveToPendingToCreatePhase = useMoveToPendingToCreatePhase();
 
   const navigate = useNavigate();
 
@@ -87,6 +88,18 @@ export const ProjectDetailsPage: React.FC = () => {
 
     fetchCurrentTier();
   }, [wallet?.publicKey]);
+
+  /**
+   * Handles the click event to move the project to the pending to create phase.
+   *
+   * @returns {Promise<void>} A promise that resolves when the project is successfully moved to the pending to create phase.
+   */
+  const handleClickMoveToPendingToCreatePhase = async () => {
+    if (!data?.id || !wallet?.publicKey) {
+      return new Error("Project ID and wallet are required");
+    }
+    await moveToPendingToCreatePhase.mutateAsync({ projectId: data.id, wallet: wallet?.publicKey });
+  };
 
   /**
    * Handles the click event for voting on a project.
@@ -206,7 +219,7 @@ export const ProjectDetailsPage: React.FC = () => {
         );
 
       case ProjectStates.PENDING_TO_CREATE:
-        return <ProjectPendingToCreate />;
+        return <ProjectPendingToCreate project={data} />;
 
       case ProjectStates.UPCOMING:
         return (
@@ -247,8 +260,9 @@ export const ProjectDetailsPage: React.FC = () => {
             myVote={!!userVotes?.projectIndexList.includes(data.smartContractId as number)}
             hasOwnership={user?.id === data.owner?.id}
             isAdmin={user?.type === UserTypes.ADMIN}
-            isLoading={isLoadingUserVotes}
+            isLoading={isLoadingUserVotes || moveToPendingToCreatePhase.isPending}
             onClick={handleClickVote}
+            onClickMoveToPendingToCreatePhase={handleClickMoveToPendingToCreatePhase}
           />
         );
 
@@ -329,7 +343,7 @@ export const ProjectDetailsPage: React.FC = () => {
    *
    * @returns {JSX.Element} The loader component.
    */
-  if (project.isLoading && !data) {
+  if ((project.isLoading || project.isFetching) && !data) {
     return <Loader variant={"full"} size={42} />;
   }
 

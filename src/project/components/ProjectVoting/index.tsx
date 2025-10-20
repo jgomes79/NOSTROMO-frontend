@@ -41,6 +41,7 @@ interface ProjectVotingProps {
   readonly hasOwnership: boolean;
   readonly isLoading?: boolean;
   readonly onClick?: (vote: boolean) => void;
+  readonly onClickMoveToPendingToCreatePhase?: () => void;
 }
 
 /**
@@ -56,6 +57,7 @@ export const ProjectVoting: React.FC<ProjectVotingProps> = ({
   hasOwnership,
   isLoading,
   onClick,
+  onClickMoveToPendingToCreatePhase,
 }) => {
   const isYes = config.count[0] > config.count[1];
 
@@ -93,15 +95,15 @@ export const ProjectVoting: React.FC<ProjectVotingProps> = ({
                 Project Approved - Ready for Next Phase
               </Typography>
               <Typography as={"p"} variant={"body"} size={"medium"} textAlign={"center"} className={styles.lightgreen}>
-                The community has approved this project. You can now transition it to the upcoming phase and enable
-                registration and investment options.
+                The community has approved this project. You can now transition it to the pending to create.
               </Typography>
             </div>
             <div className={styles.actions}>
               <Button
-                caption="Move to Upcoming Phase"
+                caption="Move to Pending to Create"
                 color={"primary"}
-                onClick={() => null}
+                isLoading={isLoading}
+                onClick={onClickMoveToPendingToCreatePhase}
                 iconLeft={<RiArrowUpCircleFill size={24} />}
               />
             </div>

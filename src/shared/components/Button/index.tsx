@@ -2,9 +2,9 @@ import React from "react";
 
 import classNames from "clsx";
 
-import styles from "./Button.module.scss";
 import { Loader } from "../Loader";
 import { Typography } from "../Typography";
+import styles from "./Button.module.scss";
 
 /**
  * Props for the Button component.
