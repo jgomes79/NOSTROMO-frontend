@@ -70,7 +70,7 @@ export const useCreateFundraising = () => {
 
       // Get current tick info
       const tickInfo = await fetchTickInfo();
-      const targetTick = tickInfo.tick + 10;
+      const targetTick = tickInfo.tick + 20;
 
       // Convert form data to the format expected by the smart contract
       const fundraisingData: FundraisingData = {
