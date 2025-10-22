@@ -174,3 +174,15 @@ export const moveToPendingToCreatePhase = (id: Project["id"], wallet: User["wall
   request<Project>(getEndpoint("projects-service", `/projects/${id}/${wallet}/move-to-pending-to-create-phase`), {
     method: "POST",
   });
+
+/**
+ * Moves a project to the pending to create fundraising phase.
+ *
+ * @param {Project["id"]} id - The unique identifier of the project to move to the pending to create fundraising phase.
+ * @param {User["wallet"]} wallet - The wallet address of the user moving the project to the pending to create fundraising phase.
+ * @returns {Promise<void>} - A promise that resolves when the project is successfully moved to the pending to create fundraising phase.
+ */
+export const moveToPendingToCreateFundraising = (id: Project["id"], wallet: User["wallet"]) =>
+  request<Project>(getEndpoint("projects-service", `/projects/${id}/${wallet}/move-to-pending-to-create-fundraising`), {
+    method: "POST",
+  });

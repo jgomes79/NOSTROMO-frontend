@@ -41,7 +41,7 @@ interface ProjectVotingProps {
   readonly hasOwnership: boolean;
   readonly isLoading?: boolean;
   readonly onClick?: (vote: boolean) => void;
-  readonly onClickMoveToPendingToCreatePhase?: () => void;
+  readonly onClickMoveToPendingToCreateFundraising?: () => void;
 }
 
 /**
@@ -57,7 +57,7 @@ export const ProjectVoting: React.FC<ProjectVotingProps> = ({
   hasOwnership,
   isLoading,
   onClick,
-  onClickMoveToPendingToCreatePhase,
+  onClickMoveToPendingToCreateFundraising,
 }) => {
   const isYes = config.count[0] > config.count[1];
 
@@ -104,10 +104,10 @@ export const ProjectVoting: React.FC<ProjectVotingProps> = ({
             </div>
             <div className={styles.actions}>
               <Button
-                caption="Move to Pending to Create"
+                caption="Move to pending to create fundraising"
                 color={"primary"}
                 isLoading={isLoading}
-                onClick={onClickMoveToPendingToCreatePhase}
+                onClick={onClickMoveToPendingToCreateFundraising}
                 iconLeft={<RiArrowUpCircleFill size={24} />}
               />
             </div>

@@ -40,6 +40,7 @@ import { ProjectFormTabs, ProjectStates } from "../../project.types";
 import styles from "./ProjectDetailsPage.module.scss";
 
 import { ProjectPendingFundraising } from "../../components/ProjectPendingFundraising";
+import { useMoveToPendingToCreateFundraising } from "../../hooks/useMoveToPendingToCreateFundraising";
 
 /**
  * Type representing the parameters for the ProjectDetails component.
@@ -80,6 +81,7 @@ export const ProjectDetailsPage: React.FC = () => {
     refetch: refetchProjectContract,
   } = useContractProjectByIndex(data?.smartContractId);
   const moveToPendingToCreatePhase = useMoveToPendingToCreatePhase();
+  const moveToPendingToCreateFundraising = useMoveToPendingToCreateFundraising();
 
   const navigate = useNavigate();
 
@@ -97,11 +99,11 @@ export const ProjectDetailsPage: React.FC = () => {
    *
    * @returns {Promise<void>} A promise that resolves when the project is successfully moved to the pending to create phase.
    */
-  const handleClickMoveToPendingToCreatePhase = async () => {
+  const handleClickMoveToPendingToCreateFundraising = async () => {
     if (!data?.id || !wallet?.publicKey) {
       return new Error("Project ID and wallet are required");
     }
-    await moveToPendingToCreatePhase.mutateAsync({ projectId: data.id, wallet: wallet?.publicKey });
+    await moveToPendingToCreateFundraising.mutateAsync({ projectId: data.id, wallet: wallet?.publicKey });
   };
 
   /**
@@ -276,7 +278,7 @@ export const ProjectDetailsPage: React.FC = () => {
             isAdmin={user?.type === UserTypes.ADMIN}
             isLoading={isLoadingUserVotes || moveToPendingToCreatePhase.isPending}
             onClick={handleClickVote}
-            onClickMoveToPendingToCreatePhase={handleClickMoveToPendingToCreatePhase}
+            onClickMoveToPendingToCreateFundraising={handleClickMoveToPendingToCreateFundraising}
           />
         );
 
