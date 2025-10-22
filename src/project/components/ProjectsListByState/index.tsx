@@ -1,25 +1,21 @@
-import { useEffect } from "react";
-
 import { RiArrowDownLine } from "react-icons/ri";
 
 import { Button } from "@/shared/components/Button";
-import { Tabs, Tab } from "@/shared/components/Tabs";
 
-import styles from "./ProjectsListByState.module.scss";
 import { useProjectsByState } from "../../hooks/useProjectsByState";
 import { ProjectStates } from "../../project.types";
 import { ProjectList } from "../ProjectList";
+import styles from "./ProjectsListByState.module.scss";
+
 /**
  * Props for the ProjectsListByState component.
  *
  * @typedef {Object} ProjectsListByStateProps
- * @property {ProjectStates} initialState - The initial state of the projects to display.
- * @property {Tab<ProjectStates>[]} tabs - An array of tab objects representing the project states.
+ * @property {ProjectStates} state - The initial state of the projects to display.
  */
 
 interface ProjectsListByStateProps {
   initialState?: ProjectStates;
-  tabs?: Tab<ProjectStates>[];
 }
 
 /**
@@ -28,18 +24,8 @@ interface ProjectsListByStateProps {
  * @component
  * @returns {JSX.Element} The rendered ProjectsListByState component.
  */
-export const ProjectsListByState: React.FC<ProjectsListByStateProps> = ({
-  initialState = ProjectStates.ALL,
-  tabs = [],
-}) => {
-  const { page, isLoading, projects, total, state, fetchProjectsByState } = useProjectsByState();
-
-  /**
-   * Effect to fetch projects when state changes
-   */
-  useEffect(() => {
-    fetchProjectsByState(0, initialState);
-  }, []);
+export const ProjectsListByState: React.FC<ProjectsListByStateProps> = ({ initialState = ProjectStates.ALL }) => {
+  const { page, isLoading, projects, total, state, fetchProjectsByState } = useProjectsByState(initialState);
 
   /**
    * Props to be passed to the ProjectList component.
@@ -59,17 +45,7 @@ export const ProjectsListByState: React.FC<ProjectsListByStateProps> = ({
 
   return (
     <div className={styles.tabs}>
-      {tabs && tabs.length > 0 ? (
-        <Tabs<ProjectStates>
-          size={"large"}
-          activeId={state}
-          tabs={tabs}
-          onRender={<ProjectList {...projectListProps} />}
-          onChange={(state) => fetchProjectsByState(1, state)}
-        />
-      ) : (
-        <ProjectList {...projectListProps} />
-      )}
+      <ProjectList {...projectListProps} />
 
       {total > 4 && (
         <div className={styles.actions}>

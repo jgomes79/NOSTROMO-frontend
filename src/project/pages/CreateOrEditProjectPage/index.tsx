@@ -10,12 +10,14 @@ import { Loader } from "@/shared/components/Loader";
 import { ErrorPage } from "@/shared/pages/ErrorPage";
 import { useQubicConnect } from "@/wallet/qubic/QubicConnectContext";
 
+import { getRoute } from "../../../lib/router";
 import { ProjectForm, ProjectFormValues } from "../../forms/ProjectForm";
 import { useProject } from "../../hooks/useProject";
 import { useProjectSendToReview } from "../../hooks/useProjectSendToReview";
 import { usePublishProject } from "../../hooks/usePublishProject";
 import { useUpsertProject } from "../../hooks/useUpsertProject";
-import { Project } from "../../project.types";
+import { PROJECT_ROUTES } from "../../project.constants";
+import { Project, ProjectFormTabs } from "../../project.types";
 import styles from "./CreateOrEditProjectPage.module.scss";
 
 /**
@@ -59,16 +61,22 @@ export const CreateOrEditProjectPage: React.FC = () => {
     async (isPublishing: boolean, values: ProjectFormValues) => {
       if (isPublishing && project.data) {
         openModal(ModalsIds.CONFIRMATION, {
-          title: "Publish Project",
-          description: "Are you sure you want to publish this project?",
+          title: "Send project to review",
+          description: "Are you sure you want to send this project to review?",
           type: "info",
           onConfirm: {
-            caption: "Publish",
+            caption: "Send to review",
             action: async (setLoading) => {
               if (!project.data) return false;
               setLoading(true);
               await sendProjectToReview.mutateAsync({ projectId: project.data.id });
               await project.refetch();
+              navigate(
+                getRoute(PROJECT_ROUTES.PROJECT_DETAILS, {
+                  slug: project.data?.slug,
+                  tabId: ProjectFormTabs.RAISING_FUNDS,
+                }),
+              );
               closeModal();
             },
           },

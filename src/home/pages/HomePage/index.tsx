@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import classNames from "clsx";
@@ -10,9 +10,9 @@ import { Banner } from "@/shared/components/Banner";
 import { SectionIndicator } from "@/shared/components/SectionIndicator";
 import { useAppTitle } from "@/shared/hooks/useAppTitle";
 
-import styles from "./HomePage.module.scss";
 import { HowToJoinSection } from "../../components/HowToJoinSection";
 import { MainSection } from "../../components/MainSection";
+import styles from "./HomePage.module.scss";
 
 /**
  * HomePage component renders the main homepage layout.
@@ -105,7 +105,7 @@ export const HomePage: React.FC = () => {
       {/* Projects Section */}
       <section ref={(el) => (sectionRefs.current[2] = el)} className={styles.section}>
         <div className={classNames(styles.container, styles.withHeight)}>
-          <ProjectsListByState tabs={homeProjectTabs} initialState={homeProjectTabs[0].id} />
+          <ProjectsListByState initialState={homeProjectTabs[0].id} />
         </div>
       </section>
 

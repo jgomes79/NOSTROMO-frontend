@@ -5,7 +5,6 @@ import classNames from "clsx";
 
 import { getRoute } from "@/lib/router";
 import { ProjectsListByState } from "@/project/components/ProjectsListByState";
-import { ProjectsListByWallet } from "@/project/components/ProjectsListByWallet";
 import { ProjectStates } from "@/project/project.types";
 import { Loader } from "@/shared/components/Loader";
 import { Separator } from "@/shared/components/Separator";
@@ -14,10 +13,11 @@ import { useAppTitle } from "@/shared/hooks/useAppTitle";
 import { useContractTier } from "@/wallet/hooks/useContractTier";
 import { useQubicConnect } from "@/wallet/qubic/QubicConnectContext";
 
-import styles from "./UserSettingsPage.module.scss";
+import { UserProjects } from "../../components/UserProjects";
 import { UserTier } from "../../components/UserTier";
 import { USER_ROUTES } from "../../user.constants";
 import { UserSettingsTabs } from "../../user.types";
+import styles from "./UserSettingsPage.module.scss";
 
 /**
  * Parameters for the UserSettingsLayout component
@@ -64,10 +64,10 @@ export const UserSettingsPage: React.FC = () => {
   const renderTab = () => {
     switch (params.tabId) {
       case UserSettingsTabs.MY_PROJECTS:
-        return <ProjectsListByWallet walletAddress={wallet.publicKey} limit={9} />;
+        return <UserProjects wallet={wallet.publicKey} />;
 
       case UserSettingsTabs.CLAIM_TOKENS:
-        return <ProjectsListByState tabs={[]} initialState={ProjectStates.CLOSED} />;
+        return <ProjectsListByState initialState={ProjectStates.CLOSED} />;
 
       case UserSettingsTabs.MY_TIER:
       default:

@@ -34,6 +34,7 @@ export const PROJECT_STATE_STRING: { [key in ProjectStates]: string } = {
   [ProjectStates.SENT_TO_REVIEW]: "senttoreview",
   [ProjectStates.REQUEST_MORE_INFO]: "requestmoreinfo",
   [ProjectStates.PENDING_TO_CREATE]: "pendingtocreate",
+  [ProjectStates.PENDING_TO_CREATE_FUNDRAISING]: "pendingtocreatefundraising",
   [ProjectStates.READY_TO_VOTE]: "readytovote",
   [ProjectStates.REJECTED]: "rejected",
   [ProjectStates.UPCOMING]: "upcoming",

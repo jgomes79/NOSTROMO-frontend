@@ -54,10 +54,10 @@ type NavigationState = { page: number; state: ProjectStates };
  * - isLoading: Loading state indicator
  * - fetchProjectsByState: Function to fetch projects for a specific page and state
  */
-export const useProjectsByState = (): UseProjectsProps => {
+export const useProjectsByState = (initialState: ProjectStates): UseProjectsProps => {
   const [{ page, state }, setState] = useState<NavigationState>({
     page: 0,
-    state: ProjectStates.FUNDING_PHASE_1,
+    state: initialState,
   });
 
   const projects = useQuery<UseProjectsResult>({

@@ -37,15 +37,21 @@ export const usePublishProject = () => {
         throw new Error("Wallet not connected");
       }
       console.log("📝 Publishing project to smart contract...");
-      const smartContractId = await createProjectSC.mutate(project);
+      const result = await createProjectSC.mutate(project);
       console.log("✅ Project published to smart contract successfully");
 
-      if (!smartContractId) {
+      if (!result || !result.smartContractId) {
         throw new Error("Smart contract ID not found");
       }
 
+      const { smartContractId, votingStartDate, votingEndDate } = result;
+
       // First, publish in the database
-      const publishedProject = await publishProject(project.id, smartContractId);
+      const publishedProject = await publishProject(project.id, {
+        smartContractId,
+        votingStartDate,
+        votingEndDate,
+      });
       return publishedProject;
     },
     onSuccess: (data) => {

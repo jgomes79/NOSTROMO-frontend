@@ -36,6 +36,11 @@ export const ProjectCard: React.FC<Project> = ({
     [ProjectStates.ALL]: { title: "", banner: "", footer: "" },
     [ProjectStates.DRAFT]: { title: "Draft", banner: "", footer: "Edit Project" },
     [ProjectStates.SENT_TO_REVIEW]: { title: "Sent to Review", banner: "", footer: "Review" },
+    [ProjectStates.PENDING_TO_CREATE_FUNDRAISING]: {
+      title: "Pending to create fundraising",
+      banner: "",
+      footer: "Create",
+    },
     [ProjectStates.PENDING_TO_CREATE]: { title: "Pending to create", banner: "", footer: "Create" },
     [ProjectStates.REJECTED]: { title: "Rejected", banner: "", footer: "Project Rejected" },
     [ProjectStates.CLOSED]: { title: "Closed", banner: "Claim tokens in", footer: "Claim tokens" },

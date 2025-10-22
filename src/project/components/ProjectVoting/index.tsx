@@ -66,13 +66,17 @@ export const ProjectVoting: React.FC<ProjectVotingProps> = ({
     description: `You will be able to see the results at the end of the voting process`,
   };
 
+  const currentDate = new Date(new Date().toUTCString());
+
+  console.log("🚀 currentDate:", currentDate);
+
   const defaultVote = {
     title:
-      new Date() < config.startDate
+      currentDate < config.startDate
         ? "This project is waiting for the voting to start"
         : "This project is in the voting process",
     description:
-      new Date() < config.startDate
+      currentDate < config.startDate
         ? `The voting will start at ${format(config.startDate, "MMMM do, yyyy 'at' h:mm a")}`
         : `You have until ${format(config.limitDate, "MMMM do, yyyy 'at' h:mm a")} to vote on this project`,
   };
@@ -85,7 +89,7 @@ export const ProjectVoting: React.FC<ProjectVotingProps> = ({
    * @returns {JSX.Element} The JSX code for the voting section.
    */
   const renderContent = () => {
-    if (new Date() > config.limitDate) {
+    if (currentDate > config.limitDate) {
       if (isAdmin && isYes) {
         return (
           <div className={classNames(styles.field, styles.welcome)}>
@@ -199,7 +203,7 @@ export const ProjectVoting: React.FC<ProjectVotingProps> = ({
               {currentVote.description}
             </Typography>
           </div>
-          {!myVote && new Date() > config.startDate && (
+          {!myVote && currentDate > config.startDate && (
             <div className={styles.actions}>
               <Button
                 caption="Yes"
@@ -231,7 +235,7 @@ export const ProjectVoting: React.FC<ProjectVotingProps> = ({
     <Fieldset title={"Voting Phase"} variant={"white"} className={classNames(styles.section)}>
       {renderContent()}
 
-      {new Date() > config.startDate && (
+      {currentDate > config.startDate && (
         <>
           <div className={classNames(styles.inline, styles.data)}>
             <DataLabel
@@ -241,12 +245,12 @@ export const ProjectVoting: React.FC<ProjectVotingProps> = ({
                 0,
               )}
             />
-            <Countdown date={new Date() < config.startDate ? config.startDate : config.limitDate}>
+            <Countdown date={currentDate < config.startDate ? config.startDate : config.limitDate}>
               {(timeLeft) => (
                 <DataLabel
                   label={"Time left"}
                   value={
-                    new Date() > config.limitDate
+                    currentDate > config.limitDate
                       ? "Finished"
                       : `${timeLeft.days} days, ${timeLeft.hours} hours, ${timeLeft.minutes} minutes, ${timeLeft.seconds} seconds`
                   }
@@ -255,10 +259,10 @@ export const ProjectVoting: React.FC<ProjectVotingProps> = ({
             </Countdown>
           </div>
 
-          {new Date() > config.startDate && (
+          {currentDate > config.startDate && (
             <GraphBar
               colors={["green", "red"]}
-              disabled={[new Date() > config.limitDate && !isYes, new Date() > config.limitDate && isYes]}
+              disabled={[currentDate > config.limitDate && !isYes, currentDate > config.limitDate && isYes]}
               data={config.count}
             />
           )}

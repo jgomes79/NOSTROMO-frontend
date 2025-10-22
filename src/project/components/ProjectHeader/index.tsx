@@ -35,7 +35,8 @@ type ProjectHeaderProps = Pick<
   | "state"
   | "bannerUrl"
   | "photoUrl"
-  | "startDate"
+  | "votingStartDate"
+  | "votingEndDate"
   | "social"
   | "tokenPrice"
   | "currency"
@@ -59,7 +60,8 @@ export const ProjectHeader: React.FC<ProjectHeaderProps> = ({
   state,
   photoUrl,
   bannerUrl,
-  startDate,
+  votingStartDate,
+  votingEndDate,
   social,
   tokenPrice,
   currency,
@@ -71,7 +73,7 @@ export const ProjectHeader: React.FC<ProjectHeaderProps> = ({
   whitepaperUrl,
 }) => {
   const { isMobile } = useResponsive();
-  const isBeforeStartDate = isBefore(new Date(), startDate);
+  const isBeforeStartDate = isBefore(new Date(), votingStartDate);
 
   // const stateLabels = {
   //   [ProjectStates.ALL]: { title: "", banner: "", footer: "" },
@@ -103,7 +105,7 @@ export const ProjectHeader: React.FC<ProjectHeaderProps> = ({
     return (
       <div className={styles.time}>
         <Typography as="h2">{title.toUpperCase()}</Typography>
-        <Countdown date={startDate}>
+        <Countdown date={isBeforeStartDate ? votingStartDate : votingEndDate}>
           {(timeLeft) => (
             <Typography variant="heading" size="small">
               {timeLeft.days}D - {timeLeft.hours}H - {timeLeft.minutes}M - {timeLeft.seconds}S

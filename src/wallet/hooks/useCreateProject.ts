@@ -25,7 +25,7 @@ export const useCreateProject = () => {
    * @param {Project} data - The project data to create
    * @returns {Promise<number | null>} The smart contract ID or null if the project creation fails
    */
-  const mutate = async (data: Project): Promise<number | null> => {
+  const mutate = async (data: Project) => {
     if (!wallet?.publicKey) {
       setIsError(true);
       setErrorMessage("Wallet not connected");
@@ -37,9 +37,12 @@ export const useCreateProject = () => {
     setErrorMessage("");
 
     try {
+      console.log("🔍 Data:", data);
       // Use the actual dates from the form (don't override end date)
-      const startDate = new Date(data.startDate);
-      const endDate = new Date(data.TGEDate || data.startDate); // Use TGEDate as endDate
+      const startDate = new Date();
+      startDate.setHours(startDate.getHours() + 1);
+
+      const endDate = new Date(data.TGEDate); // Use TGEDate as endDate
 
       // Get current tick info
       const tickInfo = await fetchTickInfo();
@@ -50,34 +53,6 @@ export const useCreateProject = () => {
       const initialProjectCount = initialProjects.indexListForProjects.length;
       console.log("🔍 Initial project count:", initialProjectCount);
       console.log("🔍 Initial projects:", initialProjects);
-
-      // Create the project transaction
-      // Based on C++ GetYear: ((data >> 26) + 24) + 2000 = actualYear
-      // So: (data >> 26) = actualYear - 2024
-      // For 2025: (data >> 26) = 1, so we need to send 1 << 26
-      const encodeYear = (year: number) => (year - 2000) << 26;
-      const encodeMonth = (month: number) => (month & 0b1111) << 22;
-      const encodeDay = (day: number) => (day & 0b11111) << 17;
-      const encodeHour = (hour: number) => (hour & 0b11111) << 12;
-
-      const startDatePacked =
-        encodeYear(startDate.getUTCFullYear()) |
-        encodeMonth(startDate.getUTCMonth() + 1) |
-        encodeDay(startDate.getUTCDate()) |
-        encodeHour(startDate.getUTCHours());
-
-      const endDatePacked =
-        encodeYear(endDate.getUTCFullYear()) |
-        encodeMonth(endDate.getUTCMonth() + 1) |
-        encodeDay(endDate.getUTCDate()) |
-        encodeHour(endDate.getUTCHours());
-
-      console.log("🔢 Encoded dates:", {
-        startDatePacked: startDatePacked.toString(16),
-        endDatePacked: endDatePacked.toString(16),
-        startYear: startDate.getUTCFullYear(),
-        endYear: endDate.getUTCFullYear(),
-      });
 
       const tx = await createProject(
         wallet.publicKey,
@@ -141,7 +116,12 @@ export const useCreateProject = () => {
 
         // Only set loading to false after monitoring completes
         setLoading(false);
-        return smartContractId;
+
+        return {
+          smartContractId,
+          votingStartDate: startDate,
+          votingEndDate: new Date(startDate.getTime() + 10 * 60 * 1000),
+        };
       } else {
         throw new Error("Failed to broadcast project creation transaction");
       }

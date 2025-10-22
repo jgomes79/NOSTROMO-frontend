@@ -12,9 +12,9 @@ import { SectionIndicator } from "@/shared/components/SectionIndicator";
 import { Slider, SliderElement } from "@/shared/components/Slider";
 import { useAppTitle } from "@/shared/hooks/useAppTitle";
 
-import styles from "./LaunchpadPage.module.scss";
 import { HowToBoyIdoSection } from "../../components/HowToBoyIdoSection";
 import { launchpadProjectTabs } from "../../launchpad.constants";
+import styles from "./LaunchpadPage.module.scss";
 
 export const LaunchpadPage: React.FC = () => {
   const slider = useRef<SliderElement>();
@@ -106,7 +106,7 @@ export const LaunchpadPage: React.FC = () => {
 
       <section className={styles.section}>
         <div className={styles.container}>
-          <ProjectsListByState tabs={launchpadProjectTabs} initialState={launchpadProjectTabs[0].id} />
+          <ProjectsListByState initialState={launchpadProjectTabs[0].id} />
         </div>
       </section>
     </div>

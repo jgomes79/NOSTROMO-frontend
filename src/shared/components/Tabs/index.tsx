@@ -1,11 +1,11 @@
-import { useState, useRef, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import classNames from "clsx";
 
 import useResponsive from "@/shared/hooks/useResponsive";
 
-import styles from "./Tabs.module.scss";
 import { Typography, TypographyProps } from "../Typography";
+import styles from "./Tabs.module.scss";
 /**
  * Props for the Tabs component.
  *
@@ -23,7 +23,7 @@ interface TabsProps<T> {
   readonly tabs: Tab<T>[];
   readonly activeId: T;
   readonly onChange?: (tabId: T) => void;
-  readonly onRender?: React.ReactNode;
+  readonly onRender?: (tabId: T) => React.ReactNode | null;
   readonly itemClassName?: string;
   readonly size?: TypographyProps["size"];
 }
@@ -85,7 +85,7 @@ export const Tabs = <T,>({
           </button>
         ))}
       </div>
-      {onRender && onRender}
+      {onRender && onRender(activeTab)}
     </div>
   );
 };

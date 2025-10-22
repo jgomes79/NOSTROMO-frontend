@@ -3,9 +3,10 @@ import { RiCheckboxCircleLine } from "react-icons/ri";
 import { Button } from "../../../shared/components/Button";
 import { Fieldset } from "../../../shared/components/Fieldset";
 import { Typography } from "../../../shared/components/Typography";
-import { useCreateFundraising } from "../../../wallet/hooks/useCreateFundraising";
 
-import { differenceInCalendarDays } from "date-fns";
+import { useModal } from "../../../core/modals/hooks/useModal";
+import { ModalsIds } from "../../../core/modals/modals.types";
+import { usePublishProject } from "../../../project/hooks/usePublishProject";
 import { Project } from "../../project.types";
 import styles from "./ProjectPendingToCreate.module.scss";
 
@@ -15,6 +16,7 @@ import styles from "./ProjectPendingToCreate.module.scss";
  */
 interface ProjectPendingToCreateProps {
   project: Project;
+  onPublish: () => Promise<void>;
 }
 
 /**
@@ -22,71 +24,42 @@ interface ProjectPendingToCreateProps {
  * @param {ProjectPendingToCreateProps} props - The props for the component.
  * @returns {React.ReactNode} The component to be rendered.
  */
-export const ProjectPendingToCreate: React.FC<ProjectPendingToCreateProps> = ({ project }) => {
-  const createFundraising = useCreateFundraising();
+export const ProjectPendingToCreate: React.FC<ProjectPendingToCreateProps> = ({ project, onPublish }) => {
+  const publishProject = usePublishProject();
+  const { openModal, closeModal } = useModal();
 
   /**
    * Handles the click event to publish the project.
    * @returns {Promise<void>} A promise that resolves when the project is published.
    */
-  const handleClickCreateFundraising = useCallback(async () => {
+  const handleClickPublish = useCallback(async () => {
     console.log("🚀 project:", project);
-    if (!project.smartContractId) {
-      return new Error("SmartcontractId is missing");
+    if (project.smartContractId) {
+      return new Error("SmartcontractId already exists");
     }
 
-    const firstPhaseStartDate = new Date(Date.now() + 15 * 24 * 60 * 60 * 1000);
-    const firstPhaseEndDate = new Date(firstPhaseStartDate.getTime() + 7 * 24 * 60 * 60 * 1000);
-
-    const secondPhaseStartDate = new Date(firstPhaseEndDate.getTime() + 24 * 60 * 60 * 1000);
-    const secondPhaseEndDate = new Date(secondPhaseStartDate.getTime() + 7 * 24 * 60 * 60 * 1000);
-
-    const thirdPhaseStartDate = new Date(secondPhaseEndDate.getTime() + 24 * 60 * 60 * 1000);
-    const thirdPhaseEndDate = new Date(thirdPhaseStartDate.getTime() + 15 * 24 * 60 * 60 * 1000);
-
-    const cliffEndDate = new Date(project.TGEDate.getTime() + project.cliff * 24 * 60 * 60 * 1000);
-    const vestingEndDate = new Date(cliffEndDate.getTime() + project.vestingDays * 24 * 60 * 60 * 1000);
-
-    const e = differenceInCalendarDays(cliffEndDate, vestingEndDate);
-    console.log("🚀 e:", e);
-
-    await createFundraising.mutate({
-      tokenPrice: project.tokenPrice * 1000000, // 1 QU in microqubics
-      soldAmount: project.tokensForSale, // 1B tokens
-      requiredFunds: project.amountToRaise, // 1M QU in microqubics
-      indexOfProject: project.smartContractId, // Use project ID as index
-
-      // Phase 1 (ICO Phase) - Example dates
-      firstPhaseStartDate,
-      firstPhaseStartHour: 0,
-      firstPhaseEndDate,
-      firstPhaseEndHour: 23,
-
-      // Phase 2 (Public Sale)
-      secondPhaseStartDate,
-      secondPhaseStartHour: 0,
-      secondPhaseEndDate,
-      secondPhaseEndHour: 23,
-
-      // Phase 3 (Final Sale)
-      thirdPhaseStartDate,
-      thirdPhaseStartHour: 0,
-      thirdPhaseEndDate,
-      thirdPhaseEndHour: 23,
-
-      // Token Economics
-      listingStartDate: project.TGEDate,
-      listingStartHour: 0,
-      cliffEndDate,
-      cliffEndHour: 0,
-      vestingEndDate,
-      vestingEndHour: 0,
-
-      threshold: project.threshold,
-      TGE: project.unlockTokensTGE, // 20% at TGE
-      stepOfVesting: 10, // 10% monthly vesting
+    openModal(ModalsIds.CONFIRMATION, {
+      title: "Create Project and start voting",
+      description:
+        "Are you sure you want to create this project and start voting? This action cannot be undone and the voting will start in 1 hour.",
+      type: "info",
+      onConfirm: {
+        caption: "Confirm and start voting",
+        action: async (setLoading) => {
+          setLoading(true);
+          await publishProject.mutateAsync(project);
+          await onPublish();
+          closeModal();
+        },
+      },
+      onDecline: {
+        caption: "Cancel",
+        action: () => {
+          closeModal();
+        },
+      },
     });
-  }, [createFundraising]);
+  }, [openModal, closeModal, project]);
 
   return (
     <Fieldset title={"Creation Phase"} variant={"default"}>
@@ -103,11 +76,7 @@ export const ProjectPendingToCreate: React.FC<ProjectPendingToCreateProps> = ({ 
           </Typography>
         </div>
         <Typography as={"p"} variant={"body"} size={"medium"} textAlign={"center"}>
-          <Button
-            onClick={handleClickCreateFundraising}
-            caption="Create Fundraising"
-            isLoading={createFundraising.isLoading}
-          />
+          <Button onClick={handleClickPublish} caption="Publish Project" isLoading={publishProject.isPending} />
         </Typography>
       </div>
     </Fieldset>

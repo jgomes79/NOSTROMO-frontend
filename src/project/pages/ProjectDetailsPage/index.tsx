@@ -39,6 +39,8 @@ import { PROJECT_ROUTES, ProjectTabLabels } from "../../project.constants";
 import { ProjectFormTabs, ProjectStates } from "../../project.types";
 import styles from "./ProjectDetailsPage.module.scss";
 
+import { ProjectPendingFundraising } from "../../components/ProjectPendingFundraising";
+
 /**
  * Type representing the parameters for the ProjectDetails component.
  *
@@ -75,6 +77,7 @@ export const ProjectDetailsPage: React.FC = () => {
   const { data: userVotes, refetch: refetchUserVotes, isLoading: isLoadingUserVotes } = useContractUserVotes();
   const {
     data: { project: projectContract },
+    refetch: refetchProjectContract,
   } = useContractProjectByIndex(data?.smartContractId);
   const moveToPendingToCreatePhase = useMoveToPendingToCreatePhase();
 
@@ -219,7 +222,18 @@ export const ProjectDetailsPage: React.FC = () => {
         );
 
       case ProjectStates.PENDING_TO_CREATE:
-        return <ProjectPendingToCreate project={data} />;
+        return (
+          <ProjectPendingToCreate
+            project={data}
+            onPublish={async () => {
+              await refetchProjectContract();
+              await project.refetch();
+            }}
+          />
+        );
+
+      case ProjectStates.PENDING_TO_CREATE_FUNDRAISING:
+        return <ProjectPendingFundraising project={data} />;
 
       case ProjectStates.UPCOMING:
         return (
@@ -253,8 +267,8 @@ export const ProjectDetailsPage: React.FC = () => {
         return (
           <ProjectVoting
             config={{
-              startDate: data.startDate,
-              limitDate: data.TGEDate,
+              startDate: new Date(data.votingStartDate),
+              limitDate: new Date(data.votingEndDate),
               count: [projectContract?.numberOfYes ?? 0, projectContract?.numberOfNo ?? 0],
             }}
             myVote={!!userVotes?.projectIndexList.includes(data.smartContractId as number)}
@@ -385,7 +399,7 @@ export const ProjectDetailsPage: React.FC = () => {
           tabs={currentTabs}
           activeId={tabId}
           onChange={(tabId) => navigate(getRoute(PROJECT_ROUTES.PROJECT_DETAILS, { slug, tabId }))}
-          onRender={renderTab()}
+          onRender={() => renderTab()}
         />
       </div>
     </div>

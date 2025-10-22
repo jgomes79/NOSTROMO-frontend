@@ -75,6 +75,24 @@ export const ProjectSchema = z.object({
     }
   }),
 
+  votingStartDate: z.date().superRefine((date, ctx) => {
+    if (date <= new Date()) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Voting start date must be in the future",
+      });
+    }
+  }),
+
+  votingEndDate: z.date().superRefine((date, ctx) => {
+    if (date <= new Date()) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Voting end date must be in the future",
+      });
+    }
+  }),
+
   TGEDate: z.date().superRefine((date, ctx) => {
     if (date <= new Date()) {
       ctx.addIssue({

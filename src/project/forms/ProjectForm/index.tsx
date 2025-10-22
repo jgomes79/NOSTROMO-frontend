@@ -697,14 +697,14 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
    * @returns {JSX.Element | null} A Button component with appropriate styling and text,
    * or null if the form is not dirty and invalid
    *
-   * - Returns a "Publish Project" primary button if form is valid but not dirty
+   * - Returns a "Send to review" primary button if form is valid but not dirty
    * - Returns a "Save Changes" secondary button if form is dirty
    * - Returns null if form is not dirty and invalid
    */
   const renderSubmitButton = () => {
     if (isPublishing) {
       return (
-        <Button type={"submit"} isLoading={isLoading} variant={"solid"} color={"primary"} caption={"Publish Project"} />
+        <Button type={"submit"} isLoading={isLoading} variant={"solid"} color={"primary"} caption={"Send to review"} />
       );
     }
 
