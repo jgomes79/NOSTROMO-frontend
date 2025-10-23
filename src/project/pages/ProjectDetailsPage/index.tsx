@@ -269,8 +269,8 @@ export const ProjectDetailsPage: React.FC = () => {
         return (
           <ProjectVoting
             config={{
-              startDate: new Date(new Date(data.votingStartDate).toLocaleString()),
-              limitDate: new Date(new Date(data.votingEndDate).toLocaleString()),
+              startDate: new Date(data.votingStartDate),
+              limitDate: new Date(data.votingEndDate),
               count: [projectContract?.numberOfYes ?? 0, projectContract?.numberOfNo ?? 0],
             }}
             myVote={!!userVotes?.projectIndexList.includes(data.smartContractId as number)}
