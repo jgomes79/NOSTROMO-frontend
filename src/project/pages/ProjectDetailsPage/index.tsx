@@ -276,7 +276,8 @@ export const ProjectDetailsPage: React.FC = () => {
             myVote={!!userVotes?.projectIndexList.includes(data.smartContractId as number)}
             hasOwnership={user?.id === data.owner?.id}
             isAdmin={user?.type === UserTypes.ADMIN}
-            isLoading={isLoadingUserVotes || moveToPendingToCreatePhase.isPending}
+            isLoading={isLoadingUserVotes}
+            isLoadingMoveToPendingToCreateFundraising={moveToPendingToCreatePhase.isPending}
             onClick={handleClickVote}
             onClickMoveToPendingToCreateFundraising={handleClickMoveToPendingToCreateFundraising}
           />

@@ -40,6 +40,7 @@ interface ProjectVotingProps {
   readonly isAdmin: boolean;
   readonly hasOwnership: boolean;
   readonly isLoading?: boolean;
+  readonly isLoadingMoveToPendingToCreateFundraising?: boolean;
   readonly onClick?: (vote: boolean) => void;
   readonly onClickMoveToPendingToCreateFundraising?: () => void;
 }
@@ -56,6 +57,7 @@ export const ProjectVoting: React.FC<ProjectVotingProps> = ({
   isAdmin,
   hasOwnership,
   isLoading,
+  isLoadingMoveToPendingToCreateFundraising,
   onClick,
   onClickMoveToPendingToCreateFundraising,
 }) => {
@@ -104,7 +106,7 @@ export const ProjectVoting: React.FC<ProjectVotingProps> = ({
               <Button
                 caption="Move to pending to create fundraising"
                 color={"primary"}
-                isLoading={isLoading}
+                isLoading={isLoadingMoveToPendingToCreateFundraising}
                 onClick={onClickMoveToPendingToCreateFundraising}
                 iconLeft={<RiArrowUpCircleFill size={24} />}
               />
@@ -224,10 +226,6 @@ export const ProjectVoting: React.FC<ProjectVotingProps> = ({
       </>
     );
   };
-
-  if (isLoading) {
-    return null;
-  }
 
   return (
     <Fieldset title={"Voting Phase"} variant={"white"} className={classNames(styles.section)}>
