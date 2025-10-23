@@ -35,8 +35,6 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
   const { data: currencies, isLoading: isCurrenciesLoading } = useCurrencies();
   const [activeTab, setActiveTab] = useState<ProjectFormTabs>(ProjectFormTabs.BASIC_INFORMATION);
 
-  console.log("🚀 activeTab:", activeTab);
-
   const formMethods = useForm<ProjectFormValues>({
     defaultValues: defaultValues ?? getDefaultProjectFormValues(),
     resolver: zodResolver(defaultValues?.id ? OptionalFormSchema : EntryFormSchema),
