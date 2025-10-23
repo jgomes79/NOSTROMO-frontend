@@ -9,12 +9,11 @@ import { Project } from "../project.types";
  * @param {Project["slug"]} [slug] - The unique identifier (slug) of the project.
  * @returns {UseQueryResult<Project | null>} - The result object containing the project data or null.
  */
-export const useProject = (slug?: Project["slug"]): UseQueryResult<Project | null> =>
+export const useProject = (slug: Project["slug"]): UseQueryResult<Project | null> =>
   useQuery<Project | null>({
     queryKey: ["project", slug],
+    initialData: null,
     queryFn: async () => {
-      if (!slug) return null;
-
       const project = await getProjectBySlug(slug);
 
       project.startDate = new Date(project.startDate);
@@ -22,5 +21,4 @@ export const useProject = (slug?: Project["slug"]): UseQueryResult<Project | nul
 
       return project;
     },
-    enabled: !!slug,
   });

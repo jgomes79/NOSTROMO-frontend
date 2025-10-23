@@ -71,7 +71,7 @@ export const ProjectDetailsPage: React.FC = () => {
     data: { tierLevel },
   } = useContractTier();
   const { data: user } = useUserByWallet(wallet?.publicKey);
-  const { data, ...project } = useProject(slug);
+  const { data, ...project } = useProject(slug!);
   const { mutate: voteOnProject } = useVote();
   const { openModal, closeModal } = useModal();
   const { createToast } = useToast();
@@ -189,7 +189,7 @@ export const ProjectDetailsPage: React.FC = () => {
    * - Returns null for any other project state
    */
   const renderActionCard = (): JSX.Element | null => {
-    if (!data || !wallet) return null;
+    if (project.isLoading || !project.isFetched || project.isFetching || project.isRefetching || !data) return null;
 
     switch (data.state) {
       case ProjectStates.FUNDING_PHASE_1:
@@ -269,8 +269,8 @@ export const ProjectDetailsPage: React.FC = () => {
         return (
           <ProjectVoting
             config={{
-              startDate: new Date(data.votingStartDate),
-              limitDate: new Date(data.votingEndDate),
+              startDate: new Date(new Date(data.votingStartDate).toLocaleString()),
+              limitDate: new Date(new Date(data.votingEndDate).toLocaleString()),
               count: [projectContract?.numberOfYes ?? 0, projectContract?.numberOfNo ?? 0],
             }}
             myVote={!!userVotes?.projectIndexList.includes(data.smartContractId as number)}

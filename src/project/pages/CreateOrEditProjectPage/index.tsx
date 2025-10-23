@@ -48,7 +48,7 @@ export const CreateOrEditProjectPage: React.FC = () => {
   const params = useParams<CreateOrEditProjectPageParams>();
 
   const { wallet } = useQubicConnect(),
-    project = useProject(params.slug);
+    project = useProject(params.slug!);
 
   /**
    * Handles the form submission for creating, updating, or publishing a project.

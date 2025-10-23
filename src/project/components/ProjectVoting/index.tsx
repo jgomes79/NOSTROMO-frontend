@@ -68,8 +68,6 @@ export const ProjectVoting: React.FC<ProjectVotingProps> = ({
 
   const currentDate = new Date(new Date().toUTCString());
 
-  console.log("🚀 currentDate:", currentDate);
-
   const defaultVote = {
     title:
       currentDate < config.startDate
