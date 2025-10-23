@@ -27,10 +27,16 @@ module.exports = {
     ...react.rules,
     "react-hooks/exhaustive-deps": "off",
     "@typescript-eslint/naming-convention": "off",
-    "react-refresh/only-export-components": "off",
+    "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
   },
   settings: {
     ...react.settings,
+    "import/resolver": {
+      typescript: {
+        alwaysTryTypes: true,
+        project: "./tsconfig.json",
+      },
+    },
   },
   overrides: [...typescript.overrides],
 };

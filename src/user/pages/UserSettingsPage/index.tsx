@@ -67,7 +67,7 @@ export const UserSettingsPage: React.FC = () => {
         return <UserProjects wallet={wallet.publicKey} />;
 
       case UserSettingsTabs.CLAIM_TOKENS:
-        return <ProjectsListByState initialState={ProjectStates.CLOSED} />;
+        return <ProjectsListByState state={ProjectStates.CLOSED} />;
 
       case UserSettingsTabs.MY_TIER:
       default:

@@ -5,28 +5,6 @@ module.exports = {
   plugins: ["@typescript-eslint", "react-hooks", "react"],
   rules: {
     "react-hooks/rules-of-hooks": ["error"],
-    "@typescript-eslint/naming-convention": [
-      "warn",
-      {
-        selector: "memberLike",
-        modifiers: ["private"],
-        format: ["camelCase"],
-        leadingUnderscore: "forbid",
-        trailingUnderscore: "forbid",
-      },
-      {
-        selector: ["enumMember"],
-        format: ["UPPER_CASE"],
-      },
-      {
-        selector: "typeLike",
-        format: ["PascalCase"],
-      },
-      {
-        selector: "function",
-        format: ["PascalCase", "camelCase"],
-      },
-    ],
     "react/no-danger-with-children": ["error"],
     "react/no-direct-mutation-state": ["error"],
     "react/no-redundant-should-component-update": ["warn"],

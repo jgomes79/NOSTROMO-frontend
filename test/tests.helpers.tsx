@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { MemoryRouter, RouterProvider, createMemoryRouter } from "react-router-dom";
 
 import { RenderOptions, render } from "@testing-library/react";
@@ -25,6 +26,6 @@ export function TestApp({ initialEntries }: { readonly initialEntries?: string[]
   );
 }
 
-export function renderWithTestProviders(ui: React.ReactElement, options?: RenderOptions) {
+export const renderWithTestProviders = (ui: React.ReactElement, options?: RenderOptions) => {
   return render(ui, { wrapper: TestProviders, ...options });
-}
+};

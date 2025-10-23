@@ -106,7 +106,7 @@ export const LaunchpadPage: React.FC = () => {
 
       <section className={styles.section}>
         <div className={styles.container}>
-          <ProjectsListByState initialState={launchpadProjectTabs[0].id} />
+          <ProjectsListByState state={launchpadProjectTabs[0].id} />
         </div>
       </section>
     </div>

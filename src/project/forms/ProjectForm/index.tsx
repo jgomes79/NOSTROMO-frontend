@@ -125,8 +125,8 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
    * @param {ProjectFormTabs} tab - The current tab to render.
    * @returns {JSX.Element | null} The JSX element representing the tab content, or null if the tab is not recognized.
    */
-  const renderTab = (tab: ProjectFormTabs): JSX.Element | null => {
-    switch (tab) {
+  const renderTab = (): JSX.Element | null => {
+    switch (activeTab) {
       case ProjectFormTabs.VESTING_OPTIONS:
         return (
           <div className={classNames(styles.grid, styles.two)}>
@@ -771,12 +771,12 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ defaultValues, isLoadi
           tabs={currentTabs}
           onChange={setActiveTab}
         />
-      </div>
 
-      {/* Page Container */}
-      <Fieldset title={ProjectTabLabels[activeTab]}>
-        <Animatable>{renderTab(activeTab)}</Animatable>
-      </Fieldset>
+        {/* Page Container */}
+        <Fieldset title={ProjectTabLabels[activeTab]}>
+          <Animatable>{renderTab()}</Animatable>
+        </Fieldset>
+      </div>
 
       {/* Actions */}
       <div className={styles.actions}>{renderSubmitButton()}</div>

@@ -1,8 +1,9 @@
+/* eslint-disable react-refresh/only-export-components */
 import type { Dispatch, ReactNode, Reducer } from "react";
 import { createContext, useEffect, useReducer } from "react";
 
-import { detectSnaps, getSnap, isFlask } from "./utils";
 import type { Snap } from "../qubic/types";
+import { detectSnaps, getSnap, isFlask } from "./utils";
 
 export interface MetamaskState {
   snapsDetected: boolean;
@@ -16,15 +17,23 @@ const initialState: MetamaskState = {
   isFlask: false,
 };
 
+export enum MetamaskActions {
+  SetInstalled = "SetInstalled",
+  SetSnapsDetected = "SetSnapsDetected",
+  SetError = "SetError",
+  SetIsFlask = "SetIsFlask",
+}
+
+type MetamaskDispatchPayload = {
+  [MetamaskActions.SetInstalled]: Snap;
+  [MetamaskActions.SetSnapsDetected]: boolean;
+  [MetamaskActions.SetIsFlask]: boolean;
+  [MetamaskActions.SetError]: Error | undefined;
+};
+
 interface MetamaskDispatch<T extends MetamaskActions> {
   type: T;
-  payload: T extends MetamaskActions.SetInstalled
-    ? Snap
-    : T extends MetamaskActions.SetSnapsDetected | MetamaskActions.SetIsFlask
-      ? boolean
-      : T extends MetamaskActions.SetError
-        ? Error | undefined
-        : never;
+  payload: MetamaskDispatchPayload[T];
 }
 
 export const MetaMaskContext = createContext<[MetamaskState, Dispatch<MetamaskDispatch<MetamaskActions>>]>([
@@ -33,13 +42,6 @@ export const MetaMaskContext = createContext<[MetamaskState, Dispatch<MetamaskDi
     /* no op */
   },
 ]);
-
-export enum MetamaskActions {
-  SetInstalled = "SetInstalled",
-  SetSnapsDetected = "SetSnapsDetected",
-  SetError = "SetError",
-  SetIsFlask = "SetIsFlask",
-}
 
 const reducer: Reducer<MetamaskState, MetamaskDispatch<MetamaskActions>> = (state, action) => {
   switch (action.type) {

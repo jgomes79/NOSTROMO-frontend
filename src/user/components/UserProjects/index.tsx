@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { ProjectStates } from "../../../project/project.types";
 import { Tabs } from "../../../shared/components/Tabs";
@@ -26,6 +26,7 @@ interface UserProjectsProps {
  */
 export const UserProjects: React.FC<UserProjectsProps> = ({ wallet }) => {
   const { data: user } = useUserByWallet(wallet);
+  const [activeTab, setActiveTab] = useState<ProjectStates>(ProjectStates.READY_TO_VOTE);
 
   const adminOptions = [
     {
@@ -55,14 +56,15 @@ export const UserProjects: React.FC<UserProjectsProps> = ({ wallet }) => {
     ...(user?.type === UserTypes.ADMIN ? adminOptions : []),
   ];
 
-  const renderProjectList = (tabId: ProjectStates) => {
-    switch (tabId) {
+  const renderProjectList = () => {
+    console.log("🚀 activeTab:", activeTab);
+    switch (activeTab) {
       case ProjectStates.ALL:
         return <ProjectsListByWallet walletAddress={wallet} limit={9} />;
       case ProjectStates.READY_TO_VOTE:
-        return <ProjectsListByState initialState={ProjectStates.READY_TO_VOTE} />;
+        return <ProjectsListByState state={ProjectStates.READY_TO_VOTE} />;
       case ProjectStates.UPCOMING:
-        return <ProjectsListByState initialState={ProjectStates.UPCOMING} />;
+        return <ProjectsListByState state={ProjectStates.UPCOMING} />;
       default:
         return null;
     }
@@ -72,11 +74,12 @@ export const UserProjects: React.FC<UserProjectsProps> = ({ wallet }) => {
     <div className={styles.tabs}>
       <Tabs<ProjectStates>
         color={"cyan"}
-        activeId={ProjectStates.ALL}
+        activeId={activeTab}
         size={"medium"}
         tabs={projectStates}
-        onRender={(tabId) => renderProjectList(tabId)}
+        onChange={setActiveTab}
       />
+      {renderProjectList()}
     </div>
   );
 };

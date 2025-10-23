@@ -2,6 +2,7 @@ import { RiArrowDownLine } from "react-icons/ri";
 
 import { Button } from "@/shared/components/Button";
 
+import { useEffect } from "react";
 import { useProjectsByState } from "../../hooks/useProjectsByState";
 import { ProjectStates } from "../../project.types";
 import { ProjectList } from "../ProjectList";
@@ -15,7 +16,7 @@ import styles from "./ProjectsListByState.module.scss";
  */
 
 interface ProjectsListByStateProps {
-  initialState?: ProjectStates;
+  state?: ProjectStates;
 }
 
 /**
@@ -24,8 +25,12 @@ interface ProjectsListByStateProps {
  * @component
  * @returns {JSX.Element} The rendered ProjectsListByState component.
  */
-export const ProjectsListByState: React.FC<ProjectsListByStateProps> = ({ initialState = ProjectStates.ALL }) => {
-  const { page, isLoading, projects, total, state, fetchProjectsByState } = useProjectsByState(initialState);
+export const ProjectsListByState: React.FC<ProjectsListByStateProps> = ({ state = ProjectStates.ALL }) => {
+  const { page, isLoading, projects, total, fetchProjectsByState } = useProjectsByState(state);
+
+  useEffect(() => {
+    fetchProjectsByState(0, state);
+  }, [state]);
 
   /**
    * Props to be passed to the ProjectList component.

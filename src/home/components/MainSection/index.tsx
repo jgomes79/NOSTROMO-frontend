@@ -3,10 +3,9 @@ import React, { useMemo } from "react";
 import classNames from "clsx";
 import { FaArrowDown } from "react-icons/fa";
 
-import { Typography } from "@/shared/components/Typography";
-
-import styles from "./MainSection.module.scss";
+import { Typography } from "../../../shared/components/Typography";
 import NostromoImage from "../../assets/images/nostromo.png";
+import styles from "./MainSection.module.scss";
 
 /**
  * Props for the MainSection component.

@@ -11,7 +11,12 @@
 }
 
 .tabs {
+  display: flex;
+  flex-direction: column;
+  gap: 42px;
   padding-bottom: 42px;
+  position: relative;
+  z-index: 10;
 
   @include bottomLighting();
 

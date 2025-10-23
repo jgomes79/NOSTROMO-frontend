@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 
 import classNames from "clsx";
 
@@ -22,10 +22,9 @@ interface TabsProps<T> {
   readonly color?: "green" | "cyan";
   readonly tabs: Tab<T>[];
   readonly activeId: T;
-  readonly onChange?: (tabId: T) => void;
-  readonly onRender?: (tabId: T) => React.ReactNode | null;
   readonly itemClassName?: string;
   readonly size?: TypographyProps["size"];
+  readonly onChange?: (tabId: T) => void;
 }
 
 export interface Tab<T> {
@@ -40,52 +39,32 @@ export const Tabs = <T,>({
   size = "medium",
   color = "green",
   onChange,
-  onRender,
   itemClassName,
 }: TabsProps<T>) => {
   const { isMobile } = useResponsive();
-
-  const [activeTab, setActiveTab] = useState<T>(activeId);
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
-  /**
-   * Handles the click event for a tab.
-   *
-   * @param {Tab<T>["id"]} tabId - The ID of the tab to activate.
-   */
-  const handleClickTab = (tabId: Tab<T>["id"]) => {
-    setActiveTab(tabId);
-    onChange?.(tabId);
-  };
-
-  useEffect(() => {
-    setActiveTab(activeId);
-  }, [activeId]);
-
   return (
-    <div className={styles.layout}>
-      <div className={styles.tabs}>
-        {tabs.map((tab, index) => (
-          <button
-            key={`--tab-${tab.id}`}
-            ref={(el) => (tabRefs.current[index] = el)}
-            type="button"
-            className={classNames(styles.tab, styles[color], { [styles.active]: activeTab === tab.id })}
-            onClick={() => handleClickTab(tab.id)}
+    <div className={styles.tabs}>
+      {tabs.map((tab, index) => (
+        <button
+          key={`--tab-${tab.id}`}
+          ref={(el) => (tabRefs.current[index] = el)}
+          type="button"
+          className={classNames(styles.tab, styles[color], { [styles.active]: activeId === tab.id })}
+          onClick={() => onChange?.(tab.id)}
+        >
+          <Typography
+            variant={"heading"}
+            className={classNames(styles.text, itemClassName)}
+            aria-label={"crt"}
+            size={isMobile ? "medium" : size}
           >
-            <Typography
-              variant={"heading"}
-              className={classNames(styles.text, itemClassName)}
-              aria-label={"crt"}
-              size={isMobile ? "medium" : size}
-            >
-              {tab.label}
-            </Typography>
-            {tab.iconLeft && <div className={styles.icon}>{tab.iconLeft}</div>}
-          </button>
-        ))}
-      </div>
-      {onRender && onRender(activeTab)}
+            {tab.label}
+          </Typography>
+          {tab.iconLeft && <div className={styles.icon}>{tab.iconLeft}</div>}
+        </button>
+      ))}
     </div>
   );
 };
