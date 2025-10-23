@@ -26,7 +26,7 @@ interface UserProjectsProps {
  */
 export const UserProjects: React.FC<UserProjectsProps> = ({ wallet }) => {
   const { data: user } = useUserByWallet(wallet);
-  const [activeTab, setActiveTab] = useState<ProjectStates>(ProjectStates.READY_TO_VOTE);
+  const [activeTab, setActiveTab] = useState<ProjectStates>(ProjectStates.ALL);
 
   const adminOptions = [
     {

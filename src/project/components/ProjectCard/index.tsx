@@ -10,6 +10,7 @@ import { Image } from "@/shared/components/Image";
 import { Separator } from "@/shared/components/Separator";
 import { Typography } from "@/shared/components/Typography";
 
+import { isBefore } from "date-fns/isBefore";
 import { PROJECT_ROUTES, PROJECT_STATE_STRING } from "../../project.constants";
 import { Project, ProjectFormTabs, ProjectStates } from "../../project.types";
 import styles from "./ProjectCard.module.scss";
@@ -28,10 +29,13 @@ export const ProjectCard: React.FC<Project> = ({
   bannerUrl,
   amountToRaise,
   tokenPrice,
-  startDate,
   currency,
   state,
+  votingStartDate,
+  votingEndDate,
 }) => {
+  const isBeforeStartDate = isBefore(new Date(), votingStartDate);
+
   const stateLabels = {
     [ProjectStates.ALL]: { title: "", banner: "", footer: "" },
     [ProjectStates.DRAFT]: { title: "Draft", banner: "", footer: "Edit Project" },
@@ -52,6 +56,8 @@ export const ProjectCard: React.FC<Project> = ({
     [ProjectStates.REQUEST_MORE_INFO]: { title: "Needs more info", banner: "", footer: "Edit Project" },
     [ProjectStates.UPCOMING]: { title: "Upcoming", banner: "Register ends in", footer: "Register" },
   };
+
+  const title = isBeforeStartDate ? "Voting starts in" : "Voting ends in";
 
   /**
    * Determines the appropriate route for the project based on its state.
@@ -130,10 +136,10 @@ export const ProjectCard: React.FC<Project> = ({
       </div>
       {stateLabels[state].banner && (
         <div className={styles.counter}>
-          <Countdown date={startDate}>
+          <Countdown date={isBeforeStartDate ? votingStartDate : votingEndDate}>
             {({ days, hours, minutes, seconds }) => (
               <Typography variant={"body"} size={"small"}>
-                {stateLabels[state].banner} {days}d {hours}h {minutes}m {seconds}s
+                {title} {days}d {hours}h {minutes}m {seconds}s
               </Typography>
             )}
           </Countdown>
