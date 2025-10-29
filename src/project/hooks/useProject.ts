@@ -14,6 +14,7 @@ export const useProject = (slug: Project["slug"]): UseQueryResult<Project | null
     queryKey: ["project", slug],
     initialData: null,
     queryFn: async () => {
+      if (!slug) return null;
       const project = await getProjectBySlug(slug);
 
       project.startDate = new Date(project.startDate);
