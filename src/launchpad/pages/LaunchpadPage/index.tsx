@@ -12,6 +12,7 @@ import { SectionIndicator } from "@/shared/components/SectionIndicator";
 import { Slider, SliderElement } from "@/shared/components/Slider";
 import { useAppTitle } from "@/shared/hooks/useAppTitle";
 
+import { EmptyState } from "@/shared/components/EmptyState";
 import { HowToBoyIdoSection } from "../../components/HowToBoyIdoSection";
 import { launchpadProjectTabs } from "../../launchpad.constants";
 import styles from "./LaunchpadPage.module.scss";
@@ -55,6 +56,48 @@ export const LaunchpadPage: React.FC = () => {
     );
   }, [currentIndex, slider.current, projects.length]);
 
+  /**
+   *
+   * @returns
+   */
+  const renderOverview = () => {
+    if (!projects.length) {
+      return (
+        <EmptyState
+          title="No projects available"
+          description="There are no projects available to display right now, please check back later"
+        />
+      );
+    }
+
+    return (
+      <>
+        <div className={styles.sliderFrame}>
+          <Slider
+            ref={slider}
+            delay={5000}
+            onMove={setCurrentIndex}
+            components={projects.map((project, index) => (
+              <ProjectOverview
+                key={index}
+                name={project.name}
+                slug={project.slug}
+                description={project.description}
+                photoUrl={project.photoUrl}
+                bannerUrl={project.bannerUrl}
+                fundraisingGoal={project.amountToRaise}
+                tokenPrice={project.tokenPrice}
+                currency={project.currency.name}
+                date={project.startDate}
+              />
+            ))}
+          />
+        </div>
+        {renderSliderControls}
+      </>
+    );
+  };
+
   return (
     <div className={styles.layout}>
       <section className={classNames(styles.section, styles.top)}>
@@ -75,30 +118,7 @@ export const LaunchpadPage: React.FC = () => {
                 <Loader size={52} />
               </div>
             ) : (
-              <>
-                <div className={styles.sliderFrame}>
-                  <Slider
-                    ref={slider}
-                    delay={5000}
-                    onMove={setCurrentIndex}
-                    components={projects.map((project, index) => (
-                      <ProjectOverview
-                        key={index}
-                        name={project.name}
-                        slug={project.slug}
-                        description={project.description}
-                        photoUrl={project.photoUrl}
-                        bannerUrl={project.bannerUrl}
-                        fundraisingGoal={project.amountToRaise}
-                        tokenPrice={project.tokenPrice}
-                        currency={project.currency.name}
-                        date={project.startDate}
-                      />
-                    ))}
-                  />
-                </div>
-                {renderSliderControls}
-              </>
+              renderOverview()
             )}
           </div>
         </div>
