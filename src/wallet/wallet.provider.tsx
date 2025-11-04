@@ -1,6 +1,7 @@
 import React from "react";
 
 import { QubicConnectProvider } from "./qubic/QubicConnectContext";
+import { WalletConnectProvider } from "./qubic/WalletConnectContext";
 
 /**
  * Interface for WalletProvider component props
@@ -20,5 +21,7 @@ interface WalletProviderProps {
  * @returns {React.ReactElement} The rendered WalletProvider component.
  */
 export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => (
-  <QubicConnectProvider>{children}</QubicConnectProvider>
+  <WalletConnectProvider>
+    <QubicConnectProvider>{children}</QubicConnectProvider>
+  </WalletConnectProvider>
 );

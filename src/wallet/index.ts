@@ -1,7 +1,9 @@
-import { registerModule } from "@/core/modules/modules.helpers";
+export * from "./wallet.constants";
+export * from "./wallet.helpers";
+export { WalletProvider } from "./wallet.provider";
 
-import { MODULE_WALLET } from "./wallet.constants";
+// Export all types from centralized wallet.types.ts
+export * from "./wallet.types";
 
-registerModule({
-  name: MODULE_WALLET,
-});
+// Export hooks
+export * from "./hooks/useBalance";

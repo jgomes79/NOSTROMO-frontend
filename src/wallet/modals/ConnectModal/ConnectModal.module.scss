@@ -97,3 +97,15 @@
   width: 100%;
   margin: 0 auto;
 }
+
+.walletConnectMode {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.qrSection {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

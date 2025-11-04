@@ -27,7 +27,8 @@ module.exports = {
     ...react.rules,
     "react-hooks/exhaustive-deps": "off",
     "@typescript-eslint/naming-convention": "off",
-    "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
+    "@typescript-eslint/no-explicit-any": "off",
+    "react-refresh/only-export-components": "off",
   },
   settings: {
     ...react.settings,

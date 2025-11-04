@@ -13,7 +13,6 @@ import "@/core/modules/modules";
 
 Object.defineProperty(window, "matchMedia", {
   writable: true,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   value: (query: any) => ({
     matches: false,
     media: query,
@@ -33,13 +32,11 @@ if (typeof window !== "undefined") {
 }
 
 if (typeof Element !== "undefined") {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   Element.prototype.scrollIntoView = vi.fn<any, typeof Element.prototype.scrollIntoView>();
 }
 
 if (typeof document !== "undefined") {
   document.queryCommandSupported = () => false;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   Element.prototype.scrollTo = vi.fn<any, typeof Element.prototype.scrollTo>();
 }
 

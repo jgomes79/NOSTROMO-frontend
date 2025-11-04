@@ -1,28 +1,14 @@
-/* eslint-disable react-refresh/only-export-components */
 import type { Dispatch, ReactNode, Reducer } from "react";
 import { createContext, useEffect, useReducer } from "react";
 
-import type { Snap } from "../qubic/types";
+import type { MetamaskState, Snap } from "../wallet.types";
+import { MetamaskActions } from "../wallet.types";
 import { detectSnaps, getSnap, isFlask } from "./utils";
-
-export interface MetamaskState {
-  snapsDetected: boolean;
-  isFlask: boolean;
-  installedSnap?: Snap;
-  error?: Error;
-}
 
 const initialState: MetamaskState = {
   snapsDetected: false,
   isFlask: false,
 };
-
-export enum MetamaskActions {
-  SetInstalled = "SetInstalled",
-  SetSnapsDetected = "SetSnapsDetected",
-  SetError = "SetError",
-  SetIsFlask = "SetIsFlask",
-}
 
 type MetamaskDispatchPayload = {
   [MetamaskActions.SetInstalled]: Snap;
@@ -36,7 +22,7 @@ interface MetamaskDispatch<T extends MetamaskActions> {
   payload: MetamaskDispatchPayload[T];
 }
 
-export const MetaMaskContext = createContext<[MetamaskState, Dispatch<MetamaskDispatch<MetamaskActions>>]>([
+const MetaMaskContext = createContext<[MetamaskState, Dispatch<MetamaskDispatch<MetamaskActions>>]>([
   initialState,
   () => {
     /* no op */
@@ -152,3 +138,5 @@ export const MetaMaskProvider = ({ children }: { readonly children: ReactNode })
 
   return <MetaMaskContext.Provider value={[state, dispatch]}>{children}</MetaMaskContext.Provider>;
 };
+
+export { MetaMaskContext };

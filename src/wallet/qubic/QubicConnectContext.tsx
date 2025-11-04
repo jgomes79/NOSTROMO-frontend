@@ -3,92 +3,30 @@
 import { createContext, useContext, useEffect, useState } from "react";
 
 import { publicKeyStringToBytes } from "@qubic-lib/qubic-ts-library/dist/converter/converter.js";
-import Crypto, { SIGNATURE_LENGTH } from "@qubic-lib/qubic-ts-library/dist/crypto";
+import Crypto from "@qubic-lib/qubic-ts-library/dist/crypto";
 import { QubicHelper } from "@qubic-lib/qubic-ts-library/dist/qubicHelper";
-import SignClient from "@walletconnect/sign-client";
-import QRCode from "qrcode";
 
+import type {
+  Balance,
+  BroadcastResult,
+  QubicConnectContextValue,
+  QubicConnectProviderProps,
+  QubicTransaction,
+  Transaction,
+  Wallet,
+  WalletConnectAccount,
+  isErrorWithData,
+  isErrorWithMessage
+} from "../wallet.types";
 import { connectTypes, getSnapOrigin, tickOffset } from "./config";
-import { base64ToUint8Array, decodeUint8ArrayTx } from "./contract/contractUtils";
-import { QHelper } from "./contract/nostromoApi";
 import { MetaMaskProvider } from "./MetamaskContext";
-import { QubicConnectProviderProps, TickInfoType, Transaction } from "./types";
-import { getSnap } from "./utils";
+import { useWalletConnect } from "./WalletConnectContext";
 
 // Constants from QubicHelper
 const PUBLIC_KEY_LENGTH = 32;
 const TRANSACTION_SIZE = 1024;
 const DIGEST_LENGTH = 32;
-
-// WalletConnect Constants
-const WC_PROJECT_ID = import.meta.env.VITE_WC_PROJECT_ID || "b2ace378845f0e4806ef23d2732f77a4";
-const WC_RELAY_URL = import.meta.env.VITE_WC_RELAY_URL || "wss://relay.walletconnect.com";
-// Using CAIP-2 format: namespace:reference
-// For Qubic, we use a custom namespace. The chainId format must match what the wallet expects.
-const WC_CHAIN_ID = "qubic:0";
-
-interface Wallet {
-  connectType: string;
-  publicKey: string;
-  privateKey?: string;
-  wcSession?: any;
-}
-
-interface Balance {
-  id: string;
-  balance: number;
-}
-interface QubicConnectContextValue {
-  connected: boolean;
-  wallet: Wallet | null;
-  showConnectModal: boolean;
-  config: QubicConnectProviderProps["config"];
-  connect: (wallet: Wallet) => void;
-  disconnect: () => void;
-  toggleConnectModal: () => void;
-  getMetaMaskPublicId: (accountIdx?: number, confirm?: boolean) => Promise<string>;
-  getSignedTx: (tx: Uint8Array, offset: number) => Promise<{ tx: Uint8Array; offset: number }>;
-  broadcastTx: (tx: Uint8Array) => Promise<{ status: number; result: unknown }>;
-  getTick: () => Promise<TickInfoType>;
-  getBalance: (publicId: string) => Promise<{ balance: Balance }>;
-  getTransactionsHistory: (publicId: string, startTick?: number, endTick?: number) => Promise<unknown>;
-  tickOffset: number;
-  getPaymentTx: (
-    sender: string,
-    receiver: string,
-    amount: number,
-    tick: number,
-  ) => Promise<{
-    tx: Uint8Array;
-    offset: number;
-  }>;
-  qHelper: QHelper;
-  httpEndpoint: string;
-  signTransaction: (tx: Uint8Array) => Promise<Uint8Array>;
-  // WalletConnect specific
-  wcClient: any;
-  wcSession: any;
-  wcUri: string;
-  wcQrCode: string;
-  wcIsConnecting: boolean;
-  startWalletConnect: () => Promise<{ approve: () => Promise<void> }>;
-}
-
-// Helper function to sign transactions locally
-async function localSignTx(qHelper: QHelper, privateKey: string, tx: Uint8Array) {
-  const qCrypto = await Crypto;
-  const idPackage = await qHelper.createIdPackage(privateKey);
-
-  const digest = new Uint8Array(DIGEST_LENGTH);
-  const toSign = tx.slice(0, tx.length - SIGNATURE_LENGTH);
-
-  qCrypto.K12(toSign, digest, DIGEST_LENGTH);
-
-  const signature = qCrypto.schnorrq.sign(idPackage.privateKey, idPackage.publicKey, digest);
-
-  tx.set(signature, tx.length - SIGNATURE_LENGTH);
-  return tx;
-}
+const SIGNATURE_LENGTH = 64;
 
 const QubicConnectContext = createContext<QubicConnectContextValue | undefined>(undefined);
 
@@ -100,101 +38,16 @@ export function QubicConnectProvider({ children, config }: QubicConnectProviderP
   const httpEndpoint = import.meta.env.VITE_HTTP_ENDPOINT; // live system
   const [qHelper] = useState(() => new QubicHelper());
 
-  // WalletConnect states
-  const [wcClient, setWcClient] = useState<any>(null);
-  const [wcSession, setWcSession] = useState<any>(null);
-  const [wcUri, setWcUri] = useState('');
-  const [wcQrCode, setWcQrCode] = useState('');
-  const [wcIsConnecting, setWcIsConnecting] = useState(false);
+  // Add WalletConnect integration
+  const walletConnect = useWalletConnect();
 
   useEffect(() => {
-    // Initialize WalletConnect client
-    const initializeWcClient = async () => {
-      try {
-        const client = await SignClient.init({
-          projectId: WC_PROJECT_ID,
-          relayUrl: WC_RELAY_URL,
-          metadata: {
-            name: 'Nostromo Launchpad',
-            description: 'Interact with Qubic Smart Contracts',
-            url: window.location.origin,
-            icons: [window.location.origin + '/logo.png'],
-          },
-        });
-        setWcClient(client);
-
-        // Check for existing sessions
-        if (client.session.length) {
-          const lastKeyIndex = client.session.keys.length - 1;
-          const session = client.session.get(client.session.keys[lastKeyIndex]);
-          setWcSession(session);
-
-          // Extract public key from the session
-          let publicKey = '';
-          if (session.namespaces.qubic && session.namespaces.qubic.accounts.length > 0) {
-            const account = session.namespaces.qubic.accounts[0];
-            const parts = account.split(':');
-            publicKey = parts[parts.length - 1];
-          }
-
-          if (publicKey) {
-            connect(
-              {
-                connectType: "walletconnect",
-                publicKey,
-                wcSession: session,
-              },
-              true,
-            );
-          }
-        }
-
-        // Set up event listeners
-        client.on('session_event', (event) => {
-          console.log('WC Event:', event);
-        });
-
-        client.on('session_update', ({ topic, params }) => {
-          const { namespaces } = params;
-          const _session = client.session.get(topic);
-          const updatedSession = { ..._session, namespaces };
-          setWcSession(updatedSession);
-
-          // Extract public key from the updated session
-          let publicKey = '';
-          if (updatedSession.namespaces.qubic && updatedSession.namespaces.qubic.accounts.length > 0) {
-            const account = updatedSession.namespaces.qubic.accounts[0];
-            const parts = account.split(':');
-            publicKey = parts[parts.length - 1];
-          }
-
-          if (publicKey && wallet?.connectType === 'walletconnect' && wallet.publicKey !== publicKey) {
-            connect({ connectType: "walletconnect", publicKey, wcSession: updatedSession });
-          }
-        });
-
-        client.on('session_delete', () => {
-          setWcSession(null);
-          if (wallet?.connectType === 'walletconnect') {
-            disconnect();
-          }
-        });
-      } catch (e) {
-        console.error("Failed to initialize WalletConnect client:", e);
-      }
-    };
-
-    initializeWcClient();
-
-    // Restore wallet from localStorage
     const storedWallet = localStorage.getItem("wallet");
     if (storedWallet) {
       try {
         const parsedWallet = JSON.parse(storedWallet);
-        if (parsedWallet.connectType !== 'walletconnect') {
-          setWallet(parsedWallet);
-          setConnected(true);
-        }
+        setWallet(parsedWallet);
+        setConnected(true);
       } catch (error) {
         console.error("Error parsing stored wallet:", error);
         localStorage.removeItem("wallet");
@@ -202,127 +55,22 @@ export function QubicConnectProvider({ children, config }: QubicConnectProviderP
     }
   }, []);
 
-  const connect = (walletInfo: Wallet, isRestoring = false) => {
-    if (!isRestoring) {
-      localStorage.setItem("wallet", JSON.stringify(walletInfo));
-      if (walletInfo.connectType === 'walletconnect' && walletInfo.wcSession) {
-        localStorage.setItem("sessionTopic", walletInfo.wcSession.topic);
-      }
-    }
-    setWallet(walletInfo);
+  const connect = (wallet: Wallet) => {
+    localStorage.setItem("wallet", JSON.stringify(wallet));
+    setWallet(wallet);
     setConnected(true);
-    setShowConnectModal(false);
-    if (walletInfo.connectType === 'walletconnect' && walletInfo.wcSession) {
-      setWcSession(walletInfo.wcSession);
-    }
-    setWcUri('');
-    setWcQrCode('');
   };
 
   const disconnect = () => {
-    const connectType = wallet?.connectType;
     localStorage.removeItem("wallet");
-    localStorage.removeItem("sessionTopic");
     setWallet(null);
     setConnected(false);
-    setWcUri('');
-    setWcQrCode('');
-    setWcIsConnecting(false);
-
-    if (connectType === 'walletconnect' && wcSession && wcClient) {
-      console.log("Disconnecting WC session topic:", wcSession.topic);
-      wcClient
-        .disconnect({ topic: wcSession.topic, reason: { code: 6000, message: "User disconnected" } })
-        .catch((e: any) => console.error("Error during WC disconnect request:", e));
-    }
-    setWcSession(null);
   };
 
   const toggleConnectModal = () => {
     setShowConnectModal(!showConnectModal);
   };
 
-  const startWalletConnect = async () => {
-    if (!wcClient) throw new Error("WalletConnect client not initialized");
-    setWcIsConnecting(true);
-    setWcUri('');
-    setWcQrCode('');
-    console.log("Attempting wcClient.connect...");
-
-    try {
-      const { uri, approval } = await wcClient.connect({
-        requiredNamespaces: {
-          qubic: {
-            chains: [WC_CHAIN_ID],
-            methods: ['qubic_signTransaction'],
-            events: ['accountsChanged'],
-          },
-        },
-      });
-
-      console.log("WC Connect URI generated:", uri);
-      if (uri) {
-        setWcUri(uri);
-        try {
-          const qrData = await QRCode.toDataURL(uri);
-          setWcQrCode(qrData);
-          console.log("WC QR Code generated.");
-        } catch (qrErr) {
-          console.error("Failed to generate WC QR code:", qrErr);
-        }
-      } else {
-        console.warn("WalletConnect did not provide a URI.");
-      }
-
-      return {
-        approve: async () => {
-          console.log("Waiting for WC session approval...");
-          try {
-            const session = await approval();
-            console.log("WC Session approved:", session);
-            console.log("Session namespaces:", JSON.stringify(session.namespaces, null, 2));
-
-            // Extract public key from the session
-            let publicKey = '';
-            if (session.namespaces.qubic && session.namespaces.qubic.accounts.length > 0) {
-              const account = session.namespaces.qubic.accounts[0];
-              console.log("Account string:", account);
-              // Format: qubic:0:ADDRESS or qubic:ADDRESS
-              const parts = account.split(':');
-              publicKey = parts[parts.length - 1]; // Get the last part (the address)
-              console.log("Extracted publicKey:", publicKey);
-            } else {
-              throw new Error("No qubic accounts found in WalletConnect session");
-            }
-
-            connect({
-              connectType: "walletconnect",
-              publicKey,
-              wcSession: session,
-            });
-            setWcIsConnecting(false);
-          } catch (e) {
-            console.error("WC Connection approval rejected or failed:", e);
-            setWcUri('');
-            setWcQrCode('');
-            setWcIsConnecting(false);
-            throw e;
-          }
-        },
-      };
-    } catch (e) {
-      console.error("WalletConnect connection failed:", e);
-      setWcIsConnecting(false);
-      setWcUri('');
-      setWcQrCode('');
-      throw e;
-    }
-  };
-
-  function uint8ArrayToBase64(uint8Array: Uint8Array): string {
-    const binaryString = String.fromCharCode.apply(null, Array.from(uint8Array));
-    return btoa(binaryString);
-  }
 
   const getMetaMaskPublicId = async (accountIdx = 0, confirm = false): Promise<string> => {
     if (!window.ethereum) {
@@ -367,7 +115,7 @@ export function QubicConnectProvider({ children, config }: QubicConnectProviderP
     })) as { signedTx: string };
   };
 
-  const getTick = async () => {
+  const getTick = async (): Promise<number> => {
     // console.log('getTickInfo')
     const tickResult = await fetch(`${httpEndpoint}/v1/tick-info`);
     const tick = await tickResult.json();
@@ -379,19 +127,19 @@ export function QubicConnectProvider({ children, config }: QubicConnectProviderP
     return tick.tickInfo.tick;
   };
 
-  const getBalance = async (publicId: string) => {
+  const getBalance = async (publicId: string): Promise<Balance> => {
     // console.log('getBalance: for publicId ', publicId)
     const accountResult = await fetch(`${httpEndpoint}/v1/balances/${publicId}`);
     const results = await accountResult.json();
     // check if info is valid
     if (!results || !results.balance) {
       // console.warn('getBalance: Invalid balance')
-      return { balance: { id: publicId, balance: 0 } };
+      return { id: publicId, balance: 0 };
     }
-    return results;
+    return results.balance;
   };
 
-  const getTransactionsHistory = async (publicId: string, startTick: number = 1, endTick?: number) => {
+  const getTransactionsHistory = async (publicId: string, startTick: number = 1, endTick?: number): Promise<Transaction[]> => {
     // check if endTick is set if not set to current tick
     if (endTick === undefined) {
       const tickInfo = await getTick();
@@ -443,7 +191,7 @@ export function QubicConnectProvider({ children, config }: QubicConnectProviderP
     };
   };
 
-  const getSignedTx = async (tx: Uint8Array, offset: number) => {
+  const getSignedTx = async (tx: Uint8Array | QubicTransaction, offset: number = 0): Promise<Uint8Array> => {
     if (!wallet) {
       throw new Error("No wallet connected");
     }
@@ -455,6 +203,62 @@ export function QubicConnectProvider({ children, config }: QubicConnectProviderP
 
     let signedtx: Uint8Array | null = null;
 
+    // For WalletConnect, handle QubicTransaction objects like qearn
+    if (wallet.connectType === "walletconnect") {
+      console.log("🔗 WalletConnect signing - transaction type:", typeof tx);
+      console.log("🔗 Is QubicTransaction?", tx?.constructor?.name);
+
+      // If it's a QubicTransaction, build it first
+      const processedTx = tx?.build ? await tx.build("0".repeat(55)) : tx;
+      console.log("🔗 Processed transaction size:", processedTx.length);
+
+      try {
+        // Decode transaction to get parameters (exactly like qearn)
+        const decodedTx = decodeUint8ArrayTx(processedTx);
+        console.log("🔗 Decoded transaction:", decodedTx);
+
+        const [from, to] = await Promise.all([
+          qHelper.getIdentity(decodedTx.sourcePublicKey.getIdentity()),
+          qHelper.getIdentity(decodedTx.destinationPublicKey.getIdentity()),
+        ]);
+
+        console.log("🔗 Transaction addresses:");
+        console.log("🔗 From (source):", from);
+        console.log("🔗 To (destination):", to);
+        console.log("🔗 Connected wallet publicKey:", wallet.publicKey);
+        console.log("🔗 Addresses match?", from === wallet.publicKey);
+
+        // Ensure we're using the connected wallet's address
+        const fromAddress = wallet.publicKey; // Use the connected wallet address directly
+
+        const payloadBase64 = decodedTx.payload ? uint8ArrayToBase64(decodedTx.payload.getPackageData()) : "";
+        console.log("🔗 WalletConnect signing params:", { from: fromAddress, to, amount: Number(decodedTx.amount.getNumber()), tick: decodedTx.tick, inputType: decodedTx.inputType });
+
+        // Show toast like qearn
+        console.log("🔑 Requesting signature from WalletConnect app...");
+
+        const wcResult = await walletConnect.signTransaction({
+          from: fromAddress, // Use the connected wallet address
+          to,
+          amount: Number(decodedTx.amount.getNumber()),
+          tick: decodedTx.tick,
+          inputType: decodedTx.inputType,
+          payload: payloadBase64 === "" ? null : payloadBase64,
+        });
+
+        console.log("✅ WalletConnect signature received:", wcResult);
+        signedtx = base64ToUint8Array(wcResult.signedTransaction);
+
+        return {
+          tx: signedtx,
+          offset: signedtx.length,
+        };
+      } catch (error) {
+        console.error("❌ WalletConnect signing failed:", error);
+        throw new Error(`WalletConnect signing failed: ${error instanceof Error ? error.message : String(error)}`);
+      }
+    }
+
     if (wallet.connectType === "mmSnap") {
       const mmResult = await getMetaMaskSignedTx(tx, offset);
       // Convert the base64 string to a binary buffer
@@ -462,6 +266,34 @@ export function QubicConnectProvider({ children, config }: QubicConnectProviderP
       signedtx = new Uint8Array(binaryTx.length);
       for (let i = 0; i < binaryTx.length; i++) {
         signedtx[i] = binaryTx.charCodeAt(i);
+      }
+    } else if (wallet.connectType === "walletconnect") {
+      // WalletConnect signing - similar to qearn implementation
+      try {
+        // For WalletConnect, we need to decode the transaction to get parameters
+        const decodedTx = decodeUint8ArrayTx ? decodeUint8ArrayTx(tx) : null;
+        if (!decodedTx) {
+          throw new Error("Failed to decode transaction for WalletConnect");
+        }
+
+        const from = await qHelper.getIdentity(decodedTx.sourcePublicKey.getIdentity());
+        const to = await qHelper.getIdentity(decodedTx.destinationPublicKey.getIdentity());
+        const payloadBase64 = decodedTx.payload ? uint8ArrayToBase64(decodedTx.payload.getPackageData()) : null;
+
+        const wcResult = await walletConnect.signTransaction({
+          from,
+          to,
+          amount: Number(decodedTx.amount.getNumber()),
+          tick: decodedTx.tick,
+          inputType: decodedTx.inputType,
+          payload: payloadBase64,
+        });
+
+        // Convert the signed transaction back to Uint8Array
+        signedtx = base64ToUint8Array ? base64ToUint8Array(wcResult.signedTransaction) : new Uint8Array();
+      } catch (error) {
+        console.error("WalletConnect signing failed:", error);
+        throw new Error(`WalletConnect signing failed: ${error instanceof Error ? error.message : String(error)}`);
       }
     } else {
       if (!wallet.privateKey) {
@@ -490,7 +322,7 @@ export function QubicConnectProvider({ children, config }: QubicConnectProviderP
     };
   };
 
-  const broadcastTx = async (tx: Uint8Array) => {
+  const broadcastTx = async (tx: Uint8Array): Promise<BroadcastResult> => {
     const url = `${httpEndpoint}/v1/broadcast-transaction`;
     const txEncoded = uint8ArrayToBase64(tx);
     const body = { encodedTransaction: txEncoded };
@@ -507,6 +339,7 @@ export function QubicConnectProvider({ children, config }: QubicConnectProviderP
         console.log("broadcastTx:", response);
       }
       return {
+        success: response.ok,
         status: response.status,
         result,
       };
@@ -536,7 +369,7 @@ export function QubicConnectProvider({ children, config }: QubicConnectProviderP
     }
   };
 
-  const signTransaction = async (tx: Uint8Array) => {
+  const signTransaction = async (tx: Uint8Array): Promise<Uint8Array> => {
     if (!wallet || !wallet.connectType) {
       throw new Error("Wallet not connected.");
     }
@@ -590,93 +423,28 @@ export function QubicConnectProvider({ children, config }: QubicConnectProviderP
 
           processedTx.set(signatureBytes, offset);
           return processedTx;
-        } catch (error: unknown) {
+        } catch (error) {
           console.error("MetaMask Snap signing failed:", error);
 
-          // Type guard to check if error is an object with expected properties
-          const errorObj = error as { data?: { message?: string }; message?: string; code?: number };
+          let snapErrorMessage = "Unknown error";
 
-          const snapErrorMessage =
-            errorObj?.data?.message || errorObj?.message || (error instanceof Error ? error.message : String(error));
+          if (isErrorWithData(error)) {
+            snapErrorMessage = error.data.message;
+          } else if (isErrorWithMessage(error)) {
+            snapErrorMessage = error.message;
+          } else if (error instanceof Error) {
+            snapErrorMessage = error.message;
+          } else {
+            snapErrorMessage = String(error);
+          }
 
-          const specificError =
-            typeof errorObj?.code === "number"
-              ? `{code: ${errorObj.code}, message: ${JSON.stringify(snapErrorMessage)}}`
-              : snapErrorMessage;
+          const specificError = isErrorWithMessage(error) && 'code' in error && typeof error.code === 'number'
+            ? `{code: ${error.code}, message: ${JSON.stringify(snapErrorMessage)}}`
+            : snapErrorMessage;
 
           throw new Error(`MetaMask Snap signing failed: ${specificError}`);
         }
       }
-
-      case "walletconnect":
-        if (!wcSession || !wcClient) throw new Error("WalletConnect session not active.");
-        try {
-          console.log("Decoding TX for WalletConnect structured signing...");
-          const decodedTx = decodeUint8ArrayTx(processedTx);
-
-          const fromAddress = wallet.publicKey;
-          const toAddress = qHelper
-            ? await qHelper.getIdentity(decodedTx.destinationPublicKey.getIdentity())
-            : "ID_CONVERSION_FAILED";
-          const amount = decodedTx.amount.getNumber();
-          const tick = decodedTx.tick;
-          const inputType = decodedTx.inputType;
-          const payloadBytes = decodedTx.payload ? decodedTx.payload.getPackageData() : null;
-          const payloadBase64 = payloadBytes ? uint8ArrayToBase64(payloadBytes) : null;
-
-          const signingParams = {
-            from: fromAddress,
-            to: toAddress,
-            amount: Number(amount),
-            tick: tick,
-            inputType: inputType,
-            payload: payloadBase64 === "" ? null : payloadBase64,
-            nonce: Date.now().toString(),
-          };
-
-          console.log("Requesting WC signature with params object:", signingParams);
-
-          const wcResult = await wcClient.request({
-            topic: wcSession.topic,
-            chainId: WC_CHAIN_ID,
-            request: {
-              method: 'qubic_signTransaction',
-              params: signingParams,
-            },
-          });
-
-          console.log("Received result from WC signing:", wcResult);
-
-          if (typeof wcResult !== 'string' && typeof wcResult?.signedTransaction !== 'string') {
-            console.error("Unexpected response format from WC signing:", wcResult);
-            throw new Error("WalletConnect did not return a valid signedTransaction string.");
-          }
-          const signedTxBase64 = typeof wcResult === 'string' ? wcResult : wcResult.signedTransaction;
-          const signedTxBytes = base64ToUint8Array(signedTxBase64);
-
-          console.log(`Signed Tx Bytes Length: ${signedTxBytes.length} (Original: ${processedTx.length})`);
-          if (signedTxBytes.length === SIGNATURE_LENGTH) {
-            console.warn("WalletConnect returned only signature, inserting...");
-            processedTx.set(signedTxBytes, processedTx.length - SIGNATURE_LENGTH);
-            return processedTx;
-          } else if (signedTxBytes.length !== processedTx.length) {
-            console.warn(
-              `WC signed transaction length mismatch. Expected: ${processedTx.length}, Received: ${signedTxBytes.length}. Returning received bytes.`,
-            );
-            return signedTxBytes;
-          } else {
-            return signedTxBytes;
-          }
-        } catch (error: unknown) {
-          console.error("WalletConnect signing failed:", error);
-          const errorObj = error as { message?: string; code?: number };
-          const wcErrorMessage = errorObj?.message || String(error);
-          const specificError = errorObj?.code
-            ? `{code: ${errorObj.code}, message: '${wcErrorMessage}'}`
-            : wcErrorMessage;
-          throw new Error(`WalletConnect signing failed: ${specificError}`);
-        }
-
       default:
         throw new Error(`Unsupported wallet type for signing: ${wallet.connectType}`);
     }
@@ -701,13 +469,10 @@ export function QubicConnectProvider({ children, config }: QubicConnectProviderP
     qHelper,
     httpEndpoint,
     signTransaction,
-    // WalletConnect
-    wcClient,
-    wcSession,
-    wcUri,
-    wcQrCode,
-    wcIsConnecting,
-    startWalletConnect,
+    // WalletConnect methods
+    walletConnectConnect: walletConnect.connect,
+    walletConnectDisconnect: walletConnect.disconnect,
+    walletConnectRequestAccounts: walletConnect.requestAccounts as () => Promise<WalletConnectAccount[]>,
   };
 
   return (

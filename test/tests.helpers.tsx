@@ -1,4 +1,3 @@
-/* eslint-disable react-refresh/only-export-components */
 import { MemoryRouter, RouterProvider, createMemoryRouter } from "react-router-dom";
 
 import { RenderOptions, render } from "@testing-library/react";
