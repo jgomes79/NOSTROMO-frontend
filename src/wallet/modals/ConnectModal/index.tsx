@@ -8,10 +8,10 @@ import { Typography } from "@/shared/components/Typography";
 import { useQubicConnect } from "@/wallet/qubic/QubicConnectContext";
 import { connectSnap, getSnap } from "@/wallet/qubic/utils";
 
-import styles from "./ConnectModal.module.scss";
 import { Card } from "../../../shared/components/Card";
 import QubicLogo from "../../assets/images/logo.svg";
 import MetamaskLogo from "../../assets/images/metamask.svg";
+import styles from "./ConnectModal.module.scss";
 
 /**
  * ConnectModal component that displays wallet connection options.
@@ -20,13 +20,14 @@ import MetamaskLogo from "../../assets/images/metamask.svg";
  */
 export const ConnectModal = () => {
   const [isConnecting, setConnecting] = useState<"metamask" | "walletconnect" | null>(null);
-  const { config, connect, getMetaMaskPublicId } = useQubicConnect();
+  const [showWCQR, setShowWCQR] = useState(false);
+  const { config, connect, getMetaMaskPublicId, startWalletConnect, wcQrCode, wcUri } = useQubicConnect();
   const { closeModal } = useModal();
 
   /**
    * Handles the click event for connecting to Metamask.
    */
-  const handleClickConnect = useCallback(async () => {
+  const handleClickMetaMask = useCallback(async () => {
     try {
       setConnecting("metamask");
       const snapId = config?.snapOrigin;
@@ -43,10 +44,79 @@ export const ConnectModal = () => {
       setConnecting(null);
       closeModal();
     } catch (error) {
-      console.error(error);
+      console.error("MetaMask connection error:", error);
+      setConnecting(null);
     }
+  }, [config, connectSnap, getSnap, getMetaMaskPublicId, connect, closeModal]);
+
+  /**
+   * Handles the click event for connecting to WalletConnect.
+   */
+  const handleClickWalletConnect = useCallback(async () => {
+    try {
+      setConnecting("walletconnect");
+      setShowWCQR(true);
+      // This will generate QR code and URI
+      const { approve } = await startWalletConnect();
+      // Wait for user to scan QR and approve connection
+      await approve();
+      // Connection is handled in the approve callback
+      setConnecting(null);
+      setShowWCQR(false);
+      closeModal();
+    } catch (error) {
+      console.error("WalletConnect connection error:", error);
+      setConnecting(null);
+      setShowWCQR(false);
+    }
+  }, [startWalletConnect, closeModal]);
+
+  const handleCancelWC = useCallback(() => {
+    setShowWCQR(false);
+    setConnecting(null);
   }, []);
 
+  // Show QR code if WalletConnect is connecting
+  if (showWCQR) {
+    return (
+      <Card className={styles.layout}>
+        <QubicLogo />
+
+        <div className={styles.body}>
+          <Typography variant={"body"} size={"large"}>
+            Scan QR Code
+          </Typography>
+          <Typography variant={"body"} size={"medium"} className={styles.gray}>
+            Open your WalletConnect-compatible wallet and scan the QR code.
+          </Typography>
+        </div>
+
+        {wcQrCode ? (
+          <div className={styles.qrContainer}>
+            <img src={wcQrCode} alt="WalletConnect QR Code" className={styles.qrCode} />
+          </div>
+        ) : (
+          <div className={styles.loading}>
+            <Typography variant={"body"} size={"medium"}>
+              Generating QR Code...
+            </Typography>
+          </div>
+        )}
+
+        {wcUri && (
+          <div className={styles.uriInfo}>
+            <Typography variant={"body"} size={"small"} className={styles.gray}>
+              Waiting for wallet connection...
+            </Typography>
+          </div>
+        )}
+
+        <Button caption={"Cancel"} color={"secondary"} className={styles.cancelButton} onClick={handleCancelWC} />
+      </Card>
+    );
+  }
+
+  // Default view with provider options
   return (
     <Card className={styles.layout}>
       <QubicLogo />
@@ -68,7 +138,7 @@ export const ConnectModal = () => {
           color={"warning"}
           isLoading={isConnecting === "metamask"}
           iconLeft={<MetamaskLogo />}
-          onClick={handleClickConnect}
+          onClick={handleClickMetaMask}
         />
         <Button
           caption={"WalletConnect"}
@@ -76,6 +146,7 @@ export const ConnectModal = () => {
           color={"secondary"}
           isLoading={isConnecting === "walletconnect"}
           iconLeft={<SiWalletconnect />}
+          onClick={handleClickWalletConnect}
         />
       </div>
     </Card>

@@ -1,0 +1,67 @@
+.layout {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 32px;
+  max-width: 500px;
+  width: 100%;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: center;
+}
+
+.gray {
+  color: var(--color-text-secondary);
+}
+
+.qrContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 24px;
+  background: white;
+  border-radius: 12px;
+}
+
+.qrCode {
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  border-radius: 8px;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 64px;
+}
+
+.uriContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.uriBox {
+  padding: 12px;
+  background: var(--color-background-secondary);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.uri {
+  word-break: break-all;
+  font-family: monospace;
+  font-size: 12px;
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
