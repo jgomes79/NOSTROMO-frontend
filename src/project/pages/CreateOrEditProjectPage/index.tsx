@@ -100,8 +100,18 @@ export const CreateOrEditProjectPage: React.FC = () => {
    *
    * @returns {JSX.Element} The loader component.
    */
-  if (project.isLoading || !wallet?.publicKey) {
+  if (project.isLoading) {
     return <Loader variant={"full"} size={52} />;
+  }
+
+  if (!wallet?.publicKey) {
+    return (
+      <ErrorPage
+        code={<RiAliensFill className={styles.alien} />}
+        title={"No Signal"}
+        description={"To create a project, you need to be connected to a wallet."}
+      />
+    );
   }
 
   /**
