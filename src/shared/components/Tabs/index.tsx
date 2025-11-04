@@ -54,6 +54,7 @@ export const Tabs = <T,>({
           className={classNames(styles.tab, styles[color], { [styles.active]: activeId === tab.id })}
           onClick={() => onChange?.(tab.id)}
         >
+          {tab.iconLeft && <div className={styles.icon}>{tab.iconLeft}</div>}
           <Typography
             variant={"heading"}
             className={classNames(styles.text, itemClassName)}
@@ -62,7 +63,6 @@ export const Tabs = <T,>({
           >
             {tab.label}
           </Typography>
-          {tab.iconLeft && <div className={styles.icon}>{tab.iconLeft}</div>}
         </button>
       ))}
     </div>

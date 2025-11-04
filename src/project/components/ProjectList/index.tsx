@@ -1,9 +1,9 @@
 import { EmptyState } from "@/shared/components/EmptyState";
 import { Skeleton } from "@/shared/components/Skeleton";
 
-import styles from "./ProjectList.module.scss";
 import { Project } from "../../project.types";
 import { ProjectCard } from "../ProjectCard";
+import styles from "./ProjectList.module.scss";
 
 /**
  * Props interface for the ProjectList component

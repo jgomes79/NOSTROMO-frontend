@@ -2,13 +2,18 @@ import React from "react";
 
 import { TbDatabaseSearch } from "react-icons/tb";
 
-import styles from "./EmptyState.module.scss";
 import { Typography } from "../Typography";
+import styles from "./EmptyState.module.scss";
 
 /**
  * Props for the EmptyState component.
  */
 interface EmptyStateProps {
+  /**
+   * The icon of the empty state.
+   */
+  readonly icon?: React.ReactNode;
+
   /**
    * The title of the empty state.
    */
@@ -34,10 +39,10 @@ interface EmptyStateProps {
  * @param {React.ReactNode} [props.action] - Optional action element, such as a button, to be displayed.
  * @returns {JSX.Element} The rendered EmptyState component.
  */
-export const EmptyState: React.FC<EmptyStateProps> = ({ title, description, action }) => {
+export const EmptyState: React.FC<EmptyStateProps> = ({ icon, title, description, action }) => {
   return (
     <div className={styles.layout}>
-      <TbDatabaseSearch className={styles.icon} />
+      <div className={styles.icon}>{icon || <TbDatabaseSearch />}</div>
       <div className={styles.content}>
         <Typography as={"h2"} variant={"heading"} size={"large"} textAlign={"center"}>
           {title}

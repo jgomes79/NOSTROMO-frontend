@@ -1,7 +1,7 @@
 import React, { useMemo, useRef, useState } from "react";
 
 import classNames from "clsx";
-import { RiArrowLeftLine, RiArrowRightLine } from "react-icons/ri";
+import { RiArrowLeftLine, RiArrowRightLine, RiArrowUpLine, RiCloseCircleLine, RiStarLine } from "react-icons/ri";
 
 import { ProjectOverview } from "@/project/components/ProjectOverview";
 import { ProjectsListByState } from "@/project/components/ProjectsListByState";
@@ -12,17 +12,35 @@ import { SectionIndicator } from "@/shared/components/SectionIndicator";
 import { Slider, SliderElement } from "@/shared/components/Slider";
 import { useAppTitle } from "@/shared/hooks/useAppTitle";
 
+import { ProjectStates } from "@/project/project.types";
 import { EmptyState } from "@/shared/components/EmptyState";
+import { Separator } from "@/shared/components/Separator";
+import { Tabs } from "@/shared/components/Tabs";
 import { HowToBoyIdoSection } from "../../components/HowToBoyIdoSection";
-import { launchpadProjectTabs } from "../../launchpad.constants";
 import styles from "./LaunchpadPage.module.scss";
 
 export const LaunchpadPage: React.FC = () => {
   const slider = useRef<SliderElement>();
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const { projects, isLoading } = useProjectsVip();
+  const [currentState, setCurrentState] = useState<ProjectStates>(ProjectStates.FUNDING_PHASE_1);
 
   useAppTitle("Launchpad");
+
+  const projectTabs = useMemo(() => {
+    return [
+      {
+        id: ProjectStates.UPCOMING,
+        label: "Upcoming",
+        iconLeft: <RiArrowUpLine />,
+      },
+      {
+        id: ProjectStates.CLOSED,
+        label: "Closed",
+        iconLeft: <RiCloseCircleLine />,
+      },
+    ];
+  }, [currentState]);
 
   /**
    * Renders the slider controls for navigating through projects.
@@ -61,39 +79,48 @@ export const LaunchpadPage: React.FC = () => {
    * @returns
    */
   const renderOverview = () => {
-    if (!projects.length) {
+    if (isLoading) {
       return (
-        <EmptyState
-          title="No projects available"
-          description="There are no projects available to display right now, please check back later"
-        />
+        <div className={styles.loader}>
+          <Loader size={52} />
+        </div>
       );
     }
 
     return (
       <>
         <div className={styles.sliderFrame}>
-          <Slider
-            ref={slider}
-            delay={5000}
-            onMove={setCurrentIndex}
-            components={projects.map((project, index) => (
-              <ProjectOverview
-                key={index}
-                name={project.name}
-                slug={project.slug}
-                description={project.description}
-                photoUrl={project.photoUrl}
-                bannerUrl={project.bannerUrl}
-                fundraisingGoal={project.amountToRaise}
-                tokenPrice={project.tokenPrice}
-                currency={project.currency.name}
-                date={project.startDate}
+          {projects.length > 0 ? (
+            <Slider
+              ref={slider}
+              delay={5000}
+              onMove={setCurrentIndex}
+              components={projects.map((project, index) => (
+                <ProjectOverview
+                  key={index}
+                  name={project.name}
+                  slug={project.slug}
+                  description={project.description}
+                  photoUrl={project.photoUrl}
+                  bannerUrl={project.bannerUrl}
+                  fundraisingGoal={project.amountToRaise}
+                  tokenPrice={project.tokenPrice}
+                  currency={project.currency.name}
+                  date={project.startDate}
+                />
+              ))}
+            />
+          ) : (
+            <div className={styles.loader}>
+              <EmptyState
+                icon={<RiStarLine />}
+                title="No featured projects yet"
+                description="When there are featured projects, you will be able to see them here"
               />
-            ))}
-          />
+            </div>
+          )}
         </div>
-        {renderSliderControls}
+        {projects.length > 0 && renderSliderControls}
       </>
     );
   };
@@ -111,22 +138,22 @@ export const LaunchpadPage: React.FC = () => {
         </div>
 
         {/* Project Overview */}
-        <div className={classNames(styles.container, styles.large)}>
-          <div className={styles.slider}>
-            {isLoading ? (
-              <div className={styles.loader}>
-                <Loader size={52} />
-              </div>
-            ) : (
-              renderOverview()
-            )}
-          </div>
+        <div className={styles.container}>
+          <div className={styles.slider}>{renderOverview()}</div>
         </div>
       </section>
 
+      <Separator />
       <section className={styles.section}>
         <div className={styles.container}>
-          <ProjectsListByState state={launchpadProjectTabs[0].id} />
+          <Tabs<ProjectStates>
+            activeId={currentState}
+            size={"large"}
+            tabs={projectTabs}
+            onChange={(tabId) => setCurrentState(tabId)}
+          />
+
+          <ProjectsListByState state={currentState} />
         </div>
       </section>
     </div>

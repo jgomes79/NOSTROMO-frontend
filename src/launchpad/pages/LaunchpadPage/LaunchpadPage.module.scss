@@ -4,6 +4,7 @@
   padding-bottom: 82px;
   min-height: calc(100vh - 120px);
   position: relative;
+  gap: 62px;
 }
 
 .section {
@@ -16,7 +17,6 @@
 
   &.top {
     gap: 42px;
-    padding-bottom: 62px;
     background: linear-gradient(180deg, #161c10 0%, #000000 50%, rgb(0, 0, 0) 100%);
 
     @include space();
@@ -41,7 +41,7 @@
 
   position: relative;
   z-index: 4;
-  min-height: 600px;
+  width: 100%;
 
   &.large {
     max-width: 1400px !important;
@@ -66,6 +66,7 @@
   flex-direction: column;
   align-items: flex-end;
   gap: 16px;
+  width: 100%;
 }
 
 .sliderFrame {
