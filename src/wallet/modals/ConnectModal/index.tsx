@@ -27,6 +27,7 @@ export const ConnectModal = () => {
   const [selectedAccount, setSelectedAccount] = useState<number>(0);
   const { config, connect, getMetaMaskPublicId, walletConnectConnect, walletConnectRequestAccounts } =
     useQubicConnect();
+
   const { closeModal } = useModal();
 
   // Watch for WalletConnect connection status (exactly like qearn)

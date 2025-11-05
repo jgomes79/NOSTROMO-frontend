@@ -218,7 +218,7 @@ export const WalletConnectProvider = ({ children }: WalletConnectProviderProps) 
         console.log("🔗 Initializing WalletConnect SignClient...");
 
         const client = await SignClientLib.init({
-          projectId: "2697d842a392d20a355416a260f58276", // Same project ID as qearn
+          projectId: import.meta.env.VITE_WC_PROJECT_ID,
           metadata: {
             name: "NOSTROMO",
             description: "NOSTROMO Launchpad",

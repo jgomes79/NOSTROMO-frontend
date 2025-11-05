@@ -12,9 +12,11 @@ import type {
   QubicConnectContextValue,
   QubicConnectProviderProps,
   QubicTransaction,
+  SignClient,
   Transaction,
   Wallet,
   WalletConnectAccount,
+  WalletConnectSession,
   isErrorWithData,
   isErrorWithMessage
 } from "../wallet.types";
@@ -34,6 +36,8 @@ export function QubicConnectProvider({ children, config }: QubicConnectProviderP
   const [connected, setConnected] = useState(false);
   const [wallet, setWallet] = useState<Wallet | null>(null);
   const [showConnectModal, setShowConnectModal] = useState(false);
+  const [wcClient, setWcClient] = useState<SignClient | null>(null);
+  const [wcSession, setWcSession] = useState<WalletConnectSession | null>(null);
 
   const httpEndpoint = import.meta.env.VITE_HTTP_ENDPOINT; // live system
   const [qHelper] = useState(() => new QubicHelper());
@@ -42,6 +46,60 @@ export function QubicConnectProvider({ children, config }: QubicConnectProviderP
   const walletConnect = useWalletConnect();
 
   useEffect(() => {
+    // Use the SignClient from WalletConnectContext instead of creating a new one
+    if (walletConnect.signClient) {
+      setWcClient(walletConnect.signClient);
+
+      // Check for existing sessions
+      if (walletConnect.signClient.session.length) {
+        const lastKeyIndex = walletConnect.signClient.session.keys.length - 1;
+        const session = walletConnect.signClient.session.get(walletConnect.signClient.session.keys[lastKeyIndex]);
+        setWcSession(session);
+        connect({
+          connectType: "walletconnect",
+          publicKey: session.namespaces.qubic.accounts[0].split(':')[2],
+          wcSession: session,
+        }, true);
+      }
+
+      // Setup event listeners
+      const handleSessionEvent = (event) => {
+        console.log('WC Event:', event);
+      };
+
+      const handleSessionUpdate = ({ topic, params }) => {
+        const { namespaces } = params;
+        const _session = walletConnect.signClient.session.get(topic);
+        const updatedSession = { ..._session, namespaces };
+        setWcSession(updatedSession);
+        const publicKey = updatedSession.namespaces.qubic.accounts[0].split(':')[2];
+        if (wallet?.connectType === 'walletconnect' && wallet.publicKey !== publicKey) {
+          connect({ connectType: "walletconnect", publicKey, wcSession: updatedSession });
+        }
+      };
+
+      const handleSessionDelete = () => {
+        setWcSession(null);
+        if (wallet?.connectType === 'walletconnect') {
+          disconnect();
+        }
+      };
+
+      walletConnect.signClient.on('session_event', handleSessionEvent);
+      walletConnect.signClient.on('session_update', handleSessionUpdate);
+      walletConnect.signClient.on('session_delete', handleSessionDelete);
+
+      // Cleanup function
+      return () => {
+        if (walletConnect.signClient) {
+          walletConnect.signClient.off('session_event', handleSessionEvent);
+          walletConnect.signClient.off('session_update', handleSessionUpdate);
+          walletConnect.signClient.off('session_delete', handleSessionDelete);
+        }
+      };
+    }
+
+
     const storedWallet = localStorage.getItem("wallet");
     if (storedWallet) {
       try {
@@ -53,7 +111,7 @@ export function QubicConnectProvider({ children, config }: QubicConnectProviderP
         localStorage.removeItem("wallet");
       }
     }
-  }, []);
+  }, [walletConnect.signClient, wallet?.connectType]);
 
   const connect = (wallet: Wallet) => {
     localStorage.setItem("wallet", JSON.stringify(wallet));
