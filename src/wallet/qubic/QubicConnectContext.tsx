@@ -35,7 +35,6 @@ const QubicConnectContext = createContext<QubicConnectContextValue | undefined>(
 export function QubicConnectProvider({ children, config }: QubicConnectProviderProps) {
   const [connected, setConnected] = useState(false);
   const [wallet, setWallet] = useState<Wallet | null>(null);
-  const [showConnectModal, setShowConnectModal] = useState(false);
   const [wcClient, setWcClient] = useState<SignClient | null>(null);
   const [wcSession, setWcSession] = useState<WalletConnectSession | null>(null);
 
@@ -123,12 +122,11 @@ export function QubicConnectProvider({ children, config }: QubicConnectProviderP
     localStorage.removeItem("wallet");
     setWallet(null);
     setConnected(false);
-  };
 
-  const toggleConnectModal = () => {
-    setShowConnectModal(!showConnectModal);
+    if (wallet?.connectType === "walletconnect") {
+      walletConnect.disconnect();
+    }
   };
-
 
   const getMetaMaskPublicId = async (accountIdx = 0, confirm = false): Promise<string> => {
     if (!window.ethereum) {
@@ -511,11 +509,9 @@ export function QubicConnectProvider({ children, config }: QubicConnectProviderP
   const contextValue: QubicConnectContextValue = {
     connected,
     wallet,
-    showConnectModal,
     connect,
     config,
     disconnect,
-    toggleConnectModal,
     getMetaMaskPublicId,
     getSignedTx,
     broadcastTx,

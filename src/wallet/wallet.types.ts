@@ -319,10 +319,8 @@ export interface QubicDate {
 export interface QubicConnectContextValue {
   connected: boolean;
   wallet: Wallet | null;
-  showConnectModal: boolean;
   connect: (wallet: Wallet) => void;
   disconnect: () => void;
-  toggleConnectModal: () => void;
   getMetaMaskPublicId: (accountIdx?: number, confirm?: boolean) => Promise<string>;
   getSignedTx: (tx: Uint8Array | QubicTransaction, offset: number) => Promise<Uint8Array>;
   broadcastTx: (tx: Uint8Array) => Promise<BroadcastResult>;

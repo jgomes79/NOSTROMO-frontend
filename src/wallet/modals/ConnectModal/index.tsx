@@ -9,7 +9,7 @@ import { Typography } from "@/shared/components/Typography";
 import { useQubicConnect } from "@/wallet/qubic/QubicConnectContext";
 import { connectSnap, getSnap } from "@/wallet/qubic/utils";
 
-import type { Account, Wallet, WalletConnectAccount } from "@/wallet/wallet.types";
+import type { Wallet } from "@/wallet/wallet.types";
 import { Card } from "../../../shared/components/Card";
 import QubicLogo from "../../assets/images/logo.svg";
 import MetamaskLogo from "../../assets/images/metamask.svg";
@@ -21,10 +21,8 @@ import styles from "./ConnectModal.module.scss";
  * @returns {JSX.Element} The rendered ConnectModal component.
  */
 export const ConnectModal = () => {
-  const [selectedMode, setSelectedMode] = useState<"none" | "metamask" | "walletconnect" | "account-select">("none");
+  const [selectedMode, setSelectedMode] = useState<"none" | "metamask" | "walletconnect">("none");
   const [qrCode, setQrCode] = useState<string>("");
-  const [accounts, setAccounts] = useState<Account[]>([]);
-  const [selectedAccount, setSelectedAccount] = useState<number>(0);
   const { config, connect, getMetaMaskPublicId, walletConnectConnect, walletConnectRequestAccounts } =
     useQubicConnect();
 
@@ -42,13 +40,16 @@ export const ConnectModal = () => {
 
           if (accounts && accounts.length > 0) {
             console.log("✅ Setting accounts and switching to account selection");
-            setAccounts(
-              accounts.map((account: WalletConnectAccount) => ({
-                publicId: account.publicKey,
-                alias: account.alias || "WalletConnect Account",
-              })),
-            );
-            setSelectedMode("account-select");
+            const account = accounts[0];
+
+            const selectedWallet: Wallet = {
+              connectType: "walletconnect",
+              publicKey: account.address || "",
+              alias: account.name || "WalletConnect Account",
+            };
+            console.log("✅ Connecting selected wallet:", selectedWallet);
+            connect(selectedWallet);
+            closeModal();
           }
         }
       } catch (error) {
@@ -209,56 +210,6 @@ export const ConnectModal = () => {
             className={styles.cancelButton}
             onClick={() => setSelectedMode("none")}
           />
-        </div>
-      )}
-
-      {selectedMode === "account-select" && (
-        <div className={styles.accountSelectMode}>
-          <div className={styles.body}>
-            <Typography variant={"body"} size={"large"}>
-              Select Account
-            </Typography>
-            <Typography variant={"body"} size={"medium"} className={styles.gray}>
-              Choose which account to connect from your wallet.
-            </Typography>
-          </div>
-
-          <div className={styles.accountList}>
-            {accounts.map((account, index) => (
-              <Button
-                key={index}
-                caption={account.alias || `Account ${index + 1}`}
-                variant={selectedAccount === index ? "solid" : "outline"}
-                color="primary"
-                onClick={() => setSelectedAccount(index)}
-                className={styles.accountButton}
-              />
-            ))}
-          </div>
-
-          <div className={styles.actions}>
-            <Button
-              caption={"Cancel"}
-              variant={"outline"}
-              color={"secondary"}
-              onClick={() => setSelectedMode("none")}
-            />
-            <Button
-              caption={"Connect Account"}
-              variant={"solid"}
-              color={"primary"}
-              onClick={() => {
-                const selectedWallet: Wallet = {
-                  connectType: "walletconnect",
-                  publicKey: accounts[selectedAccount]?.publicId || "",
-                  alias: accounts[selectedAccount]?.alias,
-                };
-                console.log("✅ Connecting selected wallet:", selectedWallet);
-                connect(selectedWallet);
-                closeModal();
-              }}
-            />
-          </div>
         </div>
       )}
     </Card>
