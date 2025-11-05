@@ -44,7 +44,7 @@ export const WalletConnectProvider = ({ children }: WalletConnectProviderProps) 
       const { uri, approval } = await signClient.connect({
         requiredNamespaces: {
           qubic: {
-            chains: ["qubic:mainnet"],
+            chains: [import.meta.env.VITE_CHAIN_ID],
             methods: [
               "qubic_requestAccounts",
               "qubic_sendQubic",
@@ -107,7 +107,7 @@ export const WalletConnectProvider = ({ children }: WalletConnectProviderProps) 
     try {
       const result = await signClient.request({
         topic: sessionTopic,
-        chainId: "qubic:mainnet",
+        chainId: import.meta.env.VITE_CHAIN_ID,
         request: {
           method: "qubic_requestAccounts",
           params: {
@@ -127,7 +127,7 @@ export const WalletConnectProvider = ({ children }: WalletConnectProviderProps) 
 
     const result = await signClient.request<TransactionResult>({
       topic: sessionTopic,
-      chainId: "qubic:mainnet",
+      chainId: import.meta.env.VITE_CHAIN_ID,
       request: {
         method: "qubic_sendQubic",
         params: {
@@ -146,7 +146,7 @@ export const WalletConnectProvider = ({ children }: WalletConnectProviderProps) 
     try {
       const result = await signClient.request<SignedTransaction>({
         topic: sessionTopic,
-        chainId: "qubic:mainnet",
+        chainId: import.meta.env.VITE_CHAIN_ID,
         request: {
           method: "qubic_signTransaction",
           params: {
@@ -172,7 +172,7 @@ export const WalletConnectProvider = ({ children }: WalletConnectProviderProps) 
 
     const result = await signClient.request<string>({
       topic: sessionTopic,
-      chainId: "qubic:mainnet",
+      chainId: import.meta.env.VITE_CHAIN_ID,
       request: {
         method: "qubic_sign",
         params,

@@ -98,7 +98,6 @@ export function QubicConnectProvider({ children, config }: QubicConnectProviderP
       };
     }
 
-
     const storedWallet = localStorage.getItem("wallet");
     if (storedWallet) {
       try {

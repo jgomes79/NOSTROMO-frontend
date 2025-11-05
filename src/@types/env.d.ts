@@ -1,6 +1,7 @@
 interface ImportMetaEnv {
   VITE_WC_PROJECT_ID: string;
   VITE_WC_RELAY_URL: string;
+  VITE_CHAIN_ID: string;
   VITE_SNAP_ORIGIN: string;
   VITE_SNAP_VERSION: string;
   VITE_HTTP_ENDPOINT: string;
