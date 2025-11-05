@@ -60,7 +60,7 @@ export const ConnectModal = () => {
     if (selectedMode === "walletconnect") {
       // Check periodically for connection
       const interval = setInterval(checkConnection, 1000);
-      setTimeout(() => clearInterval(interval), 30000); // Stop after 30 seconds
+      setTimeout(() => clearInterval(interval), 30000);
 
       return () => clearInterval(interval);
     }

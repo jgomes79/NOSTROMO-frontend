@@ -118,14 +118,15 @@ export function QubicConnectProvider({ children, config }: QubicConnectProviderP
     setConnected(true);
   };
 
-  const disconnect = () => {
+  const disconnect = async () => {
+    if (wallet?.connectType === "walletconnect" && walletConnect.signClient) {
+      await walletConnect.disconnect();
+    }
+
     localStorage.removeItem("wallet");
     setWallet(null);
     setConnected(false);
 
-    if (wallet?.connectType === "walletconnect") {
-      walletConnect.disconnect();
-    }
   };
 
   const getMetaMaskPublicId = async (accountIdx = 0, confirm = false): Promise<string> => {
