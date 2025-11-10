@@ -67,6 +67,10 @@ export interface BalanceInfo {
 export interface WalletConnectAccount {
   publicKey: string;
   alias?: string;
+  address: string;
+  amount: number;
+  assets: string[];
+  name: string;
 }
 
 /**

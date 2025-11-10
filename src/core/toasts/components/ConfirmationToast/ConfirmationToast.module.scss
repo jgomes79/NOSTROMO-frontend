@@ -19,6 +19,20 @@
   }
 }
 
+.error {
+  svg {
+    color: #f05050;
+  }
+
+  h3 {
+    color: #f05050;
+  }
+
+  p {
+    color: #f05050;
+  }
+}
+
 .content {
   display: flex;
   flex-direction: column;

@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+import { ToastIds, useToast } from "@/core/toasts/hooks/useToast";
 import {
   NOSTROMO_TIER_CHESTBURST_STAKE_AMOUNT,
   NOSTROMO_TIER_DOG_STAKE_AMOUNT,
@@ -23,6 +24,7 @@ export const useChangeTier = () => {
   const [txHash, setTxHash] = useState<string>("");
   const { wallet, getSignedTx } = useQubicConnect();
   const { isMonitoring, monitorTransaction } = useTransactionMonitor();
+  const { createToast } = useToast();
 
   const mutate = async (newTierLevel: number) => {
     if (!wallet?.publicKey) {
@@ -89,6 +91,10 @@ export const useChangeTier = () => {
           onSuccess: () => {
             console.log(`🎉 Tier upgrade confirmed! Successfully upgraded to tier ${newTierLevel}`);
             setLoading(false);
+            createToast(ToastIds.CONFIRMATION, {
+              title: "Tier upgraded successfully",
+              type: "success",
+            });
           },
           onError: (error) => {
             setIsError(true);
@@ -103,6 +109,12 @@ export const useChangeTier = () => {
       setIsError(true);
       setErrorMessage(error instanceof Error ? error.message : "Unknown error occurred");
       setLoading(false);
+
+      createToast(ToastIds.CONFIRMATION, {
+        title: "Error upgrading tier",
+        type: "error",
+        description: "An error occurred, please verify you have sufficient funds and try again",
+      });
     }
   };
 

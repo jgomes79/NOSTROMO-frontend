@@ -143,6 +143,18 @@
   }
 }
 
+.secondary {
+  &.solid {
+    background: $green-04;
+    color: $green-01;
+  }
+
+  &.outline {
+    border: 1px solid $green-04;
+    color: $green-04;
+  }
+}
+
 .warning {
   &.solid {
     background: rgb(53, 44, 30);

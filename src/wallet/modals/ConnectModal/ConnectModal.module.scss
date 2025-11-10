@@ -109,3 +109,15 @@
   justify-content: center;
   align-items: center;
 }
+
+.accountDetails {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 22px;
+  padding: 4px;
+
+  svg {
+    color: $green-03;
+  }
+}

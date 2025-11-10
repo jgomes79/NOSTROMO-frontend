@@ -1,5 +1,7 @@
 import { useState } from "react";
 
+import { useToast } from "@/core/toasts/hooks/useToast";
+import { ToastIds } from "@/core/toasts/toasts.types";
 import { getTierLevelByUser, registerInTier } from "../../lib/nostromo/services/nostromo.service";
 import { broadcastTx, fetchTickInfo } from "../../lib/nostromo/services/rpc.service";
 import { useQubicConnect } from "../qubic/QubicConnectContext";
@@ -16,6 +18,7 @@ export const useRegisterTier = () => {
   const [txHash, setTxHash] = useState<string>("");
   const { wallet, getSignedTx } = useQubicConnect();
   const { isMonitoring, monitorTransaction } = useTransactionMonitor();
+  const { createToast } = useToast();
 
   const mutate = async (tierLevel: number) => {
     if (!wallet?.publicKey) {
@@ -91,16 +94,13 @@ export const useRegisterTier = () => {
         throw new Error("Failed to broadcast transaction");
       }
     } catch (error) {
-      console.error("Error registering in tier:", error);
       setIsError(true);
 
-      // Better error message handling
-      let errorMessage = "Unknown error occurred";
-      if (error instanceof Error) {
-        errorMessage = error.message;
-      } else if (typeof error === "object" && error !== null) {
-        errorMessage = JSON.stringify(error);
-      }
+      createToast(ToastIds.CONFIRMATION, {
+        title: "Error upgrading tier",
+        type: "error",
+        description: "An error occurred, please verify you have sufficient funds and try again",
+      });
 
       setErrorMessage(errorMessage);
       setLoading(false);

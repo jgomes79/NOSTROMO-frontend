@@ -85,7 +85,9 @@ export const WalletConnectProvider = ({ children }: WalletConnectProviderProps) 
   };
 
   const disconnect = async () => {
-    if (!signClient || !sessionTopic) return;
+    if (!signClient || !sessionTopic) {
+      return;
+    }
 
     try {
       await signClient.disconnect({

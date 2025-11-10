@@ -126,18 +126,10 @@ export const UserTier: React.FC<UserTierProps> = ({ wallet, userTier }) => {
                 await registerInTier(tier.id);
                 await refetchUserbyWallet();
                 await refetchTier();
-                createToast(ToastIds.CONFIRMATION, {
-                  title: "Tier Upgraded",
-                  type: "success",
-                });
                 navigate(getRoute(USER_ROUTES.SETTINGS, { tabId: UserSettingsTabs.MY_TIER }));
                 closeModal();
               } catch (error) {
-                createToast(ToastIds.CONFIRMATION, {
-                  title: "Error Upgrading Tier",
-                  type: "error",
-                  description: error instanceof Error ? error.message : "Unknown error occurred",
-                });
+                console.error("Error upgrading tier:", error);
               } finally {
                 setLoading(false);
               }

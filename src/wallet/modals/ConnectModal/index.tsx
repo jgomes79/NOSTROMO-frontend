@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { SiWalletconnect } from "react-icons/si";
 
@@ -9,7 +9,10 @@ import { Typography } from "@/shared/components/Typography";
 import { useQubicConnect } from "@/wallet/qubic/QubicConnectContext";
 import { connectSnap, getSnap } from "@/wallet/qubic/utils";
 
-import type { Wallet } from "@/wallet/wallet.types";
+import { Selector } from "@/shared/components/Selector";
+import { shortHex } from "@/wallet/wallet.helpers";
+import { WalletConnectAccount, type Wallet } from "@/wallet/wallet.types";
+import { LuWallet } from "react-icons/lu";
 import { Card } from "../../../shared/components/Card";
 import QubicLogo from "../../assets/images/logo.svg";
 import MetamaskLogo from "../../assets/images/metamask.svg";
@@ -23,47 +26,45 @@ import styles from "./ConnectModal.module.scss";
 export const ConnectModal = () => {
   const [selectedMode, setSelectedMode] = useState<"none" | "metamask" | "walletconnect">("none");
   const [qrCode, setQrCode] = useState<string>("");
-  const { config, connect, getMetaMaskPublicId, walletConnectConnect, walletConnectRequestAccounts } =
+  const walletConnectTimer = useRef<NodeJS.Timeout | null>(null);
+  const { config, connect, getMetaMaskPublicId, walletConnectConnect, walletConnectRequestAccounts, disconnect } =
     useQubicConnect();
 
   const { closeModal } = useModal();
+  const [accounts, setAccounts] = useState<WalletConnectAccount[]>([]);
+  const [selectedWallet, setSelectedWallet] = useState<WalletConnectAccount | null>(null);
 
-  // Watch for WalletConnect connection status (exactly like qearn)
+  // Poll for WalletConnect accounts after connection is established
   useEffect(() => {
-    // This will be triggered when WalletConnect connection is established
+    if (selectedMode !== "walletconnect") {
+      return;
+    }
+
     const checkConnection = async () => {
       try {
-        if (selectedMode === "walletconnect") {
-          console.log("🔗 Checking WalletConnect connection status...");
-          const accounts = await walletConnectRequestAccounts();
-          console.log("📋 Accounts fetched:", accounts);
+        const accounts = await walletConnectRequestAccounts();
 
-          if (accounts && accounts.length > 0) {
-            console.log("✅ Setting accounts and switching to account selection");
-            const account = accounts[0];
-
-            const selectedWallet: Wallet = {
-              connectType: "walletconnect",
-              publicKey: account.address || "",
-              alias: account.name || "WalletConnect Account",
-            };
-            console.log("✅ Connecting selected wallet:", selectedWallet);
-            connect(selectedWallet);
-            closeModal();
+        if (accounts?.length > 0) {
+          setAccounts(accounts);
+          setSelectedWallet(accounts[0]);
+          if (walletConnectTimer.current) {
+            clearInterval(walletConnectTimer.current);
+            walletConnectTimer.current = null;
           }
         }
       } catch (error) {
-        console.log("⏳ WalletConnect not ready yet or no accounts available");
+        // Connection not ready yet, will retry on next interval
       }
     };
 
-    if (selectedMode === "walletconnect") {
-      // Check periodically for connection
-      const interval = setInterval(checkConnection, 1000);
-      setTimeout(() => clearInterval(interval), 30000);
+    walletConnectTimer.current = setInterval(checkConnection, 1000);
 
-      return () => clearInterval(interval);
-    }
+    return () => {
+      if (walletConnectTimer.current) {
+        clearInterval(walletConnectTimer.current);
+        walletConnectTimer.current = null;
+      }
+    };
   }, [selectedMode, walletConnectRequestAccounts]);
 
   /**
@@ -116,6 +117,79 @@ export const ConnectModal = () => {
       setSelectedMode("none");
     }
   };
+
+  /**
+   * Handles the click event for connecting to WalletConnect.
+   * @param publicKey - The public key of the wallet to connect to.
+   */
+  const handleConnectWalletConnect = () => {
+    if (!selectedWallet) return;
+
+    const wallet: Wallet = {
+      connectType: "walletconnect",
+      publicKey: selectedWallet.address,
+    };
+    connect(wallet);
+    closeModal();
+  };
+
+  if (accounts.length > 0) {
+    return (
+      <Card className={styles.layout}>
+        <QubicLogo />
+
+        <div className={styles.body}>
+          <Typography variant={"body"} size={"large"}>
+            Select your account
+          </Typography>
+          <Typography variant={"body"} size={"medium"} className={styles.gray}>
+            Select the account you want to connect to Nostromo Launchpad.
+          </Typography>
+        </div>
+
+        <div className={styles.accounts}>
+          <Selector
+            label={"Account"}
+            value={selectedWallet?.address || ""}
+            options={accounts.map((account, index) => ({
+              label: account.name || `Account ${index + 1}`,
+              value: account.address,
+            }))}
+            onChange={(value) => {
+              const address = value.target.value;
+              const account = accounts.find((account) => account.address === address);
+
+              if (account) {
+                setSelectedWallet(account);
+              }
+            }}
+          />
+          {selectedWallet && (
+            <div className={styles.accountDetails}>
+              <LuWallet size={18} />
+              <Typography variant={"body"} size={"medium"} className={styles.gray}>
+                {shortHex(selectedWallet.address, 12)}
+              </Typography>
+            </div>
+          )}
+        </div>
+        <div className={styles.actions}>
+          <Button
+            caption={"Cancel"}
+            variant={"outline"}
+            color={"secondary"}
+            onClick={() => {
+              setSelectedMode("none");
+              setAccounts([]);
+              setSelectedWallet(null);
+              disconnect();
+            }}
+          />
+          <Button caption={"Connect"} variant={"solid"} color={"primary"} onClick={handleConnectWalletConnect} />
+        </div>
+      </Card>
+    );
+  }
 
   return (
     <Card className={styles.layout}>
