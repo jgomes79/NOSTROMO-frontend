@@ -6,7 +6,7 @@ import { publicKeyStringToBytes } from "@qubic-lib/qubic-ts-library/dist/convert
 import Crypto from "@qubic-lib/qubic-ts-library/dist/crypto";
 import { QubicHelper } from "@qubic-lib/qubic-ts-library/dist/qubicHelper";
 import { decodeUint8ArrayTx } from "./contract/contractUtils";
-import { uint8ArrayToBase64 } from "./utils/index";
+import { uint8ArrayToBase64, base64ToUint8Array } from "./utils/index";
 
 import type {
   Balance,
