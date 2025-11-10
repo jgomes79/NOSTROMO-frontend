@@ -5,6 +5,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { publicKeyStringToBytes } from "@qubic-lib/qubic-ts-library/dist/converter/converter.js";
 import Crypto from "@qubic-lib/qubic-ts-library/dist/crypto";
 import { QubicHelper } from "@qubic-lib/qubic-ts-library/dist/qubicHelper";
+import { decodeUint8ArrayTx } from "./contract/contractUtils";
 
 import type {
   Balance,
