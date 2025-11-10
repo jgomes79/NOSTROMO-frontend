@@ -34,7 +34,7 @@ export const HomePage: React.FC = () => {
   const navigate = useNavigate();
 
   /** Set the page title */
-  useAppTitle("QUBICANS, WELCOME ABOARD");
+  useAppTitle("QUBICANS WELCOME ABOARD");
 
   /**
    * Scrolls smoothly to the section referenced by the given ref.

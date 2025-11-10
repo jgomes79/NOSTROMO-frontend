@@ -56,7 +56,7 @@ export const MainSection: React.FC<MainSectionProps> = ({ onClickShowProjects })
             textAlign={"center"}
             className={styles.title}
           >
-            QUBICANS, WELCOME ABOARD.
+            QUBICANS WELCOME ABOARD
           </Typography>
           <Typography
             variant={"body"}

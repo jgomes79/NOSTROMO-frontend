@@ -25,7 +25,7 @@ export const navigationMenu = [
  */
 export const socialNetworks = [
   {
-    path: "https://discord.com/channels/1296427133488336927/1305960771414655036",
+    path: "https://discordapp.com/channels/768887649540243497/1315796419826683975",
     icon: <RiDiscordFill />,
   },
   /*
